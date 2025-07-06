@@ -9,22 +9,38 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#6C2382",
+      "animation": {
+        "fadeIn": {
+          "durationMillis": 1000,
+          "delayMillis": 500
+        },
+        "fadeOut": {
+          "durationMillis": 1000,
+          "delayMillis": 2000
+        }
+      }
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#6C2382"
+      },
+
+      "permissions": ["android.permission.WRITE_EXTERNAL_STORAGE","android.permission.READ_EXTERNAL_STORAGE"],
+      "package": "com.israelrvmwork.BingoMaac"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f1711c65-328c-418c-9290-a187f75d04b9"
+      }
     }
   }
 }
