@@ -4,7 +4,7 @@ import { IconButton, Text, TextInput, Button } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import ListaNrosRetirados from "../Listas/ListaNrosRetirados";
 import ListaGanadores from "../Listas/ListaGanadores";
-import { Audio } from 'expo-av'; // Import the Audio from expo-av
+import { Audio } from 'expo-av'; 
 import {
   ObtenerNumerosPartida,
   agregarNumero,
@@ -36,7 +36,7 @@ export default function PartidaEnCurso({ volver }) {
   const ganadoresTernoRef = useRef([]);
   const ganadoresCuartaRef = useRef([]);
   const ganadoresCompletoRef = useRef([]);
-  // State for audio playback
+  
   const [sound, setSound] = useState();
   useEffect(() => {
     ganadoresFilaRef.current = ganadoresFila;
@@ -61,10 +61,10 @@ export default function PartidaEnCurso({ volver }) {
     automaticoRef.current = automatico;
   }, [automatico]);
 
-  // Function to load and play sound
+  
   async function playSound() {
     const { sound } = await Audio.Sound.createAsync(
-      require("../../sounds/women/bienvenido.wav") // Adjust this path based on your audio file
+      require("../../sounds/women/bienvenido.wav") 
     );
     setSound(sound);
     await sound.playAsync();
@@ -73,7 +73,7 @@ export default function PartidaEnCurso({ volver }) {
   useEffect(() => {
     return sound
       ? () => {
-        sound.unloadAsync(); // Clean up the sound when the component unmounts
+        sound.unloadAsync(); 
       }
       : undefined;
   }, [sound]);
@@ -81,7 +81,7 @@ export default function PartidaEnCurso({ volver }) {
   useEffect(() => {
     obtenerNumeros();
     obtenerGanadores();
-    playSound(); // Play sound when component mounts
+    playSound(); 
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -89,11 +89,11 @@ export default function PartidaEnCurso({ volver }) {
     };
   }, [obtenerNumeros, obtenerGanadores]);
   const arraysAreEqual = (array, valueType) => {
-    // Debug inicial
+    
     console.log("Comparando array con valueType:", valueType);
     console.log("Array recibido:", array);
 
-    // Use refs to get the current state length
+    
     const getCurrentStateLength = () => {
       switch (valueType) {
         case 1: return ganadoresCompletoRef.current.length;
@@ -250,7 +250,7 @@ export default function PartidaEnCurso({ volver }) {
       console.log("Programando siguiente número...");
       timeoutRef.current = setTimeout(async () => {
         try {
-          if (!automaticoRef.current) return; // Check again before adding number
+          if (!automaticoRef.current) return; 
           const success = await agregarNumeroAleatorio();
           if (success && automaticoRef.current) {
             programarSiguienteNumero();
