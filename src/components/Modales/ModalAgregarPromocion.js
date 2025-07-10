@@ -11,6 +11,7 @@ const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
     };
 
     const actualizarPromocion = (index, field, value) => {
+        console.log('index, field, value: ', index, field, value);
         const nuevasPromociones = [...promociones];
         nuevasPromociones[index][field] = value;
         setPromociones(nuevasPromociones);
@@ -70,7 +71,7 @@ const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
                                             label={"Regalo"}
                                             keyboardType="numeric"
                                             onChangeText={(value) =>
-                                                actualizarPromocion(index, "regalo", value)
+                                                actualizarPromocion(index, "boletosRegalo", value)
                                             }
                                         />
                                         <IconButton

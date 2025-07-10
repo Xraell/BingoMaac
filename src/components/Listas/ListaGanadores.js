@@ -105,25 +105,25 @@ export default function ListaGanadores({ ganadoresFila, ganadoresCompleto, ganad
   useEffect(() => {
     switch (categoria) {
       case 'completo':
-        if (ganadoresCompleto.length > prevGanadoresCompleto) {
+        if (prevGanadoresCompleto == 0 && ganadoresCompleto.length > prevGanadoresCompleto) {
           reproducirAudio('completo');
           setPrevGanadoresCompleto(ganadoresCompleto.length);
         }
         break;
       case 'fila':
-        if (ganadoresFila.length > prevGanadoresFila) {
+        if (prevGanadoresFila  == 0 && ganadoresFila.length > prevGanadoresFila) {
           reproducirAudio('fila');
           setPrevGanadoresFila(ganadoresFila.length);
         }
         break;
       case 'terno':
-        if (ganadoresTerno.length > prevGanadoresTerno) {
+        if (prevGanadoresTerno  == 0 && ganadoresTerno.length > prevGanadoresTerno) {
           reproducirAudio('terno');
           setPrevGanadoresTerno(ganadoresTerno.length);
         }
         break;
       case 'cuarta':
-        if (ganadoresCuarta.length > prevGanadoresCuarta) {
+        if (prevGanadoresCuarta  == 0 && ganadoresCuarta.length > prevGanadoresCuarta) {
           reproducirAudio('cuarta');
           setPrevGanadoresCuarta(ganadoresCuarta.length);
         }
