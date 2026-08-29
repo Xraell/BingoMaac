@@ -11,8 +11,9 @@ import {
   FlatList,
 } from "react-native";
 import { ActivityIndicator, Button, Switch, Text } from "react-native-paper";
+import { useAppContext } from "../../context/AppProvider";
 import { BingoColors } from "../../Theme/Colors";
-const ModalComoRetirarCredito = () => {
+const ModalActivaTuCuenta = () => {
   const [visible, setModalVisible] = useState(false);
   return (
     <View style={styles.centeredView}>
@@ -31,11 +32,12 @@ const ModalComoRetirarCredito = () => {
               <Text style={styles.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
-
-              ¿COMO RETIRAR CREDITO?
+              ACTIVA Y ABONA SALDO A SU CUENTA AQUÍ!
             </Text>
             <Text variant="titleMedium" style={styles.title}>
-              Debe ir al icono de inicio en la app y realizar la solicitud del saldo que desea retirar por el icono de WhatsApp, con su nombre y apellido con el cual se registró en la app y sus datos bancarios de pago movil. En un máximo de 24 horas su dinero estará en su cuenta bancaria.
+              Pago móvil 04141279671  {' \n'}CI. 16673304 Bancamiga (0172) 
+             {' \n'}
+              Otros métodos de pago preguntar por el icono de WhatsApp.
             </Text>
           </View>
         </View>
@@ -44,11 +46,11 @@ const ModalComoRetirarCredito = () => {
       <Button
         mode="outlined"
         textColor={BingoColors.black}
-        style={{ width: "100%" }}
+        style={{ margin: 10, width: "90%" }}
         onPress={() => setModalVisible(!visible)}
         icon={"help-circle"}
       >
-        ¿COMO RETIRAR CREDITO?
+        ACTIVA Y ABONA SALDO A SU CUENTA AQUÍ!
       </Button>
     </View>
   );
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     minHeight: 300,
     marginTop: "40%",
-    maxHeight: "60%",
+    maxHeight: '90%',
     width: "92%",
   },
   button: {
@@ -149,4 +151,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalComoRetirarCredito;
+export default ModalActivaTuCuenta;

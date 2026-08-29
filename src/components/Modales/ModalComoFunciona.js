@@ -32,11 +32,12 @@ const ModalComoFunciona = () => {
               <Text style={styles.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
-              ¿COMO SE EJECUTA UNA PARTIDA?
+              ¿COMO FUNCIONA LA APP BINGO MAAC?
             </Text>
             <Text variant="titleMedium" style={styles.title}>
-              
-            Cada día de la semana se realizan partidas de Bingo clásico 90, cada una de nuestras jugadas son transmitidas en directo por Instagram @proyectomaacoficial aquí podrá apreciar la extracción de números de cada sorteo, recordando que en esta app puede adquirir los cartones que desee y jugar en automático, también puede jugar manualmente sus cartónes en el método tradicional de BINGOMAAC queda a su elección. ¡ No te pierdas nuestras partidas, adquiere tus cartones ahora mismo!</Text>
+
+              Está es una app para jugar Bingo Clásico 90, dónde usted podrá realizar su recarga de dinero y posterior a tener saldo a favor podrá adquirir cartónes para la jugada más próxima a realizar, en esta app cuenta con una trasmisión en vivo de la extracción de números de manera aleatoria la cual podrá apreciar en el momento de ejecución de la partida, sus cartones se irán tachando de forma automática hasta que se termine la jugada, también cuenta con un tabla de 90 números los cuales también se van tachando según van saliendo. ¡ No sé pierda de nuestras partidas recargue y adquiera sus cartones ya mismo !..
+            </Text>
           </View>
         </View>
       </Modal>
@@ -48,7 +49,7 @@ const ModalComoFunciona = () => {
         onPress={() => setModalVisible(!visible)}
         icon={"help-circle"}
       >
-        ¿COMO FUNCIONA BINGO MAAC?
+        ¿COMO FUNCIONA LA APP BINGO MAAC?
       </Button>
     </View>
   );
@@ -80,8 +81,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   Encabezado: {
-    borderRadius:5,
-    padding:5,
+    borderRadius: 5,
+    padding: 5,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     minHeight: 300,
     marginTop: "40%",
-    maxHeight:'90%',
+    maxHeight: '90%',
     width: "92%",
   },
   button: {

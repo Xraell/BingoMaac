@@ -4,7 +4,7 @@ import { IconButton, Text, TextInput, Button } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import ListaNrosRetirados from "../Listas/ListaNrosRetirados";
 import ListaGanadores from "../Listas/ListaGanadores";
-import { Audio } from 'expo-av'; 
+import { Audio } from 'expo-av';
 import {
   ObtenerNumerosPartida,
   agregarNumero,
@@ -31,12 +31,12 @@ export default function PartidaEnCurso({ volver }) {
   const ultimoNroAgregado = useRef(0);
   const nrosRetiradosRef = useRef(nrosRetirados);
   const automaticoRef = useRef(automatico);
-  
+
   const ganadoresFilaRef = useRef([]);
   const ganadoresTernoRef = useRef([]);
   const ganadoresCuartaRef = useRef([]);
   const ganadoresCompletoRef = useRef([]);
-  
+
   const [sound, setSound] = useState();
   useEffect(() => {
     ganadoresFilaRef.current = ganadoresFila;
@@ -61,10 +61,10 @@ export default function PartidaEnCurso({ volver }) {
     automaticoRef.current = automatico;
   }, [automatico]);
 
-  
+
   async function playSound() {
     const { sound } = await Audio.Sound.createAsync(
-      require("../../sounds/women/bienvenido.wav") 
+      require("../../sounds/women/bienvenido.wav")
     );
     setSound(sound);
     await sound.playAsync();
@@ -73,7 +73,7 @@ export default function PartidaEnCurso({ volver }) {
   useEffect(() => {
     return sound
       ? () => {
-        sound.unloadAsync(); 
+        sound.unloadAsync();
       }
       : undefined;
   }, [sound]);
@@ -81,7 +81,7 @@ export default function PartidaEnCurso({ volver }) {
   useEffect(() => {
     obtenerNumeros();
     obtenerGanadores();
-    playSound(); 
+    playSound();
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -89,11 +89,11 @@ export default function PartidaEnCurso({ volver }) {
     };
   }, [obtenerNumeros, obtenerGanadores]);
   const arraysAreEqual = (array, valueType) => {
-    
+
     console.log("Comparando array con valueType:", valueType);
     console.log("Array recibido:", array);
 
-    
+
     const getCurrentStateLength = () => {
       switch (valueType) {
         case 1: return ganadoresCompletoRef.current.length;
@@ -107,9 +107,11 @@ export default function PartidaEnCurso({ volver }) {
     };
 
     const currentStateLength = getCurrentStateLength();
-    
     console.log(`Longitud actual para valueType ${valueType}:`, currentStateLength);
-    
+    if (currentStateLength > 0) {
+      return true;
+    }
+
     return array.length === currentStateLength;
   };
 
@@ -250,7 +252,7 @@ export default function PartidaEnCurso({ volver }) {
       console.log("Programando siguiente número...");
       timeoutRef.current = setTimeout(async () => {
         try {
-          if (!automaticoRef.current) return; 
+          if (!automaticoRef.current) return;
           const success = await agregarNumeroAleatorio();
           if (success && automaticoRef.current) {
             programarSiguienteNumero();

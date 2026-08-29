@@ -33,7 +33,10 @@ const ModalComoConseguirCredito = () => {
             <Text variant="titleLarge" style={styles.title}>
               ¿COMO CONSEGUIR CRÉDITOS?
             </Text>
-            <Text variant="titleMedium" style={styles.title}></Text>
+            <Text variant="titleMedium" style={styles.title}>
+              Debe ir al icono de inicio en la app y enviar su comprobante de pago por el icono de WhatsApp, con su nombre y apellido con el cual se registró en la app. Pasado unos 20 minutos su saldo será colocado en su billetera en la app como disponible.
+
+            </Text>
           </View>
         </View>
       </Modal>

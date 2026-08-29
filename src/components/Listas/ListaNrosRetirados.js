@@ -25,7 +25,7 @@ export default function ListaNrosRetirados({ lista }) {
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { color: theme.colors.primary }]}>
-        Números retirados
+        Números extraídos
       </Text>
       <PinchGestureHandler
         onGestureEvent={onPinchGestureEvent}
