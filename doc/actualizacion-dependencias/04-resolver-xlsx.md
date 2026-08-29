@@ -79,12 +79,16 @@ evalúa `exceljs` en la Etapa 2.
 
    Sin cambios en `src/`. Si aparecen, esta tarea se salió de su alcance.
 
-## Prueba manual (obligatoria)
+## Riesgo diferido a la tarea 05
 
-Esta tarea **debe** validarse a mano — es el único modo de saber que el reporte sigue bien:
+Cambiar de versión mayor de `xlsx` (0.18 → 0.20) es el riesgo más alto de la etapa: la
+compilación pasa aunque el archivo generado salga mal, porque el fallo sería de contenido,
+no de resolución de módulos.
+
+**Foco obligatorio del checklist manual de la [tarea 05](05-verificacion-final.md):**
 
 1. Entrar como **ADMIN**.
-2. Ir a la pantalla de Partida y pulsar **EXPORTAR EN EXCEL NUEVO**.
+2. Pantalla de Partida → **EXPORTAR EN EXCEL NUEVO**.
 3. Confirmar que se abre el diálogo de compartir y que el `.xlsx` se genera.
 4. **Abrir el archivo** y comprobar:
    - Encabezado con fecha, hora y número de partida.
@@ -92,12 +96,15 @@ Esta tarea **debe** validarse a mano — es el único modo de saber que el repor
    - El bloque *RESUMEN DE PARTIDA* con totales y monto recaudado.
 5. Repetir con el botón de exportación anterior (`BotonExportarReporte`).
 
+Si el Excel sale corrupto o vacío, esta es la tarea a revertir.
+
 ## Criterio de aceptación
 
 - `xlsx` ≥ 0.20.3 instalado.
 - `npm audit` ya no reporta `xlsx`.
-- Los dos reportes se generan y se abren correctamente en Excel.
+- `expo export` compila sin errores.
 - Cero cambios en `src/`.
+- La validación del archivo generado queda para la tarea 05.
 
 ## Notas
 

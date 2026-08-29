@@ -66,21 +66,24 @@ Confirmar cuando pregunte si quiere corregir las versiones.
    npx expo start --clear
    ```
 
-## Pruebas manuales
+## Riesgo diferido a la tarea 05
 
-`expo-file-system` y `expo-sharing` cambian de versión, y ambos sostienen la exportación de
-reportes; `expo-av` sostiene todo el audio. Probar:
+Esta tarea cambia `expo-av` (todo el audio del bingo), `expo-file-system` y `expo-sharing`
+(exportación de reportes). La compilación no puede detectar una regresión ahí.
 
-- **Exportar reporte** a Excel desde la pantalla de admin (se abre el diálogo de compartir).
-- **Audio del bingo**: iniciar partida y cantar un número — debe sonar la locución.
-- **Login** en los tres roles.
+**Anotar como foco prioritario del checklist manual de la [tarea 05](05-verificacion-final.md):**
+
+- Audio del bingo: iniciar partida y cantar un número — debe sonar la locución.
+- Exportar reporte a Excel desde la pantalla de admin.
+
+Si alguno falla en la 05, esta tarea es la principal sospechosa.
 
 ## Criterio de aceptación
 
 - `expo install --check` sin pendientes.
 - `expo-doctor` pasa **17/18** (queda solo el aviso de React Native Directory, que se
   atiende en la Etapa 2).
-- Audio y exportación funcionan.
+- `expo export` compila sin errores.
 
 ## Notas
 

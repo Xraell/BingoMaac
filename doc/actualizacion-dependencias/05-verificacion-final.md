@@ -35,7 +35,10 @@ El check que **seguirá fallando** es *"Validate packages against React Native D
 
 ## Verificación manual
 
-Sin tests ni linter en el proyecto, esta es la parte que de verdad valida la etapa.
+**Esta es la única prueba manual de toda la etapa.** Las tareas 01–04 se verifican solas
+compilando el bundle (`expo export`), pero eso no detecta regresiones funcionales: que el
+audio no suene o que el Excel salga corrupto solo se ve ejecutando la app.
+
 Arrancar con caché limpia:
 
 ```bash
@@ -71,6 +74,32 @@ npx expo start --clear
 **Cierre de partida**
 - [ ] Finalizar partida (centinela `-1`).
 - [ ] El jugador sincronizado ve el modal de mensaje final.
+
+## Diagnóstico si algo falla
+
+Como la validación funcional se concentra aquí, un fallo llega con varios commits encima.
+Esta tabla dice a qué tarea apuntar primero:
+
+| Síntoma | Tarea sospechosa | Por qué |
+|---|---|---|
+| No suena el audio del bingo | [02](02-alinear-versiones-sdk52.md) | Cambió `expo-av` |
+| El Excel sale corrupto, vacío o mal formado | [04](04-resolver-xlsx.md) | Cambió `xlsx` de 0.18 a 0.20 |
+| No se abre el diálogo de compartir | [02](02-alinear-versiones-sdk52.md) | Cambiaron `expo-file-system` y `expo-sharing` |
+| La app no arranca / pantalla en blanco | [03](03-corregir-vulnerabilidades-transitivas.md) | `audit fix` reescribe el lockfile |
+| La sesión no persiste al reabrir | [03](03-corregir-vulnerabilidades-transitivas.md) | Posible cambio transitivo de AsyncStorage |
+| Falla el build de EAS | [04](04-resolver-xlsx.md) | El tarball del CDN de SheetJS puede no resolverse en CI |
+
+Revertir es directo, porque cada tarea es un commit aislado:
+
+```bash
+git revert <hash>
+```
+
+Tras revertir, reinstalar y volver a probar:
+
+```bash
+rm -rf node_modules && npm install && npx expo start --clear
+```
 
 ## Cierre
 

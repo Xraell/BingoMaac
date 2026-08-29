@@ -81,28 +81,58 @@ salió mal: revierte y avisa.
 git checkout package.json package-lock.json && rm -rf node_modules && npm install
 ```
 
-### 6. Pruebas manuales
+### 6. Verificación de compilación (tareas 01–04)
 
-El proyecto **no tiene tests ni linter**. Nunca declares una tarea verificada apoyándote
-solo en comandos.
-
-Pide al usuario que ejecute el checklist manual del documento y **espera su confirmación**
-antes del commit. Como mínimo, en toda tarea:
+El proyecto **no tiene tests ni linter**, pero sí una verificación automática que no
+requiere al usuario: compilar el bundle real.
 
 ```bash
-npx expo start --clear
+npx expo export --platform android --output-dir <scratchpad>/exp-check --clear
 ```
 
-Y según la tarea, insiste en los flujos que toca: audio del bingo (tareas 02 y 03),
-exportación a Excel (tarea 04), login en los tres roles (todas).
+Usa el directorio de scratchpad de la sesión, **nunca** una carpeta del proyecto. Bórralo
+al terminar.
+
+Debe completar sin errores e imprimir el bundle (`AppEntry-*.hbc`, ~5 MB) junto con los
+assets de audio. Esto prueba que Metro resuelve todo el árbol de módulos — que es
+justamente el riesgo de agregar, quitar o cambiar de versión una dependencia.
+
+Prefiérelo a `npx expo start`: no se queda en primer plano, falla de forma explícita y no
+necesita que nadie mire una pantalla.
+
+**No pidas pruebas manuales al usuario en las tareas 01–04.** Toda la validación funcional
+en dispositivo está concentrada en la tarea 05. Si una tarea sale sospechosa, anótalo en el
+informe del paso 8 para que la 05 lo revise con atención — pero no bloquees el avance.
+
+> **Sobre el target web:** no está disponible. Faltan `react-dom` y `react-native-web`, e
+> instalarlos violaría el alcance de la etapa. Aunque estuvieran, el audio (`expo-av`),
+> `AsyncStorage`, los permisos de Android y `expo-sharing` no se comportan igual en
+> navegador, así que no sustituirían la prueba en dispositivo.
+
+### 6b. Prueba manual (solo tarea 05)
+
+La tarea 05 es la única que involucra al usuario. Ahí sí:
+
+- Pídele que ejecute el checklist completo de
+  `doc/actualizacion-dependencias/05-verificacion-final.md`.
+- **Espera su confirmación explícita** antes de dar la etapa por cerrada.
+- Si algo falla, usa la tabla de diagnóstico de ese documento para identificar qué tarea
+  revertir. No improvises parches sobre la marcha.
 
 ### 7. Commit
 
-Con la confirmación del usuario, commitea **solo los archivos de dependencias**:
+En las tareas **01–04**, si el paso 5 y la compilación del paso 6 salieron bien, commitea
+sin esperar al usuario. En la **05**, solo tras su confirmación.
+
+Commitea **solo los archivos de dependencias**:
 
 ```bash
 git add package.json package-lock.json
 ```
+
+Nunca uses `git add -A` ni `git add .`: puede arrastrar trabajo ajeno, ya que hay otros
+agentes operando sobre este repositorio. Si `git status` muestra cambios que no hiciste tú,
+déjalos fuera del commit y menciónalos en el informe.
 
 Usa el mensaje indicado en la tabla del `README.md` de la etapa. Termina el mensaje con:
 
@@ -117,13 +147,21 @@ No hagas `push` salvo que el usuario lo pida.
 Cierra con:
 
 - Métricas antes → después (`expo-doctor`, total de vulnerabilidades).
+- Resultado de la compilación del paso 6.
+- **Señales de alerta para la tarea 05**: si esta tarea tocó paquetes de audio
+  (`expo-av`), de archivos (`expo-file-system`, `expo-sharing`) o `xlsx`, dilo
+  explícitamente para que la prueba manual final se enfoque ahí.
 - Qué quedó pendiente y por qué.
 - Cuál es la siguiente tarea.
 
 ## Notas del proyecto
 
 - App **Expo SDK 52 / React Native 0.76** de bingo 90 bolas, JavaScript plano.
-- Sin tests, sin linter, sin TypeScript: **toda verificación funcional es manual**.
+- Sin tests, sin linter, sin TypeScript. La verificación automática posible es
+  `npx expo export` (compila el bundle real); la validación funcional en dispositivo se
+  concentra en la tarea 05.
+- Hay **otros agentes trabajando en paralelo** sobre este repositorio: nunca hagas
+  `git add -A`, y revisa `git status` antes de commitear.
 - Lo más frágil es el motor de partida en vivo (`PartidaEnCurso.js`) y el audio
   (`expo-av`, 5 archivos). Ante cualquier duda sobre estos, prioriza la prueba manual.
 - Contexto arquitectónico completo en `CLAUDE.md`.

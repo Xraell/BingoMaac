@@ -55,10 +55,20 @@ Ninguna tarea se da por terminada sin esto:
 
 ```bash
 npx expo-doctor
+npx expo export --platform android --output-dir <temporal> --clear
 ```
 
-El proyecto **no tiene tests ni linter**, así que la verificación final es siempre manual:
-arrancar la app y probar los flujos que toca el cambio.
+`expo export` compila el bundle real de Android y falla si Metro no resuelve algún módulo,
+que es justo el riesgo de tocar dependencias. No requiere intervención de nadie, así que
+las tareas 01–04 se verifican y commitean solas.
+
+El proyecto **no tiene tests ni linter**, de modo que la validación funcional (audio,
+exportación, login) es manual y está **concentrada en la tarea 05**, al cierre de la etapa.
+
+> **El target web no es una alternativa.** Faltan `react-dom` y `react-native-web`, e
+> instalarlos saldría del alcance de esta etapa. Aunque estuvieran, `expo-av`,
+> `AsyncStorage`, los permisos de Android y `expo-sharing` se comportan distinto en
+> navegador y no sustituyen la prueba en dispositivo.
 
 ### Flujos críticos a probar
 
