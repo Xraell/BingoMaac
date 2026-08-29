@@ -1,4 +1,4 @@
-const UrlApi = "https://bingoservice.digitalrobert.digital/api/usuario";
+const UrlApi = "http://10.0.0.2:8000/api/usuario";
 
 export const VerificarUsuario = async (tel, clave) => {
   const url = UrlApi+"/authenticarte";

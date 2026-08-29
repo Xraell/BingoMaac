@@ -1,4 +1,4 @@
-const UrlApi = "https://bingoservice.digitalrobert.digital/api/compra";
+const UrlApi = "http://10.0.0.2:8000/api/compra";
 
 export const crearObjetocompra = (
   Monto,

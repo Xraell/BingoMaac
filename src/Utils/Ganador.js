@@ -1,4 +1,4 @@
-const UrlApi = "https://bingoservice.digitalrobert.digital/api/ganador";
+const UrlApi = "http://10.0.0.2:8000/api/ganador";
 
 export const crearObjetoGanadores = (
   usuarios_ganadores,

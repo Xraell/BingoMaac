@@ -26,7 +26,7 @@ App Expo / React Native (SDK 52, RN 0.76) de bingo en vivo de 90 bolas. El clien
 
 ### Backend
 
-Todos los módulos de `src/Utils/*.js` son wrappers `fetch` sobre `https://bingoservice.digitalrobert.digital/api/<recurso>`. Cada archivo declara su propia constante `UrlApi` en la línea 1 — **la URL base está duplicada en 8 archivos**; cambiarla implica editarlos todos (`Boleto`, `Compra`, `Ganador`, `Mensaje`, `Numero`, `Partida`, `Usuario`, `UsuarioPromocion`).
+Todos los módulos de `src/Utils/*.js` son wrappers `fetch` sobre `http://10.0.0.2:8000/api/<recurso>`. Cada archivo declara su propia constante `UrlApi` en la línea 1 — **la URL base está duplicada en 8 archivos**; cambiarla implica editarlos todos (`Boleto`, `Compra`, `Ganador`, `Mensaje`, `Numero`, `Partida`, `Usuario`, `UsuarioPromocion`).
 
 Convención de cada módulo: funciones `Obtener*` / `agregar*` / `actualizar*` / `eliminar*` más un `crearObjeto*` que arma el payload. Los `Obtener*` capturan el error y devuelven `null` (o lanzan, según el caso) en vez de propagarlo; los `agregar*` sí lanzan. Los nombres de funciones están en español y no siempre coinciden con el recurso — p. ej. `UsuarioPromocion.js` exporta `ObtenerNumeros`, `agregarNumero`, etc., copiados de `Numero.js`.
 

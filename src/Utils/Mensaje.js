@@ -1,4 +1,4 @@
-const UrlApi = "https://bingoservice.digitalrobert.digital/api/mensaje";
+const UrlApi = "http://10.0.0.2:8000/api/mensaje";
 
 export const crearObjetoMensaje = (
   idMensaje,

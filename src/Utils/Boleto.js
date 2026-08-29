@@ -1,4 +1,4 @@
-const UrlApi = "https://bingoservice.digitalrobert.digital/api/boleto";
+const UrlApi = "http://10.0.0.2:8000/api/boleto";
 
 export const crearObjetoBoleto = (
   Nombres,
