@@ -13,7 +13,6 @@
     "@react-navigation/material-bottom-tabs": "^6.2.24",
     "@react-navigation/native": "^6.1.14",
     "date-fns": "^3.6.0",
-    "eas": "^0.1.0",
     "expo": "~52.0.17",
     "expo-av": "~15.0.1",
     "expo-clipboard": "~7.0.0",
@@ -34,8 +33,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@types/react": "~18.3.12",
-    "@types/react-native": "^0.73.0"
+    "@types/react": "~18.3.12"
   },
   "private": true
 }
