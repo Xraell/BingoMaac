@@ -11,7 +11,6 @@ import MisBoletos from "../screens/User/MisBoletos";
 import Perfil from "../screens/User/Perfil";
 import { ObtenerDatosPartida, ObtenerPartidaActual } from "../Utils/Partida";
 import { ObtenerBoletosUsuario } from "../Utils/Boleto";
-import { ObtenerPromocionUsuario } from "../Utils/UsuarioPromocion";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -44,23 +43,16 @@ export default function TabsUser() {
     console.log("🚀 ~ obtenerPActual ~ response:", response)
     if (response) {
       obtenerPremiosActual(response.id);
-      obtenerPromocionActual(response.id)
       setPartidaActual(response)
     }
   };
-  const obtenerPromocionActual = async (idPartida) => {
-    const response = await ObtenerPromocionUsuario(user.id,idPartida)
-    console.log("🚀 ~ ObtenerPromocionUsuario ~ response:", response)
-    if (response) {
-      setPromocion(response)
-    }
-  };
   const obtenerPremiosActual = async (idPartida) => {
-    const response = await ObtenerDatosPartida(idPartida)
+    const response = await ObtenerDatosPartida(idPartida, user.id)
     console.log("🚀 ~ obtenerPremiosActual ~ response:", response)
     if (response) {
       setPremios(response.premios)
       setPromociones(response.promociones)
+      setPromocion(response.promocionUsuario ?? null)
     }
   };
   return (

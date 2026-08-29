@@ -79,9 +79,14 @@ export const ObtenerPartidaActual = async () => {
   }
 };
 
-export const ObtenerDatosPartida = async (idPartida) => {
+export const ObtenerDatosPartida = async (idPartida, idUsuario) => {
   try {
-    const response = await fetch(UrlApi + "/obtener-datos/" + idPartida);
+    const url =
+      UrlApi +
+      "/obtener-datos/" +
+      idPartida +
+      (idUsuario ? "?idUsuario=" + idUsuario : "");
+    const response = await fetch(url);
     const data = await response.json();
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");

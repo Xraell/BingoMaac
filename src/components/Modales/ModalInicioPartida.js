@@ -31,16 +31,23 @@ export default function ModalInicioPartida() {
     const [selectedPromocion, setSelectedPromocion] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const { partidaActual, premios, promociones, setPromocion, user } = useAppContext();
+    const { partidaActual, premios, promociones, promocion, setPromocion, user } = useAppContext();
 
     useEffect(() => {
         verificarNuevaPartida();
-    }, []);
+    }, [promocion]);
 
     const verificarNuevaPartida = async () => {
         try {
+            // El servidor manda: si ya hay promocion asignada no se pregunta de nuevo.
+            // AsyncStorage solo evita repetir el modal dentro de la misma partida.
+            if (promocion) {
+                setVisible(false);
+                await AsyncStorage.setItem('idUltimaPartida', partidaActual.id.toString());
+                return;
+            }
             const valor = await AsyncStorage.getItem('idUltimaPartida');
-            if (valor == null || (valor != partidaActual.id && selectedPromocion == null)) {
+            if (valor == null || valor != partidaActual.id) {
                 setVisible(true);
             }
         } catch (error) {

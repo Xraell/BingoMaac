@@ -85,19 +85,23 @@ export const ObtenerNumero = async (id) => {
 };
 export const EscogerPromocion = async (idUser,idPromocion) => {
   try {
-    const response = await fetch(UrlApi + "/designar-promocion/" + idUser+"/"+idPromocion);
-    const data = await response.json();
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
+    const response = await fetch(
+      UrlApi + "/designar-promocion/" + idUser + "/" + idPromocion,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`Error al designar promocion: ${response.status}`);
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return await response.json();
   } catch (error) {
     console.error("Error en designar promocion:", error);
-    return null;
+    throw error;
   }
 };
 export const ObtenerNumeroActual = async () => {
