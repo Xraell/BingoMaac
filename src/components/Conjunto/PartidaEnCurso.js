@@ -119,7 +119,7 @@ export default function PartidaEnCurso({ volver }) {
   const obtenerNumeros = useCallback(async () => {
     try {
       const response = await ObtenerNumerosPartida(partidaActual.id);
-      const arregloNumeros = response.map((e) => e.Nro);
+      const arregloNumeros = (response ?? []).map((e) => e.Nro);
       if (arregloNumeros.includes(-1)) {
         volver();
         return Alert.alert(

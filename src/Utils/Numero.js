@@ -39,6 +39,9 @@ export const ObtenerNumerosUsuario = async (idUsuario) => {
 export const ObtenerNumerosPartida = async (idPartida) => {
     try {
       const response = await fetch(UrlApi+"/obtener-numeros-partida/"+idPartida );
+      if (!response.ok) {
+        throw new Error(`Error al obtener numeros: ${response.status}`);
+      }
       const data = await response.json();
       if (!Array.isArray(data)) {
         throw new Error("La respuesta no es un arreglo de objetos JSON");
@@ -46,7 +49,7 @@ export const ObtenerNumerosPartida = async (idPartida) => {
       return data;
     } catch (error) {
       console.error("Error en Obtener Numeros:", error);
-      return null;
+      return [];
     }
   };
 export const ObtenerNumero = async (id) => {

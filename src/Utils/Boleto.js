@@ -64,6 +64,9 @@ export const ObtenerBoletos = async () => {
 export const ObtenerBoletosUsuario = async (idUsuario) => {
   try {
     const response = await fetch(UrlApi + "/obtener-boletos-usuario/" + idUsuario);
+    if (!response.ok) {
+      throw new Error(`Error al obtener boletos: ${response.status}`);
+    }
     const data = await response.json();
     if (!Array.isArray(data)) {
       throw new Error("La respuesta no es un arreglo de objetos JSON" + idUsuario);
