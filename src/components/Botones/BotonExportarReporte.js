@@ -6,103 +6,144 @@ import * as FileSystem from "expo-file-system";
 import XLSX from "xlsx";
 import * as Sharing from "expo-sharing";
 import { useAppContext } from "../../context/AppProvider";
+import { ObtenerReportePartidaNuevo } from "../../Utils/Boleto";
 import { requestStoragePermission } from "../../Utils/storagePermissions";
-export default function BotonExportarReporte({ datos }) {
-  console.log("datos: ", datos);
+
+export default function BotonExportarReporte() {
   const [datosExport, setDatosExport] = useState({});
   const { partidaActual } = useAppContext();
   const fechaActual = format(new Date(), "dd/MM/yyyy");
   const horaActual = format(new Date(), "hh:mm a");
-  useEffect(() => {
-    const formatoReporte = datos.flatMap((e) => {
-      const nros = e.numeros_serial.split(",");
-      const seriales = nros.map((nro) => ({
-        Fecha: "",
-        HORA: "",
-        "NºPARTIDA": "",
-        COMPRO: "",
-        NOMBRE: "",
-        SERIAL: nro,
-      }));
-      return [ 
-        {
-          Fecha: "",
-          HORA: "",
-          "NºPARTIDA": "",
-          COMPRO: e.total_boletos,
-          NOMBRE: e.Nombres + " " + e.Apellidos,
-          SERIAL: "",
-        },
-        ...seriales,
-      ];
-    });
-    setDatosExport([{
-        Fecha: fechaActual,
-        HORA: horaActual,
-        NºPARTIDA: partidaActual.NroPartida,
-        COMPRO: "",
-        NOMBRE: "",
-        SERIAL: "",
-      },...formatoReporte]);
-    console.log("formatoReporte: ", formatoReporte);
-  }, [datos]);
+  const crearTablaTickets = (boletos,datosExportPort) => {
+    const COLUMNAS = 10;
+    const filas = Math.ceil(boletos.length / COLUMNAS);
+    let tabla = [];
 
-  const exportar = async () => {
+    tabla.push({
+      A: fechaActual,
+      B: horaActual,
+      C: `Partida N° ${partidaActual.NroPartida}`,
+      D: "",
+      E: "TABLA DE BOLETOS"
+    });
+
+    tabla.push({});
+
+    for (let i = 0; i < filas; i++) {
+      tabla.push({});
+    }
+
+    for (let col = 0; col < COLUMNAS; col++) {
+      const colKey = String.fromCharCode(65 + col);
+      console.log(`Procesando columna: ${colKey} (Columna ${col + 1} de ${COLUMNAS})`);
+
+      for (let fila = 0; fila < filas; fila++) {
+        const index = col * filas + fila;
+        console.log(`Fila: ${fila + 1} | Columna: ${colKey} | Índice: ${index}`);
+
+        if (index < boletos.length) {
+          const boleto = boletos[index];
+          console.log(`Asignando boleto: #${boleto.NroSerial} ${boleto.Nombres} ${boleto.Apellidos} a tabla[${fila + 2}][${colKey}]`);
+          tabla[fila + 2][colKey] = `#${boleto.NroSerial} ${boleto.Nombres} ${boleto.Apellidos}`;
+        } else {
+          console.log(`No hay más boletos, asignando celda vacía a tabla[${fila + 2}][${colKey}]`);
+          tabla[fila + 2][colKey] = "";
+        }
+      }
+    }
+
+
+    console.log('tabla: ', tabla);
+    tabla.push({});
+    tabla.push({});
+
+    tabla.push({
+      A: "RESUMEN DE PARTIDA",
+      B: "",
+      C: "",
+      D: "",
+      E: ""
+    });
+
+    tabla.push({
+      A: "Total Boletos Vendidos:",
+      B: datosExportPort.total_boletos_vendidos,
+      C: "",
+      D: "",
+      E: ""
+    });
+
+    tabla.push({
+      A: "Total Boletos en Juego:",
+      B: datosExportPort.total_boletos_en_juego,
+      C: "",
+      D: "",
+      E: ""
+    });
+
+    tabla.push({
+      A: "Monto Recaudado:",
+      B: `Bs/ ${datosExportPort.monto_recaudado}`,
+      C: "",
+      D: "",
+      E: ""
+    });
+
+    return tabla;
+  };
+
+
+
+  const exportar = async (datos) => {
     try {
       let wb = XLSX.utils.book_new();
-      let ws = XLSX.utils.json_to_sheet(datosExport);
+      let ws = XLSX.utils.json_to_sheet(datos);
+
+      // Ajustar ancho de columnas
+      const colWidths = Array(10).fill({ wch: 30 });
+      ws["!cols"] = colWidths;
+
       XLSX.utils.book_append_sheet(
         wb,
         ws,
-        "Participantes_partida_" + partidaActual.NroPartida
+        `Partida_${partidaActual.NroPartida}`
       );
+
       const wbout = XLSX.write(wb, { type: "base64", bookType: "xlsx" });
-      const fileName =
-        "Informe_partida_" +
-        partidaActual.NroPartida +
-        "_" +
-        horaActual +
-        ".xlsx";
+      const fileName = `Informe_partida_${partidaActual.NroPartida}_${horaActual}.xlsx`;
       const fileUri = `${FileSystem.documentDirectory}${fileName}`;
-      try {
-        await FileSystem.writeAsStringAsync(fileUri, wbout, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
 
-        await Sharing.shareAsync(fileUri, {
-          mimeType:
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
-      } catch (error) {
-        console.log("Error writeFile", error);
-      }
+      await FileSystem.writeAsStringAsync(fileUri, wbout, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      await Sharing.shareAsync(fileUri, {
+        mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
     } catch (error) {
-      console.log("error: ", error);
+      console.log("Error:", error);
     }
   };
-
-  const ExporTouch = async () => {
+  const handleExport = async () => {
     try {
-     
-        const hasPermission = await requestStoragePermission();
-        if (hasPermission) {
-          exportar();
-          console.log("PERMISO OBTENIDO");
-        } else {
-          console.log("PERMISO NO OBTENIDO");
-        }
+
+      const datosRecibidos = await ObtenerReportePartidaNuevo(partidaActual.id);
+      setDatosExport(datosRecibidos);
+
+      const tabla = crearTablaTickets(datosRecibidos.boletos_vendidos,datosRecibidos);
+      await exportar(tabla);
     } catch (error) {
-      console.log("Error en grsnted:" + error);
-      return;
+      console.log("Error en handleExport:", error);
     }
   };
+
   return (
     <View style={styles.container}>
       <Button
         mode="elevated"
         icon="microsoft-excel"
         style={{ margin: 20 }}
-        onPress={() => exportar()}
+        onPress={handleExport}
       >
         EXPORTAR EN EXCEL
       </Button>
@@ -110,4 +151,8 @@ export default function BotonExportarReporte({ datos }) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    width: '100%'
+  }
+});

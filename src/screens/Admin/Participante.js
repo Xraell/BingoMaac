@@ -7,7 +7,6 @@ import { ObtenerReportePartida } from "../../Utils/Boleto";
 import TablaParticipantes from "../../components/Tablas/TablaParticipantes";
 import ModalDetallesParticipante from "../../components/Modales/ModalDetallesParticipante";
 import BotonExportarReporte from "../../components/Botones/BotonExportarReporte";
-import BotonExportarReporteNuevo from "../../components/Botones/BotonExportarReporteNuevo";
 
 export default function Participante() {
   const { user,partidaActual } = useAppContext();
@@ -62,8 +61,7 @@ export default function Participante() {
           >
             ACTUALIZAR
           </Button>
-          <BotonExportarReporte datos={listaInternaUsuarios} />
-          <BotonExportarReporteNuevo datos={listaInternaUsuarios} />
+          <BotonExportarReporte />
         </View>
       </View>
       <ModalDetallesParticipante setVisible={setVisible} visible={visible} usuario={usuarioSeleccionado}  />
