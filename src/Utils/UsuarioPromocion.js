@@ -1,4 +1,4 @@
-import { apiFetch } from "./http";
+import { apiFetch, pedirODevolverNull, pedirOLanzar } from "./http";
 
 export const crearObjetoNumero = (
   idPartida,
@@ -47,54 +47,26 @@ export const ObtenerNumerosPartida = async (idPartida) => {
     }
   };
 export const ObtenerNumero = async (id) => {
-  try {
-    const data = await apiFetch("/usuario_promocion/" + id);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en VerificarNumero:", error);
-    return null;
-  }
+  return pedirODevolverNull("/usuario_promocion/" + id, "VerificarNumero");
 };
 export const EscogerPromocion = async (idUser,idPromocion) => {
-  try {
-    return await apiFetch(
-      "/usuario_promocion/designar-promocion/" + idUser + "/" + idPromocion,
-      {
-        method: "POST",
-      }
-    );
-  } catch (error) {
-    console.error("Error en designar promocion:", error);
-    throw error;
-  }
+  return pedirOLanzar(
+    "/usuario_promocion/designar-promocion/" + idUser + "/" + idPromocion,
+    "designar promocion",
+    {
+      method: "POST",
+    }
+  );
 };
 export const ObtenerNumeroActual = async () => {
-  try {
-    const data = await apiFetch("/usuario_promocion/obtener-Numero-actual");
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en obtener Numero actual:", error);
-    return null;
-  }
+  return pedirODevolverNull("/usuario_promocion/obtener-Numero-actual", "obtener Numero actual");
 };
 
 export const agregarNumero = async (Numero) => {
-  try {
-    const data = await apiFetch("/usuario_promocion/crear", {
-      method: "POST",
-      body: JSON.stringify(Numero),
-    });
-    return data;
-  } catch (error) {
-    console.error("Error en Numero:", error);
-    throw error;
-  }
+  return pedirOLanzar("/usuario_promocion/crear", "Numero", {
+    method: "POST",
+    body: JSON.stringify(Numero),
+  });
 };
 
 export const actualizarNumero = async (User, id) => {

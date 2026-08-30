@@ -10,7 +10,7 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 | 01 | Línea base | ❌ bloqueada por entorno | — | **Obligatoria** — ver «Bloqueo» abajo |
 | 02 | Limpiar logs | ✅ completada (sin `expo export`) | — | Autorizado explícitamente por el usuario — ver «Verificación degradada» |
 | 03 | Imports y código muerto | ✅ completada (sin `expo export`) | — | Autorizado por el usuario — ver «Verificación degradada» |
-| 04 | Utils duplicados | ⏭ no iniciada | — | Fuera de alcance sin `expo export`: riesgo medio, reescribe la capa de red |
+| 04 | Utils duplicados | ✅ completada (sin `expo export`) | — | Autorizado explícitamente por el usuario tras advertirle del riesgo — ver «Verificación degradada» |
 | 05 | Constantes | ✅ completada (sin `expo export`) | — | Autorizado por el usuario — ver «Verificación degradada». Sin depender de la 04: no toca los mismos ficheros |
 | 06 | Informe | ⏭ no iniciada | — | Depende de las anteriores |
 
@@ -86,14 +86,14 @@ que esta sesión puede tocar (política de red externa), la segunda no aplica (e
 contenedor es el entorno de ejecución), y la tercera cuenta como tocar dependencias, fuera
 del alcance del plan.
 
-## Verificación degradada (autorizada por el usuario, tareas 02, 03 y 05)
+## Verificación degradada (autorizada por el usuario, tareas 02, 03, 05 y 04)
 
 El usuario, informado del bloqueo, pidió explícitamente avanzar las tareas mecánicas y de
-bajo riesgo (02, 03 y 05) sin la verificación automática que el plan exige
-(`expo export`), asumiendo el riesgo residual. La 04 (Utils duplicados, riesgo medio)
-queda fuera de este permiso: reescribe la capa de comunicación con el backend y un error
-ahí no rompe la compilación, rompe llamadas en ejecución — exactamente lo que no se puede
-verificar sin `expo export` ni dispositivo.
+bajo riesgo (02, 03, 05) sin la verificación automática que el plan exige
+(`expo export`), asumiendo el riesgo residual. Se le advirtió aparte que la 04 (Utils
+duplicados) es la única de riesgo medio del plan — reescribe la capa de comunicación con
+el backend y un error ahí no rompe la compilación, rompe llamadas en ejecución — y el
+usuario pidió explícitamente hacerla también ("Realizalo"), aceptando ese riesgo mayor.
 
 Lo que sí se pudo hacer sin `node_modules` completo:
 
@@ -140,6 +140,44 @@ Lo que sí se pudo hacer sin `node_modules` completo:
   constante ahí "si no genera un import circular", pero está dentro de
   `src/components/Data/`, que la skill marca como zona prohibida en general. Se optó por
   la lectura más conservadora: dejarlo como literal `Rol: "GUEST"`, sin tocar el fichero.
+- **Tarea 04**, la de mayor riesgo del plan (reescribe la capa de red), se hizo con una
+  regla más estricta que la del documento: **solo se unificó una función si calzaba byte a
+  byte con el molde exacto**, no solo "aproximadamente". Se catalogó cada función
+  exportada de `Boleto.js`, `Compra.js`, `Ganador.js`, `Mensaje.js`, `Numero.js`,
+  `Partida.js`, `Usuario.js` y `UsuarioPromocion.js` contra estos criterios de exclusión,
+  cualquiera que se cumpliera bastaba para dejar la función intacta:
+  - Valida la forma de la respuesta con `!Array.isArray(data)` en vez de `!data` (mensaje
+    de error distinto: "La respuesta no es un arreglo..." vs "No se pudo obtener datos de
+    la API"). Ejemplos: `ObtenerUsuarios`, `ObtenerPartidas`, `ObtenerNumeros`,
+    `ObtenerNumerosUsuario`, `ObtenerNumerosPartida` (en `Numero.js` y
+    `UsuarioPromocion.js`), `ObtenerReportePartida`, `ObtenerBoletosUsuario`.
+  - El texto exacto del `console.error` no coincide con la plantilla `` `Error en
+    ${etiqueta}:` `` del ayudante (por ejemplo falta los dos puntos finales). Único caso:
+    `ObtenerReportePartidaNuevo` en `Boleto.js` ("Error en Obtener Reporte" sin `:`).
+  - Devuelve algo distinto de `data` o de `null`/relanzar tras el `apiFetch` — típicamente
+    `return true` en vez de devolver el cuerpo de la respuesta. Todos los `actualizar*` y
+    `eliminar*` de cada fichero (`actualizarNumero`, `eliminarNumero` ×2,
+    `actualizarPartida`, `eliminarPartida`, `eliminarUsuario`).
+  - Tiene lógica propia antes o dentro del `try` más allá de construir la ruta como una
+    única expresión (p. ej. una variable `ruta` con un ternario para un query param
+    condicional): `ObtenerDatosPartida`. Se dejó fuera aunque probablemente sería seguro
+    de extraer, por prudencia.
+  - Explícitamente excluida por el documento: `VerificarUsuario` (login, verificada en la
+    etapa de seguridad) y `ObtenerBoletosAleatorios` (desviación documentada previa).
+
+  Con esos criterios, se unificaron **21 funciones** (13 al molde `pedirODevolverNull`, 8
+  al molde `pedirOLanzar`) en `Mensaje.js`, `Ganador.js`, `Compra.js`, `Numero.js`,
+  `Partida.js`, `UsuarioPromocion.js`, `Boleto.js` y `Usuario.js` (en ese orden, de menor a
+  mayor riesgo, `Usuario.js` al final). Se añadieron `pedirODevolverNull` y `pedirOLanzar`
+  a `http.js` — la única adición permitida ahí. `sesion.js` no se tocó.
+
+  Para cada función unificada se pasó la ruta ya construida (cuando la ruta era una
+  concatenación directa en la llamada, como `"/boleto/reiniciar-boletos/" + idPartida +
+  "/" + Precio`, se pasó esa misma expresión tal cual) y la `etiqueta` de log **copiada
+  literal** del mensaje original, typos y etiquetas incorrectas incluidas (p. ej.
+  `AgregarCreditosUsuario` seguía logueando "Error en VerificarUsuario:" — se conservó ese
+  error de copy-paste en vez de corregirlo, porque corregirlo sería un cambio de
+  comportamiento fuera del alcance de esta tarea).
 
 **No se ejecutó `expo export` ni se generó un bundle.** No hay confirmación de que la app
 siga bundleando ni funcionando en tiempo de ejecución. Esto debe verificarse en el
@@ -164,8 +202,8 @@ Se rellenan durante la ejecución; alimentan la sección 2 del informe.
 |---|---|---|
 | `console.log` | 47 | **2** (los de `ItemNro.js`, zona prohibida, dejados a propósito) |
 | `console.error` | 68 | **68** (confirmado igual) |
-| Líneas en `src/Utils/` | 942 | **709** (-233; 18 funciones muertas eliminadas en 6 ficheros) |
-| Bloques `try` en `Utils/` | 60 | 43 (baja porque cada función muerta eliminada se llevaba su propio `try`; no se tocó ningún `try` vivo) |
+| Líneas en `src/Utils/` | 942 | **570** (-372 en total: -233 tarea 03 por funciones muertas, -139 tarea 04 por unificar 21 funciones a dos ayudantes) |
+| Bloques `try` en `Utils/` | 60 | 24 (43 tras la tarea 03; -21 en la 04 por las funciones unificadas, +2 porque `pedirODevolverNull` y `pedirOLanzar` tienen su propio `try` en `http.js` — antes esos 21 `try` estaban repetidos, ahora viven en dos sitios) |
 | Ficheros `.js` | 81 | 81 (ningún fichero creado ni borrado) |
 | Imports sin usar eliminados | — | 125 especificadores en 39 ficheros (import React nunca tocado) |
 | Comparaciones de rol con literal | 7 (6 comparaciones + 1 asignación) | 0 fuera de `roles.js` y `usuarioInvitado.js` (excepción documentada) |
@@ -186,14 +224,22 @@ sección 3 del informe final.
   no instalable, `expo export` no ejecutable). No es un apartamiento de diseño: es la
   consecuencia directa de la regla explícita de la tarea 01 ("si `expo export` falla
   aquí, detener el plan entero").
-- **El usuario autorizó explícitamente avanzar las tareas 02, 03 y 05 sin esa
-  verificación**, aceptando el riesgo. Se hizo con revisión manual línea por línea (02,
-  05) o de una muestra representativa más scripts de detección basados en AST (03), y un
-  chequeo de sintaxis JS/JSX (no equivalente a `expo export`) — ver «Verificación
-  degradada» arriba. La tarea 04 se considera fuera de lo autorizado por su mayor riesgo:
-  toca la capa de red y un fallo ahí no se detecta compilando. `PartidaEnCurso.js` solo
-  perdió líneas de log, según lo permitido; en `ItemNro.js` (zona prohibida, sin excepción
-  para logs) se dejaron sus 2 `console.log` intactos a propósito.
+- **El usuario autorizó explícitamente avanzar las tareas 02, 03, 05 y, tras una
+  advertencia aparte sobre su riesgo, también la 04, sin `expo export`**, aceptando el
+  riesgo en todos los casos. Se hizo con revisión manual línea por línea (02, 05, 04) o de
+  una muestra representativa más scripts de detección basados en AST (03), y un chequeo de
+  sintaxis JS/JSX (no equivalente a `expo export`) — ver «Verificación degradada» arriba.
+  `PartidaEnCurso.js` solo perdió líneas de log, según lo permitido; en `ItemNro.js` (zona
+  prohibida, sin excepción para logs) se dejaron sus 2 `console.log` intactos a propósito.
+- **Tarea 04: criterio más estricto que el documento.** El documento solo pide catalogar
+  qué devuelve cada función al fallar; en la práctica había más diferencias sutiles entre
+  funciones "parecidas" (validación por `!data` vs `!Array.isArray(data)`, mensajes de
+  `console.error` con o sin los dos puntos finales, `return true` en vez del cuerpo de la
+  respuesta). Se excluyó cualquier función que no calzara byte a byte, incluso cuando el
+  documento sugiere ejemplos de "envolver" la validación extra alrededor del ayudante
+  (como con `ObtenerUsuarios`) — no se aplicó esa técnica porque cambia el texto exacto
+  del `console.error` en el caso límite de una respuesta vacía, y verificar que ese caso
+  límite no importa exige poder ejecutar la app. Detalle completo arriba.
 - **Tarea 05, la constante de `usuarioInvitado.js` no se aplicó** por estar el fichero
   dentro de `src/components/Data/` (zona prohibida). El propio documento de la tarea lo
   permitía condicionalmente; se optó por la lectura más conservadora igualmente.

@@ -26,6 +26,32 @@ Conocidas al redactar el plan, pendientes de confirmar durante la ejecución:
 - **`ItemNro.js` dispara el audio con `index === 0`.** Si esa condición deja de cumplirse,
   simplemente no suena.
 
+## Deuda técnica adicional (tarea 04)
+
+- **Quedan patrones repetidos en `src/Utils/` que la tarea 04 dejó fuera a propósito**,
+  porque no calzaban byte a byte con ninguno de los dos moldes autorizados:
+  - Las funciones que validan con `!Array.isArray(data)` en vez de `!data`
+    (`ObtenerUsuarios`, `ObtenerPartidas`, `ObtenerNumeros`/`ObtenerNumerosUsuario`/
+    `ObtenerNumerosPartida` en `Numero.js` y `UsuarioPromocion.js`,
+    `ObtenerReportePartida`, `ObtenerBoletosUsuario`) — un tercer ayudante tipo
+    `pedirArregloODevolverNull` podría cubrirlas, pero el documento de la tarea solo
+    autorizaba dos moldes.
+  - Las funciones `actualizar*`/`eliminar*` que hacen `await apiFetch(...); return true;`
+    (`actualizarNumero`, `eliminarNumero` en dos ficheros, `actualizarPartida`,
+    `eliminarPartida`, `eliminarUsuario`) — un tercer ayudante que ignore la respuesta y
+    devuelva `true` podría unificarlas también.
+  - `ObtenerReportePartidaNuevo` (`Boleto.js`) calza el molde salvo por un detalle: su
+    mensaje de `console.error` no lleva los dos puntos finales que sí tiene la plantilla
+    del ayudante — un typo del código original, no algo para "corregir" silenciosamente
+    dentro de un refactor de solo-duplicación.
+  - `ObtenerDatosPartida` (`Partida.js`) construye la ruta con un ternario para un query
+    param condicional dentro del `try`; probablemente segura de extraer, mover eso fuera
+    del `try` no cambiaría el comportamiento porque la construcción del string nunca lanza,
+    pero se dejó como está por prudencia.
+
+  Cualquiera de estos es candidato razonable para una futura tarea de refactor, con
+  verificación real (`expo export` + dispositivo) de por medio.
+
 ## Deuda técnica
 
 - **`src/components/Data/usuarioInvitado.js` sigue con el literal `Rol: "GUEST"`** en vez

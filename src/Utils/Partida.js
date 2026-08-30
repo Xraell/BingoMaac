@@ -1,4 +1,4 @@
-import { apiFetch } from "./http";
+import { apiFetch, pedirODevolverNull, pedirOLanzar } from "./http";
 
 export const crearObjetoPartida = (
   NroPartida,
@@ -27,28 +27,10 @@ export const ObtenerPartidas = async () => {
 };
 
 export const ObtenerPremiosPartida = async (idPartida) => {
-  try {
-    const data = await apiFetch("/partida/obtener-premios/" + idPartida);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en ObtenerpremiosPartida:", error);
-    return null;
-  }
+  return pedirODevolverNull("/partida/obtener-premios/" + idPartida, "ObtenerpremiosPartida");
 };
 export const ObtenerPartidaActual = async () => {
-  try {
-    const data = await apiFetch("/partida/obtener-partida-actual");
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en obtener partida actual:", error);
-    return null;
-  }
+  return pedirODevolverNull("/partida/obtener-partida-actual", "obtener partida actual");
 };
 
 export const ObtenerDatosPartida = async (idPartida, idUsuario) => {
@@ -68,21 +50,15 @@ export const ObtenerDatosPartida = async (idPartida, idUsuario) => {
   }
 };
 export const agregarPartida = async (Partida, Promociones, Costo, Premios) => {
-  try {
-    const data = await apiFetch("/partida/crear", {
-      method: "POST",
-      body: JSON.stringify({
-        partida: Partida,
-        promociones: Promociones,
-        premio: Premios,
-        costo: Costo
-      }),
-    });
-    return data;
-  } catch (error) {
-    console.error("Error en Partida:", error);
-    throw error;
-  }
+  return pedirOLanzar("/partida/crear", "Partida", {
+    method: "POST",
+    body: JSON.stringify({
+      partida: Partida,
+      promociones: Promociones,
+      premio: Premios,
+      costo: Costo
+    }),
+  });
 };
 
 export const actualizarPartida = async (User, id) => {

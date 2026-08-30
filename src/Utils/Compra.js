@@ -1,4 +1,4 @@
-import { apiFetch } from "./http";
+import { pedirOLanzar } from "./http";
 
 export const crearObjetocompra = (
   Monto,
@@ -14,15 +14,9 @@ export const crearObjetocompra = (
 };
 
 export const agregarcompra = async (compra) => {
-  try {
-    const data = await apiFetch("/compra/crear", {
-      method: "POST",
-      body: JSON.stringify(compra),
-    });
-    return data;
-  } catch (error) {
-    console.error("Error en compra:", error);
-    throw error;
-  }
+  return pedirOLanzar("/compra/crear", "compra", {
+    method: "POST",
+    body: JSON.stringify(compra),
+  });
 };
 

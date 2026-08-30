@@ -1,4 +1,4 @@
-import { apiFetch } from "./http";
+import { apiFetch, pedirODevolverNull } from "./http";
 
 export const ObtenerReportePartida = async (idPartida) => {
   try {
@@ -50,27 +50,9 @@ export const ObtenerBoletosAleatorios = async (idPartida) => {
   }
 };
 export const ReiniciarBoletos = async (idPartida, Precio) => {
-  try {
-    const data = await apiFetch("/boleto/reiniciar-boletos/" + idPartida + "/" + Precio);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en reiniciar:", error);
-    return null;
-  }
+  return pedirODevolverNull("/boleto/reiniciar-boletos/" + idPartida + "/" + Precio, "reiniciar");
 };
 export const ObtenerBoletosGanadores = async (idPartida) => {
-  try {
-    const data = await apiFetch("/boleto/obtener-ganadores-fila/" + idPartida);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en VerificarBoleto:", error);
-    return null;
-  }
+  return pedirODevolverNull("/boleto/obtener-ganadores-fila/" + idPartida, "VerificarBoleto");
 };
 
