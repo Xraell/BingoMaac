@@ -18,7 +18,16 @@ Build de APK / producción con EAS (perfiles definidos en `eas.json`: `developme
 eas build --profile preview --platform android
 ```
 
-No hay tests, linter ni TypeScript configurados en el proyecto. El código es JavaScript plano con JSX; no existe script de `lint` ni `test` en `package.json`.
+```bash
+npm test             # jest
+```
+
+Hay tests con Jest (`jest-expo` + `@testing-library/react-native`), agregados en
+`doc/pruebas-automatizadas/`. Cobertura todavía parcial: solo funciones puras de
+`src/Utils/` (los `crearObjeto*` y los ayudantes `pedirODevolverNull`/`pedirOLanzar` de
+`http.js`) y las constantes de `src/constants/roles.js`. Los componentes y el resto de
+`Utils/` siguen sin tests. No hay linter ni TypeScript configurados. El código es
+JavaScript plano con JSX.
 
 ## Arquitectura
 

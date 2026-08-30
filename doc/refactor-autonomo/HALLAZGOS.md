@@ -68,9 +68,11 @@ Conocidas al redactar el plan, pendientes de confirmar durante la ejecución:
   fichero en esta sesión: el plan de la tarea 03 cubre imports, variables y funciones
   muertas dentro de un fichero, no decidir si borrar un fichero entero, y esa es una
   llamada algo mayor que prefiero dejar para revisión humana. Candidato claro a borrado.
-- **No hay tests ni linter.** Es la carencia más importante del proyecto y la razón de que
-  este plan sea tan conservador. Instalar Jest y `@testing-library/react-native` exige
-  cambiar dependencias y configurar Babel: necesita supervisión.
+- **Sin linter todavía.** Los tests ya se resolvieron parcialmente en esta misma sesión
+  (`doc/pruebas-automatizadas/`, commit `test: agregar Jest + testing-library y primeros
+  tests reales`): 3 suites, 11 tests, cubriendo los builders puros de `Utils/` y los dos
+  ayudantes de la tarea 04. Cobertura todavía mínima — nada de componentes, nada del resto
+  de `Utils/`. Un linter (ESLint) sigue sin instalarse.
 - **`package-lock.json` sigue versionado** pese a la migración a pnpm. `expo-doctor` avisa
   con "Multiple lock files detected". Borrarlo es decisión de quien hizo la migración.
 - **`src/config/api.js` mantiene `https://<dominio-real>/api`** como placeholder. Un build

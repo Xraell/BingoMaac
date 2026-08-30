@@ -7,12 +7,13 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 
 | # | Tarea | Estado | Commit | Notas |
 |---|---|---|---|---|
-| 01 | Línea base | ❌ bloqueada por entorno | — | **Obligatoria** — ver «Bloqueo» abajo |
-| 02 | Limpiar logs | ✅ completada (sin `expo export`) | — | Autorizado explícitamente por el usuario — ver «Verificación degradada» |
-| 03 | Imports y código muerto | ✅ completada (sin `expo export`) | — | Autorizado por el usuario — ver «Verificación degradada» |
-| 04 | Utils duplicados | ✅ completada (sin `expo export`) | — | Autorizado explícitamente por el usuario tras advertirle del riesgo — ver «Verificación degradada» |
-| 05 | Constantes | ✅ completada (sin `expo export`) | — | Autorizado por el usuario — ver «Verificación degradada». Sin depender de la 04: no toca los mismos ficheros |
-| 06 | Informe | ⏭ no iniciada | — | Depende de las anteriores |
+| 01 | Línea base | ❌ bloqueada por entorno | `23ea324` | **Obligatoria** — ver «Bloqueo» abajo |
+| 02 | Limpiar logs | ✅ completada (sin `expo export`) | `910d8a9` | Autorizado explícitamente por el usuario — ver «Verificación degradada» |
+| 03 | Imports y código muerto | ✅ completada (sin `expo export`) | `7282377` | Autorizado por el usuario — ver «Verificación degradada» |
+| 04 | Utils duplicados | ✅ completada (sin `expo export`) | `94ceb1b` | Autorizado explícitamente por el usuario tras advertirle del riesgo — ver «Verificación degradada» |
+| 05 | Constantes | ✅ completada (sin `expo export`) | `232ef0d` | Autorizado por el usuario — ver «Verificación degradada». Se hizo antes que la 04 en esta sesión |
+| — | Testing (fuera del plan) | ✅ completada | `1a81035` | Jest + testing-library, pedido por el usuario tras proponerlo como oportunidad. Ver `doc/pruebas-automatizadas/` |
+| 06 | Informe | ✅ completada | — (este commit) | Ver `INFORME.md` |
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ completada · ❌ revertida · ⏭ saltada
 
