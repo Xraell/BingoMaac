@@ -66,7 +66,6 @@ const ModalEditarPartida = ({ partida, visible, setVisible }) => {
   
   const obtenerPromociones = async () => {
     const response = await ObtenerPremiosPartida(partida.id)
-    console.log('response: ', response);
     if (response.premios.length > 0) {
 
 
@@ -75,14 +74,11 @@ const ModalEditarPartida = ({ partida, visible, setVisible }) => {
         const accion = accionesPremios[premio.premio.nombre];
 
         if (!accion) {
-          console.log(`Advertencia: No se encontró acción para el premio "${premio.premio.nombre}"`);
           return;
         }
 
         if (premio.monto > 0) {
           accion(premio.monto.toString(),premio.id);
-        } else {
-          console.log(`Monto no válido (${premio.monto}) para el premio "${premio.premio.nombre}". No se ejecuta acción.`);
         }
       });
     }

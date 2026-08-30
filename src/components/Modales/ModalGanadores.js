@@ -33,7 +33,6 @@ export default function ModalGanadores({ visible, ganadores, onClose }) {
   }, [visible]);
 
   const reproducirSonido = async (tipoPremio) => {
-    console.log('tipoPremio: ', tipoPremio);
     try {
       const soundMap = {
         'Cartón lleno': require('../../sounds/women/bingo.wav'),
@@ -48,7 +47,6 @@ export default function ModalGanadores({ visible, ganadores, onClose }) {
         await audioPlayer.playAsync();
       }
     } catch (error) {
-      console.log('Error al reproducir sonido:', error);
     }
   };
 

@@ -30,17 +30,14 @@ export default function TabsUser() {
     try {
 
       const response = await ObtenerBoletosUsuario(user.id)
-      console.log("🚀 ~ obtenerListas ~ response:", response)
       setMisBoletos(response)
     } catch (error) {
-      console.log("error: ", error);
       setMisBoletos([])
 
     }
   }
   const obtenerPActual = async () => {
     const response = await ObtenerPartidaActual()
-    console.log("🚀 ~ obtenerPActual ~ response:", response)
     if (response) {
       obtenerPremiosActual(response.id);
       setPartidaActual(response)
@@ -48,7 +45,6 @@ export default function TabsUser() {
   };
   const obtenerPremiosActual = async (idPartida) => {
     const response = await ObtenerDatosPartida(idPartida, user.id)
-    console.log("🚀 ~ obtenerPremiosActual ~ response:", response)
     if (response) {
       setPremios(response.premios)
       setPromociones(response.promociones)

@@ -12,7 +12,6 @@ export const requestStoragePermission = async () => {
       const readGranted = granted[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === PermissionsAndroid.RESULTS.GRANTED;
 
       if (!writeGranted || !readGranted) {
-        console.log("Storage permissions denied");
         return false;
       }
       return true;

@@ -27,8 +27,6 @@ export default function TabsAdmin() {
     setPartidas(lista)
     const usuarios = await ObtenerUsuarios()
     setListUsers(usuarios)
-    console.log("response: ", response);
-    
   }
   return (
     <Tab.Navigator

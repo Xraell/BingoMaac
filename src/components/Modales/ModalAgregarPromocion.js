@@ -11,7 +11,6 @@ const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
     };
 
     const actualizarPromocion = (index, field, value) => {
-        console.log('index, field, value: ', index, field, value);
         const nuevasPromociones = [...promociones];
         nuevasPromociones[index][field] = value;
         setPromociones(nuevasPromociones);

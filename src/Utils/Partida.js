@@ -80,7 +80,6 @@ export const ObtenerDatosPartida = async (idPartida, idUsuario) => {
   }
 };
 export const agregarPartida = async (Partida, Promociones, Costo, Premios) => {
-  console.log("🚀 ~ agregarPartida ~ Premios:", Premios)
   try {
     const data = await apiFetch("/partida/crear", {
       method: "POST",

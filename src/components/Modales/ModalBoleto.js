@@ -133,7 +133,6 @@ const ModalBoleto = ({
       const response = await ObtenerBoletosUsuario(user.id);
       setMisBoletos(response);
     } catch (error) {
-      console.log("error: ", error);
       setMisBoletos([]);
     }
   };

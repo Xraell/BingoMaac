@@ -34,7 +34,6 @@ export default function FiltrarUsuarios({ filtrar }) {
               let txt = txtBusqueda
                 .replace(new RegExp("Mi código es:", "g"), "")
                 .trim();
-              console.log("Texto:" + txt);
               return obtenerCodigoUsuario(usuario).includes(txt);
             default:
               return true;

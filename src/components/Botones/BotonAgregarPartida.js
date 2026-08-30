@@ -77,7 +77,6 @@ export default function BotonesAgregarPartida({
       const response = await agregarPartida(PartidaNuevo, promociones, costoBoleto,premios);
       const Partidas = await ObtenerPartidas();
       setPartidas(Partidas);
-      console.log("Partidas al agregar: ", Partidas);
       if (Partidas.length > 0) {
         setPartidaActual(Partidas[0]);
       } else {

@@ -109,7 +109,6 @@ export default function ListaMisBoletos() {
     const fetchData = async () => {
       try {
         const ganadoresData = await ObtenerGanadoresPorPartida(partidaActual.id)
-        console.log('ganadores: ', ganadoresData);
         setGanadoresResponse(ganadoresData)
         verificarGanadoresParaAlertar(ganadoresData)
         const response = await ObtenerNumerosPartida(partidaActual.id);
@@ -144,12 +143,7 @@ export default function ListaMisBoletos() {
     }
   }, [sincronizado, partidaActual.id]);
   const verificarGanadoresParaAlertar = (ganadoresData) => {
-    console.log("Ejecutando verificarGanadoresParaAlertar");
-    console.log("Datos de ganadores recibidos:", ganadoresData);
-  
     setPremiosYaAlertados((prevPremiosYaAlertados) => {
-      console.log("Premios ya alertados antes de procesar:", prevPremiosYaAlertados);
-  
       if (ganadoresData) {
         const nuevosPremios = [...prevPremiosYaAlertados];
   
@@ -181,8 +175,6 @@ export default function ListaMisBoletos() {
             Nombres: ganadoresData.Terno,
           });
           setModalGanadoresVisible(true);
-        } else {
-          console.log("No se detectaron nuevos premios para alertar");
         }
   
         return nuevosPremios;

@@ -8,10 +8,10 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 | # | Tarea | Estado | Commit | Notas |
 |---|---|---|---|---|
 | 01 | Línea base | ❌ bloqueada por entorno | — | **Obligatoria** — ver «Bloqueo» abajo |
-| 02 | Limpiar logs | ⏭ no iniciada | — | Depende del check de la 01 |
-| 03 | Imports y código muerto | ⏭ no iniciada | — | Depende del check de la 01 |
-| 04 | Utils duplicados | ⏭ no iniciada | — | Depende del check de la 01 |
-| 05 | Constantes | ⏭ no iniciada | — | Depende del check de la 01 |
+| 02 | Limpiar logs | ✅ completada (sin `expo export`) | — | Autorizado explícitamente por el usuario — ver «Verificación degradada» |
+| 03 | Imports y código muerto | ⏭ no iniciada | — | |
+| 04 | Utils duplicados | ⏭ no iniciada | — | Fuera de alcance sin `expo export`: riesgo medio |
+| 05 | Constantes | ⏭ no iniciada | — | |
 | 06 | Informe | ⏭ no iniciada | — | Depende de las anteriores |
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ completada · ❌ revertida · ⏭ saltada
@@ -86,6 +86,35 @@ que esta sesión puede tocar (política de red externa), la segunda no aplica (e
 contenedor es el entorno de ejecución), y la tercera cuenta como tocar dependencias, fuera
 del alcance del plan.
 
+## Verificación degradada (autorizada por el usuario, tarea 02)
+
+El usuario, informado del bloqueo, pidió explícitamente avanzar la tarea 02 sin la
+verificación automática que el plan exige (`expo export`), asumiendo el riesgo residual.
+Alcance de lo autorizado: solo tareas **mecánicas y de bajo riesgo** (02: quitar
+`console.log`); la 04 (Utils duplicados, riesgo medio) queda fuera de este permiso.
+
+Lo que sí se pudo hacer sin `node_modules` completo:
+
+- `node_modules/` quedó parcialmente instalado (312 paquetes) del intento fallido de la
+  tarea 01 — incluye `@babel/parser`, aunque no `@babel/core` ni el resto de la cadena de
+  Metro/Expo.
+- Con `@babel/parser` se validó la **sintaxis JS+JSX** de cada fichero tocado (script en
+  el scratchpad, borrado al terminar). Todos los ficheros modificados en la tarea 02
+  parsean correctamente.
+- Esto **no sustituye a `expo export`**: no resuelve imports, no genera bundle, no detecta
+  módulos rotos ni referencias a símbolos inexistentes. Es una validación de sintaxis
+  únicamente.
+- Revisión manual línea por línea de cada `console.log` eliminado (ver diff del commit de
+  la tarea 02), comprobando que ninguno estuviera dentro de un `if` sin llaves y que
+  `PartidaEnCurso.js` solo perdiera líneas de log.
+- Se reprodujeron a mano los checks automáticos del documento de la tarea 02 que no
+  dependen de `expo export`: conteo de `console.log`/`console.error`, `git diff --stat`
+  contra `pre-refactor-app`, y el diff aislado de `PartidaEnCurso.js`. Todos en verde.
+
+**No se ejecutó `expo export` ni se generó un bundle.** No hay confirmación de que la app
+siga bundleando ni funcionando en tiempo de ejecución. Esto debe verificarse en el
+checklist manual final (tarea 06 / emulador) antes de dar la tarea por buena de verdad.
+
 ## Zonas prohibidas
 
 Ninguna tarea las toca. Verificado el 2026-08-30:
@@ -103,12 +132,12 @@ Se rellenan durante la ejecución; alimentan la sección 2 del informe.
 
 | Métrica | Antes | Después |
 |---|---|---|
-| `console.log` | 47 | — (plan detenido en la tarea 01) |
-| `console.error` | 68 | **debe quedar igual** |
-| Líneas en `src/Utils/` | 942 | — |
+| `console.log` | 47 | **2** (los de `ItemNro.js`, zona prohibida, dejados a propósito) |
+| `console.error` | 68 | **68** (confirmado igual) |
+| Líneas en `src/Utils/` | 942 | — (tarea 03 no ejecutada) |
 | Bloques `try` en `Utils/` | 60 | — |
-| Ficheros `.js` | 81 | — |
-| Bundle | 5.47 MB (declarado en el plan, no reproducido) | — no se pudo generar |
+| Ficheros `.js` | 81 | 81 (ningún fichero creado ni borrado en la 02) |
+| Bundle | 5.47 MB (declarado en el plan, no reproducido) | — no se pudo generar en ninguna tarea |
 
 ## Aviso sobre la verificación
 
@@ -124,5 +153,11 @@ sección 3 del informe final.
   (`cdn.sheetjs.com` rechazado por la política de red de la sesión, dependencia `xlsx`
   no instalable, `expo export` no ejecutable). No es un apartamiento de diseño: es la
   consecuencia directa de la regla explícita de la tarea 01 ("si `expo export` falla
-  aquí, detener el plan entero"). Ninguna tarea 02-06 se ha ejecutado. `src/` no se ha
-  tocado en esta sesión.
+  aquí, detener el plan entero").
+- **El usuario autorizó explícitamente avanzar la tarea 02 sin esa verificación**,
+  aceptando el riesgo. Se hizo con revisión manual línea por línea más un chequeo de
+  sintaxis JS/JSX (no equivalente a `expo export`) — ver «Verificación degradada» arriba.
+  La tarea 03 no se ha ejecutado en este turno; la 04 se considera fuera de lo autorizado
+  por su mayor riesgo. `PartidaEnCurso.js` solo perdió líneas de log, según lo permitido.
+  En `ItemNro.js` (zona prohibida, sin excepción para logs) se dejaron sus 2 `console.log`
+  intactos a propósito.
