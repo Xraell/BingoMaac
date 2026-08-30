@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Modal, Pressable, StyleSheet, ScrollView } from "react-native";
 import { Text, TextInput, Button, IconButton } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
+import { estilosComunes } from "../../Theme/estilosComunes";
 
 const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
     const [visible, setVisible] = useState(false);
@@ -30,7 +31,7 @@ const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
                             style={[styles.button, styles.buttonClose]}
                             onPress={() => setVisible(false)}
                         >
-                            <Text style={styles.textStyle}>X</Text>
+                            <Text style={estilosComunes.textStyle}>X</Text>
                         </Pressable>
                         <Text variant="titleLarge" style={styles.title}>
                             AGREGAR PROMOCIONES
@@ -136,12 +137,6 @@ const styles = StyleSheet.create({
         right: 10,
         borderRadius: 100,
         paddingHorizontal: 10,
-    },
-    textStyle: {
-        color: "#fff",
-        fontWeight: "bold",
-        textAlign: "center",
-        fontSize: 20,
     },
     title: {
         marginTop: 10,

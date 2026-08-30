@@ -5,6 +5,7 @@ import { ActivityIndicator, Button, IconButton, Text } from "react-native-paper"
 import { BingoColors } from "../../Theme/Colors";
 import { useAppContext } from "../../context/AppProvider";
 import { RetirarCreditosUsuario } from "../../Utils/Usuario";
+import { estilosComunes } from "../../Theme/estilosComunes";
 const ModalRetirarCredito = ({ usuario, visible, setVisible }) => {
   const [loading, setLoading] = useState(false);
   const { setListUsers,listUsers } = useAppContext();
@@ -55,7 +56,7 @@ const ModalRetirarCredito = ({ usuario, visible, setVisible }) => {
               style={[styles.button, styles.buttonClose]}
               onPress={() => setVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
               RETIRAR CREDITOS
@@ -108,12 +109,6 @@ const ModalRetirarCredito = ({ usuario, visible, setVisible }) => {
 };
 
 const styles = StyleSheet.create({
-  Descripcion: {
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 5,
-    textAlign: "center",
-  },
   title: {
     marginTop: 10,
     textAlign: "center",
@@ -166,16 +161,6 @@ const styles = StyleSheet.create({
     right: 10,
     borderRadius: 100,
     paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
   },
 });
 

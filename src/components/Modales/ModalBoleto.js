@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { ObtenerBoletosUsuario } from "../../Utils/Boleto";
 import { agregarcompra, crearObjetocompra } from "../../Utils/Compra";
 import { ObtenerPartidaActual } from "../../Utils/Partida";
+import { estilosComunes } from "../../Theme/estilosComunes";
 
 // Subcomponente para una celda individual de Boleto
 const CeldaBoleto = ({ numero, squareSize }) => {
@@ -242,7 +243,7 @@ const ModalBoleto = ({
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
           </View>
 
@@ -308,12 +309,6 @@ const styles = StyleSheet.create({
     backgroundColor: BingoColors.primary,
     borderRadius: 100,
     paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
   },
   filaContainer: {
     flexDirection: "row",

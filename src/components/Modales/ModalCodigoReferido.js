@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
+import { estilosComunes } from "../../Theme/estilosComunes";
 
 const ModalCodigoReferido = () => {
   const [visible, setModalVisible] = useState(false);
@@ -24,7 +25,7 @@ const ModalCodigoReferido = () => {
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
               ¿CÓMO FUNCIONA EL CÓDIGO DE REFERIDO?
@@ -96,12 +97,6 @@ const styles = StyleSheet.create({
     right: 10,
     borderRadius: 100,
     paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
   },
   title: {
     marginTop: 20,

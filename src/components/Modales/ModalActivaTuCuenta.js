@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, StyleSheet, Pressable, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
+import { estilosComunes } from "../../Theme/estilosComunes";
 const ModalActivaTuCuenta = () => {
   const [visible, setModalVisible] = useState(false);
   return (
@@ -18,7 +19,7 @@ const ModalActivaTuCuenta = () => {
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
               ACTIVA Y ABONA SALDO A SU CUENTA AQUÍ!
@@ -49,35 +50,6 @@ const styles = StyleSheet.create({
   animation: {
     width: "100%",
     height: 200,
-  },
-  fecha: {
-    fontWeight: "bold",
-    width: "95%",
-    textAlign: "center",
-    padding: 6,
-    borderRadius: 5,
-    marginVertical: 5,
-  },
-  Descripcion: {
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 5,
-    textAlign: "center",
-  },
-  rowItem: {
-    width: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-  },
-  Encabezado: {
-    borderRadius: 5,
-    padding: 5,
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: BingoColors.secondary,
-    marginTop: 10,
   },
   title: {
     marginTop: 20,
@@ -124,19 +96,6 @@ const styles = StyleSheet.create({
     right: 10,
     borderRadius: 100,
     paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  lista: {
-    width: "100%",
   },
 });
 

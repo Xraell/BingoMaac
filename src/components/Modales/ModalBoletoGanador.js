@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, StyleSheet, Pressable, View, Image, useWindowDimensions } from "react-native";
 import { BingoColors } from "../../Theme/Colors";
 import { Text } from "react-native-paper";
+import { estilosComunes } from "../../Theme/estilosComunes";
 
 // Subcomponente para una celda individual de Bingo
 const CeldaBingo = ({ numero, squareSize, numerosPartida }) => {
@@ -121,7 +122,7 @@ const ModalBoletoGanador = ({ visible, setModalVisible, ganador, numerosPartida 
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
           </View>
           
@@ -253,12 +254,6 @@ const styles = StyleSheet.create({
     backgroundColor: BingoColors.primary,
     borderRadius: 100,
     paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
   },
   tituloGanador: {
     fontWeight: "bold",

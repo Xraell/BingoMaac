@@ -5,7 +5,7 @@
 | # | Tarea | Estado | Commit | Notas |
 |---|---|---|---|---|
 | 01 | Red de seguridad (snapshots) | ✅ **verde** | — | **La compuerta abrió**: 12 modales con snapshot estable. La 03 queda habilitada |
-| 02 | Nivel A — claves idénticas | ⬜ pendiente | — | Segura por construcción; no depende de la 01 |
+| 02 | Nivel A — claves idénticas | ✅ completada | — | **Sorpresa**: 37 de las 51 declaraciones eran estilos muertos |
 | 03 | Nivel B — chrome de modal | ⬜ pendiente | — | **Habilitada** por la 01 |
 | 04 | Informe | ⬜ pendiente | — | |
 
@@ -123,13 +123,85 @@ snapshots como prueba de fidelidad visual, **es una trampa**. Extraer el tema de
 un módulo compartido sería un cambio pequeño y provablemente seguro; no se hizo en esta
 tarea porque tocar `App.js` excede su alcance.
 
+## Resultado de la tarea 02 — el inventario mentía, y a favor
+
+Se reconfirmó el inventario por AST antes de tocar nada: **las 7 claves seguían teniendo una
+sola variante**, las 51 declaraciones seguían ahí. Hasta aquí, el plan.
+
+Lo que el plan no había mirado es **si alguien las usa**. Al contarlo:
+
+| Clave | Declaraciones | Referencias `styles.X` en JSX |
+|---|---|---|
+| `textStyle` | 14 | **14** |
+| `Descripcion` | 9 | **0** |
+| `modalText` | 9 | **0** |
+| `rowItem` | 7 | **0** |
+| `fecha` | 4 | **0** |
+| `Encabezado` | 4 | **0** |
+| `lista` | 4 | **0** |
+
+**Solo una de las siete claves se usa.** Las otras seis —37 declaraciones— son estilos
+muertos: se copiaron junto con el componente y nunca se referenciaron. Eso explica por qué
+eran byte a byte idénticas en todos los ficheros: nadie las ajustó nunca porque nadie las
+veía.
+
+Antes de borrarlas se descartó que hubiera acceso indirecto, que es lo único que invalidaría
+el conteo por `grep`:
+
+```bash
+grep -rn "styles\["      src --include=*.js   # (ninguno)
+grep -rn "\.\.\.styles"    src --include=*.js   # (ningun spread)
+grep -rn "export.*styles" src --include=*.js   # (ninguno)
+```
+
+Sin acceso dinámico, sin spread y sin exportar el objeto, `styles.X` es la única forma de
+llegar a una clave. Las seis son inalcanzables.
+
+### Qué se hizo, entonces
+
+La tarea se partió en dos mitades con garantías distintas:
+
+1. **Extracción real (14 declaraciones).** `textStyle` → `src/Theme/estilosComunes.js`. Es
+   el único caso donde había duplicación *viva*. Los 14 valores se comprobaron por hash
+   contra `pre-estilos`: **14 de 14 idénticos** (`135978ef5aad`).
+2. **Borrado de estilo muerto (37 declaraciones).** Las otras seis claves no se movieron a
+   ningún sitio: se borraron. Meterlas en un módulo común habría sido crear código muerto
+   nuevo y bien ordenado.
+
+**Desviación consciente del plan escrito**, que asumía 51 extracciones. Se deja anotada
+porque cambia lo que significan las métricas: el módulo común tiene una sola clave, no siete,
+y eso es lo correcto.
+
+### Comprobaciones
+
+| Check | Resultado |
+|---|---|
+| `npx jest` | 23 tests, 12 snapshots, **sin reescribir ninguno** |
+| Hash de `textStyle` vs `pre-estilos` | 14/14 idénticos |
+| Propiedades CSS añadidas que no estuvieran ya borradas | **0** |
+| `StyleSheet.create({})` nuevos | 0 (los 6 que hay son previos a esta etapa) |
+| Imports (`StyleSheet`, `BingoColors`) que quedaran sin uso | 0 |
+| Zonas prohibidas tocadas | ninguna |
+
+Las 12 fotos de la tarea 01 pasaron sin cambios: mover `textStyle` a otro módulo no alteró
+ni una propiedad del árbol renderizado. Que la red no dijera nada aquí es el resultado
+esperado —esta tarea es segura por construcción—; su prueba de fuego es la 03.
+
+### Ruido conocido en la salida de `npx jest`
+
+Tras el resumen en verde, Jest imprime un `TypeError: _bezier is not a function` de un timer
+de `Animated` que se dispara después de terminar los tests. **Es previo a esta tarea**: se
+comprobó guardando los cambios en un `stash` y volviendo a correr, con el mismo resultado.
+No afecta al código de salida (`exit=0`) ni a ningún test.
+
 ## Mediciones
 
 | Métrica | Antes | Después |
 |---|---|---|
-| Ficheros con `StyleSheet.create` | 59 | |
-| Declaraciones duplicadas eliminadas | 0 | |
-| Claves en `Theme/estilosComunes.js` | — | |
+| Ficheros con `StyleSheet.create` | 59 | 60 (+`Theme/estilosComunes.js`) |
+| Declaraciones de estilo en `src/` | 330 | **280** |
+| Declaraciones eliminadas de componentes | 0 | **51** (14 extraídas + 37 muertas) |
+| Claves en `Theme/estilosComunes.js` | — | **1** (`textStyle`) |
 | Tests | 11 | **23** (+12 snapshots de modal) |
 | Snapshots | 0 | **12** |
 
@@ -150,6 +222,9 @@ que el bundle compile.
   pasarle el tema a `PaperProvider`, cuando `App.js` sí se lo pasa— y se resolvió sin
   mockear nada. El plan sobrestimó el problema porque el spike original nunca miró **qué
   hace la app real**; miró solo el error.
+- **La tarea 02 extrajo 14 declaraciones, no 51.** El plan contó *declaraciones idénticas*
+  y dio por hecho que idéntico implicaba compartido. Seis de las siete claves no las usaba
+  nadie. La medición por AST era correcta; la pregunta que faltaba hacerle era otra.
 - **Se cubrieron los 12 modales de la tarea 03, no "al menos uno".** El criterio de la
   compuerta era un solo modal con snapshot estable. Como la infraestructura resultó barata,
   se extendió a los 12 que la tarea 03 va a tocar, que es lo que de verdad necesita como

@@ -4,6 +4,7 @@ import { ActivityIndicator, IconButton, Text } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import { ObtenerUsuarios, eliminarUsuario } from "../../Utils/Usuario";
 import { useAppContext } from "../../context/AppProvider";
+import { estilosComunes } from "../../Theme/estilosComunes";
 const ModalDetallesUsuario = ({ usuario, visible, setVisible }) => {
   const [loading, setLoading] = useState(false);
   const { setListUsers } = useAppContext();
@@ -48,7 +49,7 @@ const ModalDetallesUsuario = ({ usuario, visible, setVisible }) => {
               style={[styles.button, styles.buttonClose]}
               onPress={() => setVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
               DETALLES DEL USUARIO
@@ -89,18 +90,6 @@ const ModalDetallesUsuario = ({ usuario, visible, setVisible }) => {
 };
 
 const styles = StyleSheet.create({
-  Descripcion: {
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 5,
-    textAlign: "center",
-  },
-  rowItem: {
-    width: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-  },
   title: {
     marginTop: 10,
     textAlign: "center",
@@ -154,16 +143,6 @@ const styles = StyleSheet.create({
     right: 10,
     borderRadius: 100,
     paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
   },
 });
 

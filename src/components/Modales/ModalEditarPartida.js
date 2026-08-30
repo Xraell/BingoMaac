@@ -4,6 +4,7 @@ import { Switch, Text, TextInput } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import BotonesEditarPartida from "../Botones/BotonesEditarPartida";
 import { ObtenerPremiosPartida } from "../../Utils/Partida";
+import { estilosComunes } from "../../Theme/estilosComunes";
 const ModalEditarPartida = ({ partida, visible, setVisible }) => {
   const [nroPartida, setNroPartida] = useState(partida.NroPartida + "");
   const [descripcion, setDescripcion] = useState(partida.Descripcion);
@@ -99,7 +100,7 @@ const ModalEditarPartida = ({ partida, visible, setVisible }) => {
               style={[styles.button, styles.buttonClose]}
               onPress={() => setVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
               DETALLES DE LA PARTIDA
@@ -228,18 +229,6 @@ const ModalEditarPartida = ({ partida, visible, setVisible }) => {
 };
 
 const styles = StyleSheet.create({
-  Descripcion: {
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 5,
-    textAlign: "center",
-  },
-  rowItem: {
-    width: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-  },
   title: {
     marginTop: 10,
     textAlign: "center",
@@ -293,16 +282,6 @@ const styles = StyleSheet.create({
     right: 10,
     borderRadius: 100,
     paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
   },
   row: {
     flexDirection: "row",

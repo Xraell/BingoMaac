@@ -5,6 +5,7 @@ import { BingoColors } from "../../Theme/Colors";
 import BotonAgregarPartida from "../Botones/BotonAgregarPartida";
 import { useAppContext } from "../../context/AppProvider";
 import ModalAgregarPromocion from "./ModalAgregarPromocion";
+import { estilosComunes } from "../../Theme/estilosComunes";
 
 const ModalAgregarPartida = ({ }) => {
   const [visible, setVisible] = useState(false);
@@ -57,7 +58,7 @@ const ModalAgregarPartida = ({ }) => {
               style={[styles.button, styles.buttonClose]}
               onPress={() => setVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
               AGREGAR PARTIDA
@@ -239,12 +240,6 @@ const styles = StyleSheet.create({
     right: 10,
     borderRadius: 100,
     paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
   },
   title: {
     marginTop: 10,
