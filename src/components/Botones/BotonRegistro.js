@@ -1,9 +1,8 @@
 import React from "react";
 import { Alert } from "react-native";
 import { Button } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "../../context/AppProvider";
-import { agregarUsuario, crearObjetoUsuario } from "../../Utils/Usuario";
+import { agregarUsuario, crearObjetoUsuario, VerificarUsuario } from "../../Utils/Usuario";
 
 export default function BotonRegistro({ nombre, telefono, apellido, clave ,codigoInvitado}) {
   const { setUser } = useAppContext();
@@ -60,9 +59,8 @@ export default function BotonRegistro({ nombre, telefono, apellido, clave ,codig
       usuario.codigoInvitado = codigoInvitado;
     }
     try {
-      const nuevousuario = await agregarUsuario(usuario);
-      await AsyncStorage.setItem("idUsuario", nuevousuario.id.toString());
-      nuevousuario.Clave = usuario.Clave;
+      await agregarUsuario(usuario);
+      const nuevousuario = await VerificarUsuario(telefono, clave);
       setUser(nuevousuario);
       Alert.alert("Éxito", "¡Cuenta creada exitosamente!");
     } catch (error) {

@@ -1,5 +1,5 @@
 import { API_BASE } from "../config/api";
-import { leerToken } from "./sesion";
+import { leerToken, borrarToken, emitirSesionExpirada } from "./sesion";
 
 export async function apiFetch(ruta, opciones = {}) {
   const token = await leerToken();
@@ -15,6 +15,12 @@ export async function apiFetch(ruta, opciones = {}) {
   });
 
   if (!respuesta.ok) {
+    if (respuesta.status === 401 && token) {
+      // Solo habia sesion que perder si habia token: el invitado nunca tuvo una.
+      await borrarToken();
+      emitirSesionExpirada();
+    }
+
     const error = new Error(`HTTP ${respuesta.status}`);
     error.status = respuesta.status;   // lo usaran las tareas 03 y 04
     throw error;

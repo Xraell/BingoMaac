@@ -9,7 +9,7 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 |---|---|---|---|---|
 | 01 | Centralizar la API | ✅ completada | `bd0bf90` | ver Desviaciones |
 | 02 | Almacenamiento seguro | ✅ completada | `148e896` | ver Desviaciones |
-| 03 | Flujo de sesión | ⬜ pendiente | — | |
+| 03 | Flujo de sesión | ✅ completada | (pendiente de commit) | ver Desviaciones |
 | 04 | Autorización en el cliente | ⬜ pendiente | — | |
 | 05 | Endurecer el cliente | ⬜ pendiente | — | |
 | 06 | Verificación final | ⬜ pendiente | — | |
@@ -118,3 +118,33 @@ alcance de la tarea 01.
   `leerToken` verificado persistente entre reinicios.
 - `BotonesLogin.js` no se tocó, tal como exige el documento — sigue guardando
   `idUsuario` en `AsyncStorage` sin cifrar. Eso es la tarea 03.
+
+### Tarea 03 (2026-08-30)
+
+- **Se creó el emisor de eventos de sesión expirada con `DeviceEventEmitter` de
+  `react-native`**, no mencionado explícitamente por el documento pero requerido por el
+  paso 5 ("un emisor de eventos sencillo al que `AppProvider` se suscribe"). Vive en
+  `src/Utils/sesion.js` junto al resto de la capa de sesión, sin dependencias nuevas.
+  `AppProvider.js` se suscribe en un `useEffect` y vuelve a `usuarioInvitado`/`opc=0`.
+- **`verificarUsuarioPorID` se eliminó por completo de `BotonesLogin.js`.** Era la
+  función que hacía `ObtenerUsuario(id)` sin credencial — el agujero exacto que describe
+  el documento. `verificarSession` ahora restaura con `GET /usuario/me` usando el token.
+- **`BotonRegistro.js`: se optó por login inmediato tras el alta**, tal como recomienda
+  el documento ("más simple, camino ya probado"). Se eliminó la asignación manual
+  `nuevousuario.Clave = usuario.Clave` porque ya no hace falta guardar la clave en el
+  estado del usuario.
+- **El check literal `grep -rn "seendToBody" src/` exigía eliminar también la variable**,
+  no solo el `console.log` que la exponía. Se inlineó el objeto del body directamente en
+  la llamada a `apiFetch`, seguiendo el ejemplo de código del propio documento.
+- **Bug de entorno descubierto durante la prueba en dispositivo, no de esta tarea:**
+  `src/config/api.js` (tarea 01) apuntaba a `http://10.0.2.2:8000/api`, pero el backend
+  real de desarrollo corre en el puerto `8080` (confirmado con `curl` en la tarea 02).
+  El login daba 401 en el emulador pese a que el mismo `curl` contra `localhost:8080`
+  devolvía 200 con token. Corregido el puerto a `8080`. Se incluye en el commit de la
+  tarea 03 porque fue la propia prueba de esta tarea la que lo destapó y era bloqueante
+  para completarla.
+- Prueba en dispositivo confirmada por el usuario: los 8 puntos del checklist (login,
+  persistencia, logout, invitado, credenciales incorrectas, modo avión, token inválido
+  con `guardarToken("basura")` → reabre y cae al login, y el modal de inicio de partida
+  sin alterar) verificados en el emulador tras corregir el puerto.
+- `PartidaEnCurso.js` no se tocó.

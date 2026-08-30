@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { useWindowDimensions } from "react-native";
 import { usuarioInvitado } from "../components/Data/usuarioInvitado";
+import { suscribirSesionExpirada } from "../Utils/sesion";
 
 const ContextApp = createContext();
 
@@ -24,6 +25,15 @@ export function AppProvider({ children }) {
   const [promocion, setPromocion] = useState({
 
   })
+
+  useEffect(() => {
+    const cancelar = suscribirSesionExpirada(() => {
+      setUser(usuarioInvitado);
+      setOpc(0);
+    });
+    return cancelar;
+  }, []);
+
   const contextValues = {
     heightWindow,
     opc,

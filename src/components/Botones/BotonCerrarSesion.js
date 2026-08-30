@@ -4,6 +4,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BingoColors } from "../../Theme/Colors";
 import { useAppContext } from "../../context/AppProvider";
 import { usuarioInvitado } from "../Data/usuarioInvitado";
+import { apiFetch } from "../../Utils/http";
+import { borrarToken } from "../../Utils/sesion";
 export default function BotonCerrarSesion({top=false}) {
   const { setOpc,setUser } = useAppContext();
   const salir = async () => {
@@ -15,7 +17,13 @@ export default function BotonCerrarSesion({top=false}) {
       {
         text: "SI",
         onPress: async () => {
-          await AsyncStorage.clear();
+          try {
+            await apiFetch("/usuario/logout", { method: "POST" });
+          } catch {
+            // Sin red no se puede revocar; la sesion local se cierra igual.
+          }
+          await borrarToken();
+          await AsyncStorage.removeItem("idUsuario");   // limpiar el rastro antiguo
           setUser(usuarioInvitado)
           setOpc(0);
         },

@@ -3,8 +3,9 @@ import { ActivityIndicator, Button } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { BingoColors } from "../../Theme/Colors";
 import { useAppContext } from "../../context/AppProvider";
-import { ObtenerUsuario, VerificarUsuario } from "../../Utils/Usuario";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { VerificarUsuario } from "../../Utils/Usuario";
+import { apiFetch } from "../../Utils/http";
+import { leerToken, borrarToken } from "../../Utils/sesion";
 export default function BotonesLogin({ correo, clave }) {
   const [cargando, setCargando] = useState(false);
   const { heightWindow, setUser, setMembresia ,setOpc} = useAppContext();
@@ -12,41 +13,26 @@ export default function BotonesLogin({ correo, clave }) {
     verificarSession();
   }, []);
   const verificarSession = async () => {
-    // await AsyncStorage.clear()
     setCargando(true);
     try {
-      const idUsuario = await AsyncStorage.getItem("idUsuario");
-      console.log("idUsuario: ", idUsuario);
-      if (idUsuario !== null) {
-        return verificarUsuarioPorID(idUsuario);
+      const token = await leerToken();
+      if (!token) {
+        setCargando(false);
+        return;
       }
-      setCargando(false);
-    } catch (error) {}
-  };
-  const verificarUsuarioPorID = async (id) => {
-    try {
-      const response = await ObtenerUsuario(id);
-      console.log("response: ", response);
-      setUser(response);
-      if(response.Rol == "ADMIN"){
-        return setOpc(2)
-      }
-      if (response.Rol == "USER") {
-        setUser(response)
-        return setOpc(1)
-        
-      }
-      verificarMembresia(response.id);
+      const usuario = await apiFetch("/usuario/me");
+      setUser(usuario);
+      setOpc(usuario.Rol === "ADMIN" ? 2 : 1);
     } catch (error) {
-      setCargando(false);
+      // Token invalido o caducado: sesion limpia y al login.
+      await borrarToken();
     }
+    setCargando(false);
   };
   const Verificar = async () => {
     setCargando(true);
     try {
       const response = await VerificarUsuario(correo, clave);
-      await AsyncStorage.setItem("idUsuario",response.id.toString());
-      console.log("response.id.toString(): ", response.id.toString());
       setUser(response)
       if(response.Rol=="ADMIN"){
         return setOpc(2)

@@ -1,18 +1,17 @@
 import { apiFetch } from "./http";
+import { guardarToken } from "./sesion";
 
 export const VerificarUsuario = async (tel, clave) => {
   const ruta = "/usuario/authenticarte";
-  const seendToBody ={
-    "Clave":clave,
-    "Telefono":tel,
-  }
-  console.log("seendToBody: ", seendToBody);
   try {
-    const data = await apiFetch(ruta, {
+    const datos = await apiFetch(ruta, {
       method: "POST",
-      body: JSON.stringify(seendToBody),
+      body: JSON.stringify({ Telefono: tel, Clave: clave }),
     });
-    return data;
+    if (datos.token) {
+      await guardarToken(datos.token);
+    }
+    return datos.usuario ?? datos;
   } catch (error) {
     console.error("Error en usuario:", error+ruta);
     throw error;
