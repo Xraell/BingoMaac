@@ -1,5 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
+import { render, fireEvent, act } from "@testing-library/react-native";
 import { Provider as PaperProvider, DefaultTheme } from "react-native-paper";
 import { BingoColors } from "../Theme/Colors";
 import { AppProvider } from "../context/AppProvider";
@@ -49,5 +50,31 @@ export function renderizarArbol(elemento, { conContexto = false } = {}) {
   renderer.act(() => {
     arbol.unmount();
   });
+  return json;
+}
+
+/**
+ * Renderiza un modal, pulsa el boton que lo abre y devuelve el arbol resultante.
+ *
+ * Hace falta porque varios modales guardan `visible` en su propio estado, no en
+ * una prop: al montarlos aparecen cerrados y su contenido -donde viven
+ * `button`, `buttonClose` y `textStyle`- no llega al arbol. Sin abrirlos, el
+ * snapshot solo fotografia el envoltorio.
+ */
+export function renderizarAbierto(elemento, textoDelBoton, { conContexto = false } = {}) {
+  const envuelto = conContexto ? (
+    <AppProvider>
+      <PaperProvider theme={temaDePrueba}>{elemento}</PaperProvider>
+    </AppProvider>
+  ) : (
+    <PaperProvider theme={temaDePrueba}>{elemento}</PaperProvider>
+  );
+
+  const vista = render(envuelto);
+  act(() => {
+    fireEvent.press(vista.getByText(textoDelBoton));
+  });
+  const json = vista.toJSON();
+  vista.unmount();
   return json;
 }
