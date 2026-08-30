@@ -6,8 +6,8 @@
 |---|---|---|---|---|
 | 01 | Red de seguridad (snapshots) | ✅ **verde** | `6b21afc` | **La compuerta abrió**: 12 modales con snapshot estable. La 03 queda habilitada |
 | 02 | Nivel A — claves idénticas | ✅ completada | `1bfa3a6` | **Sorpresa**: 37 de las 51 declaraciones eran estilos muertos |
-| 03 | Nivel B — chrome de modal | ✅ completada | `03d6f95` + `HEAD` | 4 constantes, 36 declaraciones. Ninguna variante fusionada |
-| 04 | Informe | ⬜ pendiente | — | |
+| 03 | Nivel B — chrome de modal | ✅ completada | `03d6f95` + `7fec9e3` | 4 constantes, 36 declaraciones. Ninguna variante fusionada |
+| 04 | Informe | ✅ completada | este | Ver `INFORME.md`; la sección 3 es el entregable |
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ completada · ❌ revertida · ⏭ cancelada
 
@@ -292,6 +292,15 @@ pantalla**, que es justo lo que esta etapa tiene prohibido. Queda anotado en
 | Ficheros de componente que comparten estilos | 0 | 14 |
 | Tests | 11 | **32** |
 | Snapshots | 0 | **21** |
+
+## Cierre
+
+La etapa terminó con los niveles **A y B completados**. El informe está en
+[`INFORME.md`](INFORME.md); lo que hay que conservar de él es la **sección 3**, el mapa de
+duplicación aparente vs real.
+
+Falta lo único que este entorno no puede dar: **verificación en dispositivo**. El checklist
+está en la sección 5 del informe.
 
 ## Aviso sobre la verificación
 
