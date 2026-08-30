@@ -190,14 +190,24 @@ limpiarlo, pero no es un fallo.
 
 ## 6. Puntos de retorno
 
-Dos tags marcan el estado anterior a cada etapa:
+Dos tags marcan el estado anterior a cada etapa. **No están en el remoto**: el proxy de git
+del contenedor donde se hizo este trabajo solo permitía empujar la rama designada, no
+referencias de tag. Se recrean en local con:
 
-| Tag | Qué precede |
-|---|---|
-| `pre-refactor-app` | Todo el refactor de `doc/refactor-autonomo/` |
-| `pre-estilos` | Toda la centralización de `doc/estilos-centralizados/` |
+```bash
+git tag pre-refactor-app acbe2711c157a47ca0c68818cb78caa601b9683c
+git tag pre-estilos      6b21afc980b5f1ff5da22fe62e3d185aa472b50b
+git push origin pre-refactor-app pre-estilos   # si los quieres en el remoto
+```
 
-Cada etapa es un bloque de commits independiente y revertible por separado.
+| Tag | Commit | Qué precede |
+|---|---|---|
+| `pre-refactor-app` | `acbe271` | Todo el refactor de `doc/refactor-autonomo/` |
+| `pre-estilos` | `6b21afc` | Toda la centralización de `doc/estilos-centralizados/` |
+
+Cada etapa es un bloque de commits independiente y revertible por separado. Los informes de
+ambas etapas citan estos tags en sus comprobaciones de hash, así que conviene tenerlos si
+quieres reproducirlas.
 
 ---
 
