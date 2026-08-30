@@ -1,4 +1,4 @@
-const UrlApi = "http://10.0.2.2:8000/api/partida";
+import { apiFetch } from "./http";
 
 export const crearObjetoPartida = (
   NroPartida,
@@ -15,8 +15,7 @@ export const crearObjetoPartida = (
 };
 export const ObtenerPartidas = async () => {
   try {
-    const response = await fetch(UrlApi);
-    const data = await response.json();
+    const data = await apiFetch("/partida");
     if (!Array.isArray(data)) {
       throw new Error("La respuesta no es un arreglo de objetos JSON");
     }
@@ -29,16 +28,11 @@ export const ObtenerPartidas = async () => {
 
 export const ObtenerPartida = async (id) => {
   try {
-    const response = await fetch(UrlApi + "/" + id);
-    const data = await response.json();
+    const data = await apiFetch("/partida/" + id);
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en VerificarPartida:", error);
     return null;
@@ -46,16 +40,11 @@ export const ObtenerPartida = async (id) => {
 };
 export const ObtenerPremiosPartida = async (idPartida) => {
   try {
-    const response = await fetch(UrlApi + "/obtener-premios/" + idPartida);
-    const data = await response.json();
+    const data = await apiFetch("/partida/obtener-premios/" + idPartida);
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en ObtenerpremiosPartida:", error);
     return null;
@@ -63,16 +52,11 @@ export const ObtenerPremiosPartida = async (idPartida) => {
 };
 export const ObtenerPartidaActual = async () => {
   try {
-    const response = await fetch(UrlApi + "/obtener-partida-actual");
-    const data = await response.json();
+    const data = await apiFetch("/partida/obtener-partida-actual");
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en obtener partida actual:", error);
     return null;
@@ -81,21 +65,15 @@ export const ObtenerPartidaActual = async () => {
 
 export const ObtenerDatosPartida = async (idPartida, idUsuario) => {
   try {
-    const url =
-      UrlApi +
-      "/obtener-datos/" +
+    const ruta =
+      "/partida/obtener-datos/" +
       idPartida +
       (idUsuario ? "?idUsuario=" + idUsuario : "");
-    const response = await fetch(url);
-    const data = await response.json();
+    const data = await apiFetch(ruta);
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en obtener datos partida:", error);
     return null;
@@ -103,10 +81,8 @@ export const ObtenerDatosPartida = async (idPartida, idUsuario) => {
 };
 export const agregarPartida = async (Partida, Promociones, Costo, Premios) => {
   console.log("🚀 ~ agregarPartida ~ Premios:", Premios)
-  const url = UrlApi;
-
   try {
-    const response = await fetch(url + "/crear", {
+    const data = await apiFetch("/partida/crear", {
       method: "POST",
       body: JSON.stringify({
         partida: Partida,
@@ -114,18 +90,7 @@ export const agregarPartida = async (Partida, Promociones, Costo, Premios) => {
         premio: Premios,
         costo: Costo
       }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Error al agregar Partida: ${response.status} `
-      );
-    }
-
-    const data = await response.json();
     return data;
   } catch (error) {
     console.error("Error en Partida:", error);
@@ -134,24 +99,11 @@ export const agregarPartida = async (Partida, Promociones, Costo, Premios) => {
 };
 
 export const actualizarPartida = async (User, id) => {
-  const url = UrlApi + "/" + id;
-
   try {
-    const response = await fetch(url, {
+    await apiFetch("/partida/" + id, {
       method: "PUT",
       body: JSON.stringify(User),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Error al actualizar Partida: ${response.status} ${response.statusText
-        } ${JSON.stringify(User)}`
-      );
-    }
-
     return true;
   } catch (error) {
     console.error("Error en Partida:", error);
@@ -159,19 +111,10 @@ export const actualizarPartida = async (User, id) => {
   }
 };
 export const eliminarPartida = async (id) => {
-  const url = UrlApi + '/' + id;
-
   try {
-    const response = await fetch(url, {
+    await apiFetch("/partida/" + id, {
       method: "DELETE",
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Error al eliminar Partida: ${response.status} ${response.statusText
-        } `
-      );
-    }
     return true;
   } catch (error) {
     console.error("Error en Partida:", error);

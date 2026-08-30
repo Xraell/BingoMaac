@@ -1,4 +1,4 @@
-const UrlApi = "http://10.0.2.2:8000/api/usuario_promocion";
+import { apiFetch } from "./http";
 
 export const crearObjetoNumero = (
   idPartida,
@@ -11,8 +11,7 @@ export const crearObjetoNumero = (
 };
 export const ObtenerNumeros = async () => {
   try {
-    const response = await fetch(UrlApi );
-    const data = await response.json();
+    const data = await apiFetch("/usuario_promocion");
     if (!Array.isArray(data)) {
       throw new Error("La respuesta no es un arreglo de objetos JSON");
     }
@@ -24,8 +23,7 @@ export const ObtenerNumeros = async () => {
 };
 export const ObtenerNumerosUsuario = async (idUsuario) => {
   try {
-    const response = await fetch(UrlApi+"/obtener-Numeros-usuario/"+idUsuario );
-    const data = await response.json();
+    const data = await apiFetch("/usuario_promocion/obtener-Numeros-usuario/"+idUsuario);
     if (!Array.isArray(data)) {
       throw new Error("La respuesta no es un arreglo de objetos JSON");
     }
@@ -38,8 +36,7 @@ export const ObtenerNumerosUsuario = async (idUsuario) => {
 
 export const ObtenerNumerosPartida = async (idPartida) => {
     try {
-      const response = await fetch(UrlApi+"/obtener-numeros-partida/"+idPartida );
-      const data = await response.json();
+      const data = await apiFetch("/usuario_promocion/obtener-numeros-partida/"+idPartida);
       if (!Array.isArray(data)) {
         throw new Error("La respuesta no es un arreglo de objetos JSON");
       }
@@ -51,16 +48,11 @@ export const ObtenerNumerosPartida = async (idPartida) => {
   };
   export const ObtenerPromocionUsuario = async (idUser,idPartida) => {
     try {
-      const response = await fetch(UrlApi + "/obtener-promocion-usuario/" + idUser+"/"+idPartida);
-      const data = await response.json();
+      const data = await apiFetch("/usuario_promocion/obtener-promocion-usuario/" + idUser+"/"+idPartida);
       if (!data) {
         throw new Error("No se pudo obtener datos de la API");
       }
-      if (data && response.ok) {
-        return data;
-      } else {
-        return null;
-      }
+      return data;
     } catch (error) {
       console.error("Error en VerificarNumero:", error);
       return null;
@@ -68,16 +60,11 @@ export const ObtenerNumerosPartida = async (idPartida) => {
   };
 export const ObtenerNumero = async (id) => {
   try {
-    const response = await fetch(UrlApi + "/" + id);
-    const data = await response.json();
+    const data = await apiFetch("/usuario_promocion/" + id);
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en VerificarNumero:", error);
     return null;
@@ -85,20 +72,12 @@ export const ObtenerNumero = async (id) => {
 };
 export const EscogerPromocion = async (idUser,idPromocion) => {
   try {
-    const response = await fetch(
-      UrlApi + "/designar-promocion/" + idUser + "/" + idPromocion,
+    return await apiFetch(
+      "/usuario_promocion/designar-promocion/" + idUser + "/" + idPromocion,
       {
         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-type": "application/json; charset=UTF-8",
-        },
       }
     );
-    if (!response.ok) {
-      throw new Error(`Error al designar promocion: ${response.status}`);
-    }
-    return await response.json();
   } catch (error) {
     console.error("Error en designar promocion:", error);
     throw error;
@@ -106,16 +85,11 @@ export const EscogerPromocion = async (idUser,idPromocion) => {
 };
 export const ObtenerNumeroActual = async () => {
   try {
-    const response = await fetch(UrlApi + "/obtener-Numero-actual") ;
-    const data = await response.json();
+    const data = await apiFetch("/usuario_promocion/obtener-Numero-actual");
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en obtener Numero actual:", error);
     return null;
@@ -123,24 +97,11 @@ export const ObtenerNumeroActual = async () => {
 };
 
 export const agregarNumero = async (Numero) => {
-  const url = UrlApi;
-
   try {
-    const response = await fetch(url+"/crear", {
+    const data = await apiFetch("/usuario_promocion/crear", {
       method: "POST",
       body: JSON.stringify(Numero),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Error al agregar Numero: ${response.status} `
-      );
-    }
-
-    const data = await response.json();
     return data;
   } catch (error) {
     console.error("Error en Numero:", error);
@@ -149,25 +110,11 @@ export const agregarNumero = async (Numero) => {
 };
 
 export const actualizarNumero = async (User, id) => {
-  const url = UrlApi+"/"+id;
-
   try {
-    const response = await fetch(url, {
+    await apiFetch("/usuario_promocion/"+id, {
       method: "PUT",
       body: JSON.stringify(User),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Error al actualizar Numero: ${response.status} ${
-          response.statusText
-        } ${JSON.stringify(User)}`
-      );
-    }
-
     return true;
   } catch (error) {
     console.error("Error en Numero:", error);
@@ -175,20 +122,10 @@ export const actualizarNumero = async (User, id) => {
   }
 };
 export const eliminarNumero = async (id) => {
-  const url = UrlApi + '/'+id;
-
   try {
-    const response = await fetch(url, {
+    await apiFetch("/usuario_promocion/"+id, {
       method: "DELETE",
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Error al eliminar Numero: ${response.status} ${
-          response.statusText
-        } `
-      );
-    }
     return true;
   } catch (error) {
     console.error("Error en Numero:", error);

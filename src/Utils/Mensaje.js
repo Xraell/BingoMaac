@@ -1,4 +1,4 @@
-const UrlApi = "http://10.0.2.2:8000/api/mensaje";
+import { apiFetch } from "./http";
 
 export const crearObjetoMensaje = (
   idMensaje,
@@ -18,16 +18,11 @@ export const crearObjetoMensaje = (
 
 export const ObtenerMensajePartida = async (id) => {
   try {
-    const response = await fetch(UrlApi + "/partida/" + id);
-    const data = await response.json();
+    const data = await apiFetch("/mensaje/partida/" + id);
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en VerificarNumero:", error);
     return null;
@@ -35,23 +30,11 @@ export const ObtenerMensajePartida = async (id) => {
 };
 
 export const agregarMensaje = async (Mensaje) => {
-  const url = UrlApi;
   try {
-    const response = await fetch(url+"/crear", {
+    const data = await apiFetch("/mensaje/crear", {
       method: "POST",
       body: JSON.stringify(Mensaje),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Error al agregar Mensaje: ${response.status} `
-      );
-    }
-
-    const data = await response.json();
     return data;
   } catch (error) {
     console.error("Error en Mensaje:", error);

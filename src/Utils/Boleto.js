@@ -1,4 +1,4 @@
-const UrlApi = "http://10.0.2.2:8000/api/boleto";
+import { apiFetch } from "./http";
 
 export const crearObjetoBoleto = (
   Nombres,
@@ -19,8 +19,7 @@ export const crearObjetoBoleto = (
 };
 export const ObtenerReportePartida = async (idPartida) => {
   try {
-    const response = await fetch(UrlApi + "/obtener-reportes/" + idPartida);
-    const data = await response.json();
+    const data = await apiFetch("/boleto/obtener-reportes/" + idPartida);
     if (!Array.isArray(data)) {
       throw new Error("La respuesta no es un arreglo de objetos JSON");
     }
@@ -32,15 +31,9 @@ export const ObtenerReportePartida = async (idPartida) => {
 };
 export const ObtenerReportePartidaNuevo = async (idPartida) => {
   try {
-    const response = await fetch(UrlApi + "/obtener-reportes/nuevo/" + idPartida);
-    const data = await response.json();
+    const data = await apiFetch("/boleto/obtener-reportes/nuevo/" + idPartida);
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
-    }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
     }
     return data;
   } catch (error) {
@@ -50,8 +43,7 @@ export const ObtenerReportePartidaNuevo = async (idPartida) => {
 };
 export const ObtenerBoletos = async () => {
   try {
-    const response = await fetch(UrlApi);
-    const data = await response.json();
+    const data = await apiFetch("/boleto");
     if (!Array.isArray(data)) {
       throw new Error("La respuesta no es un arreglo de objetos JSON");
     }
@@ -63,11 +55,7 @@ export const ObtenerBoletos = async () => {
 };
 export const ObtenerBoletosUsuario = async (idUsuario) => {
   try {
-    const response = await fetch(UrlApi + "/obtener-boletos-usuario/" + idUsuario);
-    if (!response.ok) {
-      throw new Error(`Error al obtener boletos: ${response.status}`);
-    }
-    const data = await response.json();
+    const data = await apiFetch("/boleto/obtener-boletos-usuario/" + idUsuario);
     if (!Array.isArray(data)) {
       throw new Error("La respuesta no es un arreglo de objetos JSON" + idUsuario);
     }
@@ -79,32 +67,24 @@ export const ObtenerBoletosUsuario = async (idUsuario) => {
 };
 
 export const ObtenerBoletosAleatorios = async (idPartida) => {
-  let response
   try {
-    response = await fetch(UrlApi + "/obtener-boletos-partida/" + idPartida);
-    const data = await response.json();
+    const data = await apiFetch("/boleto/obtener-boletos-partida/" + idPartida);
     if (!Array.isArray(data)) {
       throw new Error("La respuesta no es un arreglo de objetos JSON");
     }
     return data;
   } catch (error) {
-    const data = await response.json();
-    console.error("Error en Obtener Boletos:", error + "data:" + data);
+    console.error("Error en Obtener Boletos:", error);
     return null;
   }
 };
 export const ObtenerBoleto = async (id) => {
   try {
-    const response = await fetch(UrlApi + "/" + id);
-    const data = await response.json();
+    const data = await apiFetch("/boleto/" + id);
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en VerificarBoleto:", error);
     return null;
@@ -112,16 +92,11 @@ export const ObtenerBoleto = async (id) => {
 };
 export const ReiniciarBoletos = async (idPartida, Precio) => {
   try {
-    const response = await fetch(UrlApi + "/reiniciar-boletos/" + idPartida + "/" + Precio);
-    const data = await response.json();
+    const data = await apiFetch("/boleto/reiniciar-boletos/" + idPartida + "/" + Precio);
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en reiniciar:", error);
     return null;
@@ -129,16 +104,11 @@ export const ReiniciarBoletos = async (idPartida, Precio) => {
 };
 export const ObtenerBoletosGanadores = async (idPartida) => {
   try {
-    const response = await fetch(UrlApi + "/obtener-ganadores-fila/" + idPartida);
-    const data = await response.json();
+    const data = await apiFetch("/boleto/obtener-ganadores-fila/" + idPartida);
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en VerificarBoleto:", error);
     return null;
@@ -146,16 +116,11 @@ export const ObtenerBoletosGanadores = async (idPartida) => {
 };
 export const ObtenerBoletoActual = async () => {
   try {
-    const response = await fetch(UrlApi + "/obtener-Boleto-actual");
-    const data = await response.json();
+    const data = await apiFetch("/boleto/obtener-Boleto-actual");
     if (!data) {
       throw new Error("No se pudo obtener datos de la API");
     }
-    if (data && response.ok) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (error) {
     console.error("Error en obtener Boleto actual:", error);
     return null;
@@ -163,24 +128,11 @@ export const ObtenerBoletoActual = async () => {
 };
 
 export const agregarBoleto = async (Boleto) => {
-  const url = UrlApi;
-
   try {
-    const response = await fetch(url + "/crear", {
+    const data = await apiFetch("/boleto/crear", {
       method: "POST",
       body: JSON.stringify(Boleto),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Error al agregar Boleto: ${response.status} `
-      );
-    }
-
-    const data = await response.json();
     return data;
   } catch (error) {
     console.error("Error en Boleto:", error);
@@ -189,24 +141,11 @@ export const agregarBoleto = async (Boleto) => {
 };
 
 export const actualizarBoleto = async (User, id) => {
-  const url = UrlApi + "/" + id;
-
   try {
-    const response = await fetch(url, {
+    await apiFetch("/boleto/" + id, {
       method: "PUT",
       body: JSON.stringify(User),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Error al actualizar Boleto: ${response.status} ${response.statusText
-        } ${JSON.stringify(User)}`
-      );
-    }
-
     return true;
   } catch (error) {
     console.error("Error en Boleto:", error);
@@ -214,19 +153,10 @@ export const actualizarBoleto = async (User, id) => {
   }
 };
 export const eliminarBoleto = async (id) => {
-  const url = UrlApi + '/' + id;
-
   try {
-    const response = await fetch(url, {
+    await apiFetch("/boleto/" + id, {
       method: "DELETE",
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Error al eliminar Boleto: ${response.status} ${response.statusText
-        } `
-      );
-    }
     return true;
   } catch (error) {
     console.error("Error en Boleto:", error);

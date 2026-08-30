@@ -7,7 +7,7 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 
 | # | Tarea | Estado | Commit | Notas |
 |---|---|---|---|---|
-| 01 | Centralizar la API | ⬜ pendiente | — | |
+| 01 | Centralizar la API | ✅ completada | (pendiente de commit) | ver Desviaciones |
 | 02 | Almacenamiento seguro | ⬜ pendiente | — | |
 | 03 | Flujo de sesión | ⬜ pendiente | — | |
 | 04 | Autorización en el cliente | ⬜ pendiente | — | |
@@ -55,7 +55,27 @@ Plan hermano: `BACKEND/doc/seguridad-produccion/`. **Repositorios git distintos*
 
 ## Desviaciones
 
-Anotar aquí cualquier apartamiento del plan escrito, con su motivo. Alimenta la
-sección 3 del informe final.
+### Tarea 01 (2026-08-29)
 
-_(vacío — el plan no ha empezado)_
+- **`expo-constants` no era dependencia directa.** Estaba instalado de forma transitiva
+  (v17.0.8, vía `expo`) pero ausente en `package.json`. Se instaló explícitamente con
+  `npx expo install expo-constants` (respeta la matriz del SDK 52) y luego se regeneró
+  `pnpm-lock.yaml` con `pnpm install`, porque `expo install` invoca `npm` internamente y
+  había dejado un `package-lock.json` modificado — descartado con `git checkout --` para
+  no reintroducir npm tras la migración a pnpm del commit anterior.
+- **`const UrlApi` se eliminó, no se reescribió a ruta relativa.** El check automático
+  `grep -rn "const UrlApi" src/` exige que no quede ninguna. Las rutas quedaron
+  inlineadas como literales en cada llamada a `apiFetch(...)`.
+- **`ObtenerBoletosAleatorios` (`Boleto.js`) cambia de comportamiento en un caso límite,
+  no cubierto por el check de firmas.** El original releía `response.json()` dentro del
+  `catch`, lo que lanzaba un `TypeError` no controlado si `response` era `undefined`
+  (fallo de red antes de recibir respuesta). Con `apiFetch` eso ya no puede ocurrir: el
+  `catch` ahora siempre recibe el error original y devuelve `null`, igual que las demás
+  funciones `Obtener*`. Es un endurecimiento incidental, no un cambio de contrato.
+- Riesgo heredado para tareas futuras: `src/config/api.js` deja `PRODUCCION` con el
+  placeholder `https://<dominio-real>/api` sin confirmar — la tarea 05 (o antes, si se
+  hace un build de producción) necesita el dominio real.
+
+Preexistente, no tocado en esta tarea: `package-lock.json` sigue trackeado en git pese a
+la migración a pnpm (aviso de `expo-doctor`, "Multiple lock files detected"); fuera de
+alcance de la tarea 01.
