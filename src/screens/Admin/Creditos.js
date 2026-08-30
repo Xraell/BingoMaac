@@ -10,6 +10,9 @@ export default function Creditos() {
     },[])
     const obtenerTotal = async ()=>{
         const response = await ObtenerTotalCreditos();
+        if (!response) {
+            return Alert.alert("Error", "No se pudo sincronizar la sumatoria de bolívares");
+        }
         setTotal(response.suma_creditos)
         Alert.alert("Exito","La sumatoria de bolivares se sincronizó")
     }

@@ -10,7 +10,7 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 | 01 | Centralizar la API | ✅ completada | `bd0bf90` | ver Desviaciones |
 | 02 | Almacenamiento seguro | ✅ completada | `148e896` | ver Desviaciones |
 | 03 | Flujo de sesión | ✅ completada | `f1edb57` | ver Desviaciones |
-| 04 | Autorización en el cliente | ⬜ pendiente | — | |
+| 04 | Autorización en el cliente | ✅ completada* | (pendiente de commit) | *sin prueba en dispositivo — ver Desviaciones |
 | 05 | Endurecer el cliente | ⬜ pendiente | — | |
 | 06 | Verificación final | ⬜ pendiente | — | |
 
@@ -49,7 +49,7 @@ Plan hermano: `BACKEND/doc/seguridad-produccion/`. **Repositorios git distintos*
 
 | Decisión | Tarea | Estado |
 |---|---|---|
-| Qué ve un invitado con la API cerrada | 04 | ⬜ sin decidir |
+| Qué ve un invitado con la API cerrada | 04 | ✅ decidido: solo presentación (opción B) |
 | Dominio de producción definitivo | 05 | ⬜ sin definir |
 | Orden de despliegue app/backend en la fase 3 | 05 | ⬜ sin acordar |
 
@@ -147,4 +147,46 @@ alcance de la tarea 01.
   persistencia, logout, invitado, credenciales incorrectas, modo avión, token inválido
   con `guardarToken("basura")` → reabre y cae al login, y el modal de inicio de partida
   sin alterar) verificados en el emulador tras corregir el puerto.
+- `PartidaEnCurso.js` no se tocó.
+
+### Tarea 04 (2026-08-30)
+
+- **Backend confirmado con `curl` real, no solo asumido.** `GET /api/usuario` con token
+  de un usuario `USER` (`+591 7324432`) devuelve `403 Forbidden` (`"No autorizado"`);
+  el mismo endpoint con token `ADMIN` devuelve `200` con la lista completa. La
+  dependencia de backend de la tarea 04 (rutas cerradas por rol, tarea 05 del plan
+  hermano) queda satisfecha y el escenario clave de esta tarea es reproducible.
+- **Paso 2 (revalidar rol al reanudar) implementado literalmente como el snippet del
+  documento**: solo hace `setUser`, no toca `opc`. Un admin degradado a `USER` verá
+  `user.Rol` actualizado pero seguiría dentro de `TabsAdmin` hasta que alguna acción
+  real dé 403 — el documento no pide sincronizar `opc` aquí y no se añadió esa lógica
+  para no salirse del alcance. La barrera real la sigue poniendo el 403 en cada
+  petición, tal como dice el "Por qué" del documento ("ocultar un botón no es
+  seguridad").
+- **Bug real encontrado y corregido en `src/screens/Admin/Creditos.js`:**
+  `ObtenerTotalCreditos()` devuelve `null` en cualquier error (incluido un 403 futuro),
+  y el código hacía `response.suma_creditos` sin comprobar antes — habría lanzado un
+  `TypeError` no controlado. Se añadió el `if (!response)` con alerta de error.
+- **Decisión de producto (paso 5) tomada con el usuario: opción B, el invitado solo ve
+  presentación.** No hizo falta tocar código: `Boletos.js`/`MisBoletos.js` ya muestran
+  `MensajeRegistrate`, `Perfil.js` ya muestra el formulario de registro, e `Inicio.js`
+  ya es una pantalla de presentación (redes sociales, cómo funciona) igual para todos
+  los roles — la app ya estaba en esa opción antes de esta tarea.
+- **Paso 6 (ocultar acciones que darían 403) no requirió cambios**: `TabsUser.js` no
+  tiene ningún acceso a rutas o pantallas de administración visible para un usuario
+  normal; el panel de admin vive solo en `TabsAdmin`, gateado por `opc === 2`.
+- **Hallazgo de seguridad en el backend, fuera del alcance de este repositorio:** una
+  ruta inexistente (`GET /api/usuario/agregar-creditos/3/100`) devolvió un stack trace
+  completo de Laravel con rutas de archivo del servidor
+  (`D:\BINGO_MAAC\BACKEND\...`), indicando `APP_DEBUG=true` expuesto. Reportado al
+  usuario para trasladar al plan del backend; no se actúa sobre ello desde aquí.
+- **Prueba en dispositivo NO realizada — commit autorizado explícitamente por el
+  usuario pese a esto, por falta de tiempo.** Verificado únicamente por backend
+  (`curl`) y por lectura de código: el 403 real en la UI, la ocultación del panel para
+  un USER, el comportamiento del invitado end-to-end, la compra de un boleto ya
+  vendido (409), la compra sin saldo (422), y que la partida en curso siga
+  funcionando igual con el cliente HTTP nuevo — **ninguno de estos siete puntos del
+  checklist de dispositivo fue probado en un teléfono o emulador real.** Queda como
+  deuda de verificación explícita para antes de dar por cerrada la etapa completa
+  (tarea 06).
 - `PartidaEnCurso.js` no se tocó.

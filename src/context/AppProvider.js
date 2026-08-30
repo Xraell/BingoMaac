@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useWindowDimensions } from "react-native";
+import { useWindowDimensions, AppState } from "react-native";
 import { usuarioInvitado } from "../components/Data/usuarioInvitado";
-import { suscribirSesionExpirada } from "../Utils/sesion";
+import { suscribirSesionExpirada, leerToken } from "../Utils/sesion";
+import { apiFetch } from "../Utils/http";
 
 const ContextApp = createContext();
 
@@ -32,6 +33,17 @@ export function AppProvider({ children }) {
       setOpc(0);
     });
     return cancelar;
+  }, []);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener("change", async (estado) => {
+      if (estado === "active" && (await leerToken())) {
+        try {
+          setUser(await apiFetch("/usuario/me"));
+        } catch { /* el 401 ya lo trata apiFetch */ }
+      }
+    });
+    return () => sub.remove();
   }, []);
 
   const contextValues = {

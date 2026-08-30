@@ -21,7 +21,16 @@ export async function apiFetch(ruta, opciones = {}) {
       emitirSesionExpirada();
     }
 
-    const error = new Error(`HTTP ${respuesta.status}`);
+    // 403: sesion valida, sin permiso. No cierra la sesion, a diferencia del 401.
+    // 409: el recurso ya no esta disponible (p.ej. boleto ya vendido).
+    // 422: el servidor rechazo los datos enviados (p.ej. saldo insuficiente).
+    const mensajesPorDefecto = {
+      403: "No tienes permiso para esta acción.",
+      409: "Esto ya no está disponible.",
+      422: "Los datos enviados no son válidos.",
+    };
+
+    const error = new Error(mensajesPorDefecto[respuesta.status] ?? `HTTP ${respuesta.status}`);
     error.status = respuesta.status;   // lo usaran las tareas 03 y 04
     throw error;
   }
