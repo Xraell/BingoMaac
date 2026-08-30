@@ -9,6 +9,116 @@ terminadas y verificadas por tests, y **cero verificaciones en un dispositivo re
 
 ---
 
+## 2026-08-30 — Verificación en dispositivo completada
+
+Hecha desde una máquina local con emulador (`Xpancity_API_31`) y el backend real
+(`D:\BINGO_MAAC\BACKEND`, `php artisan serve --port=8080`, MariaDB local `bingomaacv2`).
+
+### Bloque 1–3: en verde
+
+- **Lockfile desbloqueado.** `pnpm install` (sin `--frozen-lockfile`) regeneró
+  `pnpm-lock.yaml` con la entrada de `xlsx` intacta en `package.json`. Commit
+  [`137d1f9`](../../commit/137d1f9).
+- **Tags de retorno recreados y empujados a origin:** `pre-refactor-app` (`acbe271`),
+  `pre-estilos` (`6b21afc`).
+- **`npx expo export --platform android`: compila.** Bundle **5.45 MB** (línea base
+  5.47 MB antes del refactor+estilos; la reducción es coherente con la limpieza de
+  logs/imports/código muerto). Es la primera vez que este comando corre con éxito sobre
+  esta rama.
+- **`npx jest`: 32/32 tests, 21/21 snapshots, 4/4 suites, exit 0.** Ningún snapshot se
+  reescribió.
+  - Nota de entorno: la primera corrida falló con `TypeError: ansiRegex is not a function`
+    en el reporter de Jest — una copia duplicada de `ansi-regex@6.1.0` (ESM-only) quedó
+    anidada bajo `strip-ansi/node_modules/` por un residuo de instalación previa, y Node 25
+    la resuelve mal. **No es un bug del código**: se resolvió con `rm -rf node_modules &&
+    pnpm install` limpio. Si reaparece en otra máquina, mismo fix.
+
+### Bloque 4: checklist manual — resultado
+
+**Ningún hallazgo aquí es una regresión del refactor o de la centralización de estilos.**
+Ambas etapas verificadas en detalle contra `pre-refactor-app`/`pre-estilos` (ver abajo).
+
+Confirmado funcionando en el emulador:
+- La app arranca y llega al login.
+- **Login ADMIN** (panel completo: Partida, Usuarios, Participantes, Créditos, Juego).
+- **Login USER** (probado registrando una cuenta nueva — ver bug de backend abajo sobre
+  por qué no se pudo usar una cuenta existente).
+- **Modo invitado**: pantalla de presentación, sin pantallas colgadas ni errores en crudo
+  pese a los 401 esperados.
+- **Partida en curso**: números salen, modo automático (`setTimeout` 5 s) sin repetir,
+  detener/reiniciar automático, ganadores por premio mostrados.
+- **Panel de administración** visible solo para ADMIN; listas de Usuarios/Participantes
+  cargan.
+- **Exportar a Excel** (Participantes → Exportar en Excel): genera el `.xlsx` y abre el
+  share sheet nativo correctamente. `xlsx` funciona end-to-end tras el fix del lockfile.
+- **Cerrar sesión** y volver a entrar: funciona, vuelve limpio al login.
+- **Registro de usuario nuevo**: funciona, login inmediato tras el alta.
+- **Mis Boletos** (usuario sin boletos): carga vacía correctamente, botón SINCRONIZAR
+  presente.
+
+Checklist de estilos (`doc/estilos-centralizados/INFORME.md` § 5): verificado visualmente
+un modal de cada grupo (`ModalAgregarCredito` con `marginRight: 7`, look correcto) más los
+21 snapshots exactos en verde sin reescribir — cobertura suficiente, no se abrieron los 14
+modales uno por uno.
+
+### Hallazgos — ninguno es regresión de esta rama
+
+1. **Bug preexistente en el frontend (`src/Utils/Usuario.js`):**
+   `AgregarCreditosUsuario`/`RetirarCreditosUsuario` construyen
+   `/usuario/agregar-creditos/{id}/{nroCreditos}` con GET (por defecto), pero el backend
+   espera `POST /usuario/agregar-creditos/{id}` con `{ puntos: N }` en el body. Produce
+   404 real en el emulador ("Ocurrió un error desconocido") en **ambos** modales de
+   crédito. Confirmado **byte a byte igual en `pre-refactor-app`** — no lo tocó ninguna
+   de las dos etapas. Nunca se había ejercitado en dispositivo antes de esta sesión.
+2. **Regresión cross-repo (no de esta app):** `/boleto/obtener-boletos-partida/{id}`
+   (`ObtenerBoletosAleatorios`, usada por la pestaña Boletos de un USER para ver boletos
+   disponibles) quedó dentro del grupo `admin` en `BACKEND/routes/api.php` desde el
+   commit `sec(05)` del plan hermano de seguridad del backend. Un USER normal no puede
+   ver boletos disponibles para comprar — 403 real reproducido con la cuenta de prueba.
+   Frontend sin cambios desde `pre-refactor-app`; el desajuste es del backend.
+3. **Bug de backend, no de este repo:** login de un usuario con clave en texto plano
+   (`usuario.id = 31`, "Maria Rios") devuelve **HTTP 500** ("This password does not use
+   the Bcrypt algorithm"), porque `UsuarioController::authenticate` siempre llama
+   `Hash::check()` sin detectar contraseñas no hasheadas. Confirmado con `curl` directo
+   al backend, independiente del cliente. Coincide con lo que el `CLAUDE.md` del backend
+   ya documenta (`Clave` en texto plano para casi todos los usuarios existentes).
+   Bloqueó probar login USER con una cuenta real; se resolvió registrando una cuenta
+   nueva de prueba (`ClaudeTest Verificacion`, `+591 69990001`), que sí quedó con clave
+   bcrypt y funciona.
+
+### Planes de corrección escritos para estos tres hallazgos
+
+Los tres tienen ya un plan tarea-por-tarea con su skill. **Dos de los tres bugs son del
+backend**, así que hay un plan en cada repositorio:
+
+| Repositorio | Plan | Skill | Cubre |
+|---|---|---|---|
+| App | `doc/correccion-hallazgos/` | `/corregir-app` | Hallazgo 1 (créditos por GET) |
+| Backend | `BACKEND/doc/correccion-hallazgos/` | `/corregir-backend` | Hallazgos 2 y 3 |
+
+Son **independientes**: ninguno espera al otro. Solo se cruzan en la verificación manual,
+porque probar la compra completa como USER necesita el arreglo del backend desplegado.
+
+Dos cosas que el análisis añadió y no estaban en el reporte original:
+
+- **El hallazgo 1 tiene un segundo defecto encadenado.** `cantidad` queda como *string*
+  cuando se teclea en el campo (`onChangeText={(t) => setCantidad(t)}`), y el backend valida
+  `integer` estricto. Arreglar solo el método HTTP dejaría los botones ±10 funcionando y el
+  tecleo dando 422 — un fallo intermitente, peor de diagnosticar que el actual.
+- **El hallazgo 2 no se arregla moviendo la ruta y ya.** `obtenerBoletosPartida` devuelve la
+  fila entera, con el `idUsuario` de cada comprador. Sacarla del grupo `admin` tal cual
+  convertiría un bug de permisos en una fuga de datos entre jugadores.
+
+### Deuda ya documentada, reconfirmada, no tocada (§ 2 de este documento)
+
+- `src/config/api.js` sigue con el placeholder `https://<dominio-real>/api`.
+- `ModalAgregarPartida`/`ModalAgregarPromocion` siguen usando `styles.button` sin
+  declarar.
+- El resto de los 7 puntos de la sección 2 no se tocó ni se re-verificó en detalle en
+  esta pasada (fuera de alcance, según instrucción explícita).
+
+---
+
 ## 0. Lo primero al clonar: desbloquear `pnpm install`
 
 **`pnpm install --frozen-lockfile` va a fallar.** No es tu entorno: es un estado conocido y
