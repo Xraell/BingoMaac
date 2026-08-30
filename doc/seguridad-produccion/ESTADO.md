@@ -7,7 +7,7 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 
 | # | Tarea | Estado | Commit | Notas |
 |---|---|---|---|---|
-| 01 | Centralizar la API | ✅ completada | (pendiente de commit) | ver Desviaciones |
+| 01 | Centralizar la API | ✅ completada | `bd0bf90` | ver Desviaciones |
 | 02 | Almacenamiento seguro | ⬜ pendiente | — | |
 | 03 | Flujo de sesión | ⬜ pendiente | — | |
 | 04 | Autorización en el cliente | ⬜ pendiente | — | |
