@@ -10,7 +10,7 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 | 01 | Centralizar la API | ✅ completada | `bd0bf90` | ver Desviaciones |
 | 02 | Almacenamiento seguro | ✅ completada | `148e896` | ver Desviaciones |
 | 03 | Flujo de sesión | ✅ completada | `f1edb57` | ver Desviaciones |
-| 04 | Autorización en el cliente | ✅ completada* | (pendiente de commit) | *sin prueba en dispositivo — ver Desviaciones |
+| 04 | Autorización en el cliente | ✅ completada* | `f20047c` | *sin prueba en dispositivo — ver Desviaciones |
 | 05 | Endurecer el cliente | ⬜ pendiente | — | |
 | 06 | Verificación final | ⬜ pendiente | — | |
 
