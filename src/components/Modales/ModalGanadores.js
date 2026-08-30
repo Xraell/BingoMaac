@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Modal, View, StyleSheet, ScrollView, Animated, Dimensions } from 'react-native';
-import { Text, Button, IconButton } from 'react-native-paper';
+import { Text, Button } from 'react-native-paper';
 import { Audio } from 'expo-av';
 import LottieView from 'lottie-react-native';
 import { BingoColors } from '../../Theme/Colors';

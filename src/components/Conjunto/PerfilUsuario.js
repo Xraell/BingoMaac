@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, Alert, ToastAndroid } from 'react-native';
-import { Text, Avatar, Card, Button, Divider, IconButton } from 'react-native-paper';
+import { View, Image, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native';
+import { Text, Avatar, Card, Divider } from 'react-native-paper';
 import { useAppContext } from '../../context/AppProvider';
 import * as Clipboard from 'expo-clipboard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';

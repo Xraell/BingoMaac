@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { ActivityIndicator, Button } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { BingoColors } from "../../Theme/Colors";

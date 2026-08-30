@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  Modal,
-  StyleSheet,
-  Pressable,
-  View,
-  TouchableOpacity,
-  Image,
-  useWindowDimensions,
-} from "react-native";
+import { Modal, StyleSheet, Pressable, View, Image, useWindowDimensions } from "react-native";
 import { BingoColors } from "../../Theme/Colors";
-import { Button, Text } from "react-native-paper";
+import { Text } from "react-native-paper";
 
 // Subcomponente para una celda individual de Bingo
 const CeldaBingo = ({ numero, squareSize, numerosPartida }) => {

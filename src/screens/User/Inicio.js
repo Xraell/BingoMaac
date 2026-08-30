@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { BingoColors } from "../../Theme/Colors";
 import ModalComoFunciona from "../../components/Modales/ModalComoFunciona";
 import RedesSociales from "../../components/Accesorios/RedesSociales";

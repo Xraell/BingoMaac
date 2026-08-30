@@ -1,4 +1,4 @@
-import { Alert, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { BingoColors } from "../../Theme/Colors";
 import { Button, Text } from "react-native-paper";
 import { useAppContext } from "../../context/AppProvider";

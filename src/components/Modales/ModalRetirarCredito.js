@@ -1,25 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Pressable,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Dimensions,
-} from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  IconButton,
-  Switch,
-  Text,
-} from "react-native-paper";
+import React, { useState } from "react";
+import { Alert, Modal, StyleSheet, Pressable, View, TextInput } from "react-native";
+import { ActivityIndicator, Button, IconButton, Text } from "react-native-paper";
 // import { ObtenerUsuarios, eliminarUsuario } from "../utils/Usuario";
 import { BingoColors } from "../../Theme/Colors";
 import { useAppContext } from "../../context/AppProvider";
-import { AgregarCreditosUsuario, RetirarCreditosUsuario, crearObjetoUsuario } from "../../Utils/Usuario";
+import { RetirarCreditosUsuario } from "../../Utils/Usuario";
 const ModalRetirarCredito = ({ usuario, visible, setVisible }) => {
   const [loading, setLoading] = useState(false);
   const { setListUsers,listUsers } = useAppContext();

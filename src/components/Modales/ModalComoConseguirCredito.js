@@ -1,16 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Pressable,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Dimensions,
-  FlatList,
-} from "react-native";
-import { ActivityIndicator, Button, Switch, Text } from "react-native-paper";
+import React, { useState } from "react";
+import { Modal, StyleSheet, Pressable, View } from "react-native";
+import { Button, Text } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 const ModalComoConseguirCredito = () => {
   const [visible, setModalVisible] = useState(false);

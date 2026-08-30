@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppContext } from "../context/AppProvider";
 import { useNavigation } from "@react-navigation/native";
 import { BingoColors } from "../Theme/Colors";

@@ -1,12 +1,5 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import { BingoColors } from "../Theme/Colors";
-import { IconButton } from "react-native-paper";
 import { useState } from "react";
 import { useAppContext } from "../context/AppProvider";
 import BotonesLogin from "../components/Botones/BotonesLogin";

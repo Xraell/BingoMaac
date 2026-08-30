@@ -8,16 +8,12 @@ import {
   PanResponder,
   Animated,
 } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import { useAppContext } from "../../context/AppProvider";
 import ItemMiBoleto from "../Items/ItemMiBoleto";
 import { ObtenerNumerosPartida } from "../../Utils/Numero";
-import {
-  ObtenerPartida,
-  ObtenerPartidaActual,
-  ObtenerPartidas,
-} from "../../Utils/Partida";
+import { ObtenerPartidaActual } from "../../Utils/Partida";
 import ListaNrosRetirados from "../Listas/ListaNrosRetirados";
 import TablaBingo from "./TablaBingo";
 import { ObtenerMensajePartida } from "../../Utils/Mensaje";

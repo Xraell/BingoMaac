@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, View, ActivityIndicator } from "react-native";
+import { ScrollView, StyleSheet, View, ActivityIndicator } from "react-native";
 import BotonCreditos from "../Botones/BotonCreditos";
 import { Button, Text } from "react-native-paper";
 import { useAppContext } from "../../context/AppProvider";

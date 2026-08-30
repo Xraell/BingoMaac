@@ -46,18 +46,6 @@ export const ObtenerNumerosPartida = async (idPartida) => {
       return null;
     }
   };
-  export const ObtenerPromocionUsuario = async (idUser,idPartida) => {
-    try {
-      const data = await apiFetch("/usuario_promocion/obtener-promocion-usuario/" + idUser+"/"+idPartida);
-      if (!data) {
-        throw new Error("No se pudo obtener datos de la API");
-      }
-      return data;
-    } catch (error) {
-      console.error("Error en VerificarNumero:", error);
-      return null;
-    }
-  };
 export const ObtenerNumero = async (id) => {
   try {
     const data = await apiFetch("/usuario_promocion/" + id);

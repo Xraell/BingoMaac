@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { BingoColors } from "../../Theme/Colors";
 import FormularioRegistro from "../../components/Formularios/FormularioRegistro";
 import { useEffect, useState } from "react";

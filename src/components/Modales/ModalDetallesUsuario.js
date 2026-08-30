@@ -1,21 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Pressable,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Dimensions,
-} from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  IconButton,
-  Switch,
-  Text,
-} from "react-native-paper";
+import React, { useState } from "react";
+import { Alert, Modal, StyleSheet, Pressable, View } from "react-native";
+import { ActivityIndicator, IconButton, Text } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import { ObtenerUsuarios, eliminarUsuario } from "../../Utils/Usuario";
 import { useAppContext } from "../../context/AppProvider";

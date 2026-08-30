@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { PermissionsAndroid, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 import { format } from "date-fns";
 import * as FileSystem from "expo-file-system";
@@ -7,7 +7,6 @@ import XLSX from "xlsx";
 import * as Sharing from "expo-sharing";
 import { useAppContext } from "../../context/AppProvider";
 import { ObtenerReportePartidaNuevo } from "../../Utils/Boleto";
-import { requestStoragePermission } from "../../Utils/storagePermissions";
 
 export default function BotonExportarReporte() {
   const [datosExport, setDatosExport] = useState({});

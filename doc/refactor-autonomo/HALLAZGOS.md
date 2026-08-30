@@ -28,6 +28,14 @@ Conocidas al redactar el plan, pendientes de confirmar durante la ejecución:
 
 ## Deuda técnica
 
+- **`src/Utils/storagePermissions.js` quedó huérfano tras la tarea 03.** Su única función
+  exportada (`requestStoragePermission`) no se llamaba desde ningún sitio (ni siquiera
+  antes del refactor: el import en `BotonExportarReporte.js` ya estaba sin usar en la
+  línea base). Al quitar ese import muerto y luego la función muerta, el fichero quedó
+  reducido a un solo `import` sin ningún uso — no lo importa nadie más. No se borró el
+  fichero en esta sesión: el plan de la tarea 03 cubre imports, variables y funciones
+  muertas dentro de un fichero, no decidir si borrar un fichero entero, y esa es una
+  llamada algo mayor que prefiero dejar para revisión humana. Candidato claro a borrado.
 - **No hay tests ni linter.** Es la carencia más importante del proyecto y la razón de que
   este plan sea tan conservador. Instalar Jest y `@testing-library/react-native` exige
   cambiar dependencias y configurar Babel: necesita supervisión.

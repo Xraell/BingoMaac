@@ -14,7 +14,7 @@ import { BingoColors } from "../../Theme/Colors";
 import { ActivityIndicator, Button, Text } from "react-native-paper";
 import { useAppContext } from "../../context/AppProvider";
 import { useNavigation } from "@react-navigation/native";
-import { actualizarBoleto, ObtenerBoletosUsuario } from "../../Utils/Boleto";
+import { ObtenerBoletosUsuario } from "../../Utils/Boleto";
 import { agregarcompra, crearObjetocompra } from "../../Utils/Compra";
 import { ObtenerPartidaActual } from "../../Utils/Partida";
 

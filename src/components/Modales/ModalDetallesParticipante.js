@@ -1,22 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Pressable,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Dimensions,
-  ScrollView,
-} from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  IconButton,
-  Switch,
-  Text,
-} from "react-native-paper";
+import React, { useState, useEffect } from "react";
+import { Modal, StyleSheet, Pressable, View, ScrollView } from "react-native";
+import { Text } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 const ModalDetallesParticipante = ({ usuario, visible, setVisible }) => {
   const [listaNros, setListaNros] = useState([]);

@@ -1,24 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Pressable,
-  View,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  IconButton,
-  Switch,
-  Text,
-  TextInput,
-} from "react-native-paper";
+import React, { useState, useEffect } from "react";
+import { Modal, StyleSheet, Pressable, View } from "react-native";
+import { Switch, Text, TextInput } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import BotonesEditarPartida from "../Botones/BotonesEditarPartida";
-import { ObtenerPremiosPartida, ObtenerPromocionesPartida } from "../../Utils/Partida";
+import { ObtenerPremiosPartida } from "../../Utils/Partida";
 const ModalEditarPartida = ({ partida, visible, setVisible }) => {
   const [nroPartida, setNroPartida] = useState(partida.NroPartida + "");
   const [descripcion, setDescripcion] = useState(partida.Descripcion);

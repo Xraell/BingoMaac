@@ -47,18 +47,6 @@ export const ObtenerUsuarios = async () => {
   }
 };
 
-export const ObtenerUsuario = async (id) => {
-  try {
-    const data = await apiFetch("/usuario/" + id);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en VerificarUsuario:", error);
-    return null;
-  }
-};
 export const ObtenerTotalCreditos = async () => {
   try {
     const data = await apiFetch("/usuario/total");
@@ -96,7 +84,6 @@ export const RetirarCreditosUsuario = async (id,nroCreditos) => {
   }
 };
 
-
 export const agregarUsuario = async (Usuario) => {
   try {
     const data = await apiFetch("/usuario/crear", {
@@ -110,18 +97,6 @@ export const agregarUsuario = async (Usuario) => {
   }
 };
 
-export const actualizarUsuario = async (User, id) => {
-  try {
-    await apiFetch("/usuario/"+id, {
-      method: "PUT",
-      body: JSON.stringify(User),
-    });
-    return true;
-  } catch (error) {
-    console.error("Error en usuario:", error);
-    throw error;
-  }
-};
 export const eliminarUsuario = async (id) => {
   try {
     await apiFetch("/usuario/"+id, {

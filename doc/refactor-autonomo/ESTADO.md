@@ -9,7 +9,7 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 |---|---|---|---|---|
 | 01 | Línea base | ❌ bloqueada por entorno | — | **Obligatoria** — ver «Bloqueo» abajo |
 | 02 | Limpiar logs | ✅ completada (sin `expo export`) | — | Autorizado explícitamente por el usuario — ver «Verificación degradada» |
-| 03 | Imports y código muerto | ⏭ no iniciada | — | |
+| 03 | Imports y código muerto | ✅ completada (sin `expo export`) | — | Autorizado por el usuario — ver «Verificación degradada» |
 | 04 | Utils duplicados | ⏭ no iniciada | — | Fuera de alcance sin `expo export`: riesgo medio |
 | 05 | Constantes | ⏭ no iniciada | — | |
 | 06 | Informe | ⏭ no iniciada | — | Depende de las anteriores |
@@ -86,34 +86,48 @@ que esta sesión puede tocar (política de red externa), la segunda no aplica (e
 contenedor es el entorno de ejecución), y la tercera cuenta como tocar dependencias, fuera
 del alcance del plan.
 
-## Verificación degradada (autorizada por el usuario, tarea 02)
+## Verificación degradada (autorizada por el usuario, tareas 02 y 03)
 
-El usuario, informado del bloqueo, pidió explícitamente avanzar la tarea 02 sin la
-verificación automática que el plan exige (`expo export`), asumiendo el riesgo residual.
-Alcance de lo autorizado: solo tareas **mecánicas y de bajo riesgo** (02: quitar
-`console.log`); la 04 (Utils duplicados, riesgo medio) queda fuera de este permiso.
+El usuario, informado del bloqueo, pidió explícitamente avanzar las tareas mecánicas y de
+bajo riesgo (02, y luego 03) sin la verificación automática que el plan exige
+(`expo export`), asumiendo el riesgo residual. La 04 (Utils duplicados, riesgo medio)
+queda fuera de este permiso.
 
 Lo que sí se pudo hacer sin `node_modules` completo:
 
 - `node_modules/` quedó parcialmente instalado (312 paquetes) del intento fallido de la
   tarea 01 — incluye `@babel/parser`, aunque no `@babel/core` ni el resto de la cadena de
   Metro/Expo.
-- Con `@babel/parser` se validó la **sintaxis JS+JSX** de cada fichero tocado (script en
-  el scratchpad, borrado al terminar). Todos los ficheros modificados en la tarea 02
+- Con `@babel/parser` se validó la **sintaxis JS+JSX** de cada fichero tocado en ambas
+  tareas (script en el scratchpad, borrado al terminar). Todos los ficheros modificados
   parsean correctamente.
 - Esto **no sustituye a `expo export`**: no resuelve imports, no genera bundle, no detecta
   módulos rotos ni referencias a símbolos inexistentes. Es una validación de sintaxis
   únicamente.
-- Revisión manual línea por línea de cada `console.log` eliminado (ver diff del commit de
-  la tarea 02), comprobando que ninguno estuviera dentro de un `if` sin llaves y que
-  `PartidaEnCurso.js` solo perdiera líneas de log.
-- Se reprodujeron a mano los checks automáticos del documento de la tarea 02 que no
-  dependen de `expo export`: conteo de `console.log`/`console.error`, `git diff --stat`
-  contra `pre-refactor-app`, y el diff aislado de `PartidaEnCurso.js`. Todos en verde.
+- Tarea 02: revisión manual línea por línea de cada `console.log` eliminado, comprobando
+  que ninguno estuviera dentro de un `if` sin llaves y que `PartidaEnCurso.js` solo
+  perdiera líneas de log.
+- Tarea 03: los imports sin usar y las funciones muertas de `Utils/` se detectaron con un
+  script propio (AST vía `@babel/parser`) que busca, para cada símbolo importado o
+  exportado, si aparece como palabra completa en el resto del proyecto — más estricto que
+  el grep sugerido por el documento de la tarea (compara contra **todo** `src/`, no solo
+  fuera de `Utils/`, así que respeta también la excepción de "puede usarse dentro del
+  propio `Utils/`"). Se revisó a mano una muestra de los cambios más grandes
+  (`ModalComoFunciona.js`, `ItemBoleto.js`, `ModalDetallesParticipante.js`,
+  `src/Utils/Boleto.js`) leyendo el fichero completo antes y después.
+- Se reprodujeron a mano los checks automáticos de ambos documentos que no dependen de
+  `expo export`: conteo de `console.log`/`console.error`, `git diff --stat` contra
+  `pre-refactor-app`, diff aislado de `PartidaEnCurso.js`, imports sin nombre no tocados,
+  zonas prohibidas sin tocar, conteo de `import React` sin cambios. Todos en verde.
+- **No se tocó** el paso 2 de la tarea 03 (variables locales asignadas y nunca leídas,
+  p. ej. un `useState` cuyo valor no se lee). El documento pide dejar el hueco del
+  destructuring cuando el setter sí se usa, lo cual es más una decisión caso por caso que
+  un patrón mecánico seguro de automatizar a este volumen sin poder ejecutar la app —
+  se dejó fuera por prudencia, no se intentó.
 
 **No se ejecutó `expo export` ni se generó un bundle.** No hay confirmación de que la app
 siga bundleando ni funcionando en tiempo de ejecución. Esto debe verificarse en el
-checklist manual final (tarea 06 / emulador) antes de dar la tarea por buena de verdad.
+checklist manual final (tarea 06 / emulador) antes de dar las tareas por buenas de verdad.
 
 ## Zonas prohibidas
 
@@ -134,9 +148,10 @@ Se rellenan durante la ejecución; alimentan la sección 2 del informe.
 |---|---|---|
 | `console.log` | 47 | **2** (los de `ItemNro.js`, zona prohibida, dejados a propósito) |
 | `console.error` | 68 | **68** (confirmado igual) |
-| Líneas en `src/Utils/` | 942 | — (tarea 03 no ejecutada) |
-| Bloques `try` en `Utils/` | 60 | — |
-| Ficheros `.js` | 81 | 81 (ningún fichero creado ni borrado en la 02) |
+| Líneas en `src/Utils/` | 942 | **709** (-233; 18 funciones muertas eliminadas en 6 ficheros) |
+| Bloques `try` en `Utils/` | 60 | 43 (baja porque cada función muerta eliminada se llevaba su propio `try`; no se tocó ningún `try` vivo) |
+| Ficheros `.js` | 81 | 81 (ningún fichero creado ni borrado) |
+| Imports sin usar eliminados | — | 125 especificadores en 39 ficheros (import React nunca tocado) |
 | Bundle | 5.47 MB (declarado en el plan, no reproducido) | — no se pudo generar en ninguna tarea |
 
 ## Aviso sobre la verificación
@@ -154,10 +169,16 @@ sección 3 del informe final.
   no instalable, `expo export` no ejecutable). No es un apartamiento de diseño: es la
   consecuencia directa de la regla explícita de la tarea 01 ("si `expo export` falla
   aquí, detener el plan entero").
-- **El usuario autorizó explícitamente avanzar la tarea 02 sin esa verificación**,
-  aceptando el riesgo. Se hizo con revisión manual línea por línea más un chequeo de
-  sintaxis JS/JSX (no equivalente a `expo export`) — ver «Verificación degradada» arriba.
-  La tarea 03 no se ha ejecutado en este turno; la 04 se considera fuera de lo autorizado
-  por su mayor riesgo. `PartidaEnCurso.js` solo perdió líneas de log, según lo permitido.
-  En `ItemNro.js` (zona prohibida, sin excepción para logs) se dejaron sus 2 `console.log`
-  intactos a propósito.
+- **El usuario autorizó explícitamente avanzar las tareas 02 y 03 sin esa verificación**,
+  aceptando el riesgo. Se hizo con revisión manual línea por línea (02) o de una muestra
+  representativa más scripts de detección basados en AST (03), y un chequeo de sintaxis
+  JS/JSX (no equivalente a `expo export`) — ver «Verificación degradada» arriba. La tarea
+  04 se considera fuera de lo autorizado por su mayor riesgo. `PartidaEnCurso.js` solo
+  perdió líneas de log, según lo permitido; en `ItemNro.js` (zona prohibida, sin excepción
+  para logs) se dejaron sus 2 `console.log` intactos a propósito.
+- **Tarea 03, paso 2 (variables locales muertas) no se intentó**, ver «Verificación
+  degradada» — riesgo de automatizar mal el caso del hueco en un destructuring de
+  `useState`, sin forma de probarlo en ejecución.
+- **`src/Utils/storagePermissions.js` quedó como fichero huérfano** tras eliminar su única
+  función (muerta) y el import muerto que la traía. No se borró el fichero: decisión de
+  alcance, ver `HALLAZGOS.md`.

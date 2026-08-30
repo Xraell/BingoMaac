@@ -26,18 +26,6 @@ export const ObtenerPartidas = async () => {
   }
 };
 
-export const ObtenerPartida = async (id) => {
-  try {
-    const data = await apiFetch("/partida/" + id);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en VerificarPartida:", error);
-    return null;
-  }
-};
 export const ObtenerPremiosPartida = async (idPartida) => {
   try {
     const data = await apiFetch("/partida/obtener-premios/" + idPartida);

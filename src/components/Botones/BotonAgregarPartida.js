@@ -1,15 +1,9 @@
 import { useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { ActivityIndicator, IconButton } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import { useAppContext } from "../../context/AppProvider";
-import {
-  ObtenerPartidas,
-  actualizarPartida,
-  agregarPartida,
-  crearObjetoPartida,
-  eliminarPartida,
-} from "../../Utils/Partida";
+import { ObtenerPartidas, agregarPartida, crearObjetoPartida } from "../../Utils/Partida";
 export default function BotonesAgregarPartida({
   Nro,
   Descripcion,
