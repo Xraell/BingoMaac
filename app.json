@@ -21,7 +21,9 @@
         }
       }
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -30,8 +32,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#6C2382"
       },
-
-      "permissions": ["android.permission.WRITE_EXTERNAL_STORAGE","android.permission.READ_EXTERNAL_STORAGE"],
+      "permissions": [
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
       "package": "com.israelrvmwork.BingoMaac"
     },
     "web": {
@@ -41,6 +45,9 @@
       "eas": {
         "projectId": "f1711c65-328c-418c-9290-a187f75d04b9"
       }
-    }
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }

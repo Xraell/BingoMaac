@@ -1,11 +1,15 @@
 import { API_BASE } from "../config/api";
+import { leerToken } from "./sesion";
 
 export async function apiFetch(ruta, opciones = {}) {
+  const token = await leerToken();
+
   const respuesta = await fetch(`${API_BASE}${ruta}`, {
     ...opciones,
     headers: {
       "Content-type": "application/json; charset=UTF-8",
       Accept: "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...opciones.headers,
     },
   });

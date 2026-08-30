@@ -8,7 +8,7 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 | # | Tarea | Estado | Commit | Notas |
 |---|---|---|---|---|
 | 01 | Centralizar la API | ✅ completada | `bd0bf90` | ver Desviaciones |
-| 02 | Almacenamiento seguro | ⬜ pendiente | — | |
+| 02 | Almacenamiento seguro | ✅ completada | (pendiente de commit) | ver Desviaciones |
 | 03 | Flujo de sesión | ⬜ pendiente | — | |
 | 04 | Autorización en el cliente | ⬜ pendiente | — | |
 | 05 | Endurecer el cliente | ⬜ pendiente | — | |
@@ -79,3 +79,42 @@ Plan hermano: `BACKEND/doc/seguridad-produccion/`. **Repositorios git distintos*
 Preexistente, no tocado en esta tarea: `package-lock.json` sigue trackeado en git pese a
 la migración a pnpm (aviso de `expo-doctor`, "Multiple lock files detected"); fuera de
 alcance de la tarea 01.
+
+### Tarea 02 (2026-08-30)
+
+- **Backend confirmado con `curl` real** (no el placeholder `<dominio>` del documento):
+  `POST http://localhost:8080/api/usuario/authenticarte` con credenciales válidas
+  devuelve `token` (formato `N|hash`) junto a los datos del usuario. Rechaza credenciales
+  inválidas con 401 y trae rate limiting (`X-RateLimit-*`). Dependencia de backend de la
+  tarea 02 satisfecha.
+- **El documento menciona "matriz del SDK 54" dos veces** (pasos 1 y verificación
+  automática), pero el proyecto sigue en SDK 52 (confirmado en la tarea 01). Es el mismo
+  desfase de redacción que ya advertía la sección de Línea base. `npx expo install`
+  resolvió la versión correcta para SDK 52 automáticamente (`expo-secure-store@~14.0.1`),
+  así que no bloqueó nada.
+- **`expo-dev-client` no estaba instalado, pese a que `eas.json` ya tenía
+  `developmentClient: true` en el perfil `development`.** Sin él, `eas build --profile
+  development` fallaba antes de llegar a la nube ("you don't have expo-dev-client
+  installed"). No lo pide el documento de la tarea 02, pero es un prerrequisito de
+  infraestructura sin el cual ningún development build de esta etapa es posible.
+  Instalado con `npx expo install expo-dev-client` (`~5.0.20`), confirmado con el
+  usuario antes de proceder. Se incluye en el mismo commit que el resto de la tarea 02
+  porque separarlo habría exigido dos pasadas de `pnpm install` intermedias sobre el
+  lockfile, más frágil que documentarlo aquí.
+- **`npx expo install` (ambas veces, `expo-secure-store` y `expo-dev-client`) volvió a
+  ensuciar `package-lock.json` vía `npm`.** Mismo patrón que en la tarea 01: descartado
+  con `git checkout --` y reconciliado con `pnpm install`.
+- **La segunda instalación (`expo-dev-client`) falló tres veces seguidas con
+  `ERR_SSL_CIPHER_OPERATION_FAILED` al ejecutar `npm install` internamente** (error
+  transitorio de red/TLS, no de código). La entrada quedó en `package.json` sin que
+  `node_modules` tuviera el paquete; se resolvió con `pnpm install`, que sí completó sin
+  problemas de red.
+- Build de desarrollo generado en EAS con `expo-secure-store` y `expo-dev-client` ya
+  enlazados nativamente:
+  https://expo.dev/accounts/israelrvmwork/projects/BingoMaac/builds/04a0cf0d-5771-4608-9f39-b3691d7224e8
+- Prueba en dispositivo confirmada por el usuario: arranque correcto, modo invitado sigue
+  funcionando sin token, login con usuario real sin cambios, y ciclo completo
+  `guardarToken` → cierre total de la app → reapertura → `leerToken` → `borrarToken` →
+  `leerToken` verificado persistente entre reinicios.
+- `BotonesLogin.js` no se tocó, tal como exige el documento — sigue guardando
+  `idUsuario` en `AsyncStorage` sin cifrar. Eso es la tarea 03.
