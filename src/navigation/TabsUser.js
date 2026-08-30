@@ -11,6 +11,7 @@ import MisBoletos from "../screens/User/MisBoletos";
 import Perfil from "../screens/User/Perfil";
 import { ObtenerDatosPartida, ObtenerPartidaActual } from "../Utils/Partida";
 import { ObtenerBoletosUsuario } from "../Utils/Boleto";
+import { ROL_USER } from "../constants/roles";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -22,7 +23,7 @@ export default function TabsUser() {
     obtenerPActual();
   }, []);
   useEffect(() => {
-    if (user.Rol == "USER") {
+    if (user.Rol == ROL_USER) {
       obtenerListas()
     }
   }, [user]);

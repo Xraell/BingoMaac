@@ -28,6 +28,12 @@ Conocidas al redactar el plan, pendientes de confirmar durante la ejecución:
 
 ## Deuda técnica
 
+- **`src/components/Data/usuarioInvitado.js` sigue con el literal `Rol: "GUEST"`** en vez
+  de la constante `ROL_GUEST` de `src/constants/roles.js` (tarea 05). El documento de la
+  tarea lo permitía si no generaba import circular, pero el fichero está dentro de
+  `src/components/Data/`, zona prohibida en general para esta etapa — se dejó como
+  literal por prudencia en vez de evaluar caso por caso si de verdad habría ciclo. Cambio
+  trivial y de riesgo bajo para quien retome esto con capacidad de probar en dispositivo.
 - **`src/Utils/storagePermissions.js` quedó huérfano tras la tarea 03.** Su única función
   exportada (`requestStoragePermission`) no se llamaba desde ningún sitio (ni siquiera
   antes del refactor: el import en `BotonExportarReporte.js` ya estaba sin usar en la

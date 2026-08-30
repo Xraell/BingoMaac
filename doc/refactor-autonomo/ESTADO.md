@@ -10,8 +10,8 @@ El agente actualiza este fichero al cerrar cada tarea. Consultarlo con
 | 01 | Línea base | ❌ bloqueada por entorno | — | **Obligatoria** — ver «Bloqueo» abajo |
 | 02 | Limpiar logs | ✅ completada (sin `expo export`) | — | Autorizado explícitamente por el usuario — ver «Verificación degradada» |
 | 03 | Imports y código muerto | ✅ completada (sin `expo export`) | — | Autorizado por el usuario — ver «Verificación degradada» |
-| 04 | Utils duplicados | ⏭ no iniciada | — | Fuera de alcance sin `expo export`: riesgo medio |
-| 05 | Constantes | ⏭ no iniciada | — | |
+| 04 | Utils duplicados | ⏭ no iniciada | — | Fuera de alcance sin `expo export`: riesgo medio, reescribe la capa de red |
+| 05 | Constantes | ✅ completada (sin `expo export`) | — | Autorizado por el usuario — ver «Verificación degradada». Sin depender de la 04: no toca los mismos ficheros |
 | 06 | Informe | ⏭ no iniciada | — | Depende de las anteriores |
 
 Estados: ⬜ pendiente · 🟡 en curso · ✅ completada · ❌ revertida · ⏭ saltada
@@ -86,12 +86,14 @@ que esta sesión puede tocar (política de red externa), la segunda no aplica (e
 contenedor es el entorno de ejecución), y la tercera cuenta como tocar dependencias, fuera
 del alcance del plan.
 
-## Verificación degradada (autorizada por el usuario, tareas 02 y 03)
+## Verificación degradada (autorizada por el usuario, tareas 02, 03 y 05)
 
 El usuario, informado del bloqueo, pidió explícitamente avanzar las tareas mecánicas y de
-bajo riesgo (02, y luego 03) sin la verificación automática que el plan exige
+bajo riesgo (02, 03 y 05) sin la verificación automática que el plan exige
 (`expo export`), asumiendo el riesgo residual. La 04 (Utils duplicados, riesgo medio)
-queda fuera de este permiso.
+queda fuera de este permiso: reescribe la capa de comunicación con el backend y un error
+ahí no rompe la compilación, rompe llamadas en ejecución — exactamente lo que no se puede
+verificar sin `expo export` ni dispositivo.
 
 Lo que sí se pudo hacer sin `node_modules` completo:
 
@@ -124,6 +126,20 @@ Lo que sí se pudo hacer sin `node_modules` completo:
   destructuring cuando el setter sí se usa, lo cual es más una decisión caso por caso que
   un patrón mecánico seguro de automatizar a este volumen sin poder ejecutar la app —
   se dejó fuera por prudencia, no se intentó.
+- Tarea 05: se creó `src/constants/roles.js` (`ROL_ADMIN`, `ROL_USER`, `ROL_GUEST`) y se
+  sustituyeron las 6 comparaciones de rol encontradas en `BotonesLogin.js` (×2),
+  `TabsUser.js`, `Boletos.js`, `MisBoletos.js` y `Perfil.js`, más el literal `"USER"` de
+  `BotonRegistro.js` al construir un usuario nuevo. **Cada operador (`==` / `===`, con o
+  sin espacio) se conservó exactamente igual** — solo se sustituyó el literal, verificado
+  línea por línea en el diff. El paso de colores (buscar hex que coincidan con
+  `Colors.js`) no encontró ningún candidato: los 16 colores hardcodeados del proyecto no
+  coinciden con ninguno de los 6 de la paleta, así que no había nada que sustituir — se
+  comprobó, no se saltó.
+- Tarea 05, excepción documentada: **`src/components/Data/usuarioInvitado.js` no se
+  tocó.** El propio documento de la tarea 05 contempla este fichero y permite usar la
+  constante ahí "si no genera un import circular", pero está dentro de
+  `src/components/Data/`, que la skill marca como zona prohibida en general. Se optó por
+  la lectura más conservadora: dejarlo como literal `Rol: "GUEST"`, sin tocar el fichero.
 
 **No se ejecutó `expo export` ni se generó un bundle.** No hay confirmación de que la app
 siga bundleando ni funcionando en tiempo de ejecución. Esto debe verificarse en el
@@ -152,6 +168,7 @@ Se rellenan durante la ejecución; alimentan la sección 2 del informe.
 | Bloques `try` en `Utils/` | 60 | 43 (baja porque cada función muerta eliminada se llevaba su propio `try`; no se tocó ningún `try` vivo) |
 | Ficheros `.js` | 81 | 81 (ningún fichero creado ni borrado) |
 | Imports sin usar eliminados | — | 125 especificadores en 39 ficheros (import React nunca tocado) |
+| Comparaciones de rol con literal | 7 (6 comparaciones + 1 asignación) | 0 fuera de `roles.js` y `usuarioInvitado.js` (excepción documentada) |
 | Bundle | 5.47 MB (declarado en el plan, no reproducido) | — no se pudo generar en ninguna tarea |
 
 ## Aviso sobre la verificación
@@ -169,13 +186,17 @@ sección 3 del informe final.
   no instalable, `expo export` no ejecutable). No es un apartamiento de diseño: es la
   consecuencia directa de la regla explícita de la tarea 01 ("si `expo export` falla
   aquí, detener el plan entero").
-- **El usuario autorizó explícitamente avanzar las tareas 02 y 03 sin esa verificación**,
-  aceptando el riesgo. Se hizo con revisión manual línea por línea (02) o de una muestra
-  representativa más scripts de detección basados en AST (03), y un chequeo de sintaxis
-  JS/JSX (no equivalente a `expo export`) — ver «Verificación degradada» arriba. La tarea
-  04 se considera fuera de lo autorizado por su mayor riesgo. `PartidaEnCurso.js` solo
+- **El usuario autorizó explícitamente avanzar las tareas 02, 03 y 05 sin esa
+  verificación**, aceptando el riesgo. Se hizo con revisión manual línea por línea (02,
+  05) o de una muestra representativa más scripts de detección basados en AST (03), y un
+  chequeo de sintaxis JS/JSX (no equivalente a `expo export`) — ver «Verificación
+  degradada» arriba. La tarea 04 se considera fuera de lo autorizado por su mayor riesgo:
+  toca la capa de red y un fallo ahí no se detecta compilando. `PartidaEnCurso.js` solo
   perdió líneas de log, según lo permitido; en `ItemNro.js` (zona prohibida, sin excepción
   para logs) se dejaron sus 2 `console.log` intactos a propósito.
+- **Tarea 05, la constante de `usuarioInvitado.js` no se aplicó** por estar el fichero
+  dentro de `src/components/Data/` (zona prohibida). El propio documento de la tarea lo
+  permitía condicionalmente; se optó por la lectura más conservadora igualmente.
 - **Tarea 03, paso 2 (variables locales muertas) no se intentó**, ver «Verificación
   degradada» — riesgo de automatizar mal el caso del hueco en un destructuring de
   `useState`, sin forma de probarlo en ejecución.

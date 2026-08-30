@@ -6,6 +6,7 @@ import { useAppContext } from "../../context/AppProvider";
 import { VerificarUsuario } from "../../Utils/Usuario";
 import { apiFetch } from "../../Utils/http";
 import { leerToken, borrarToken } from "../../Utils/sesion";
+import { ROL_ADMIN } from "../../constants/roles";
 export default function BotonesLogin({ correo, clave }) {
   const [cargando, setCargando] = useState(false);
   const { heightWindow, setUser, setMembresia ,setOpc} = useAppContext();
@@ -22,7 +23,7 @@ export default function BotonesLogin({ correo, clave }) {
       }
       const usuario = await apiFetch("/usuario/me");
       setUser(usuario);
-      setOpc(usuario.Rol === "ADMIN" ? 2 : 1);
+      setOpc(usuario.Rol === ROL_ADMIN ? 2 : 1);
     } catch (error) {
       // Token invalido o caducado: sesion limpia y al login.
       await borrarToken();
@@ -34,7 +35,7 @@ export default function BotonesLogin({ correo, clave }) {
     try {
       const response = await VerificarUsuario(correo, clave);
       setUser(response)
-      if(response.Rol=="ADMIN"){
+      if(response.Rol==ROL_ADMIN){
         return setOpc(2)
       }
       return setOpc(1)
