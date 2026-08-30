@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> **Antes de retomar el trabajo, leer [`doc/PENDIENTE.md`](doc/PENDIENTE.md).** Resume qué
+> queda por hacer, qué bugs se encontraron y se dejaron a propósito, y por qué
+> `pnpm install --frozen-lockfile` falla hoy. Hay dos etapas terminadas y verificadas por
+> tests pero **sin probar nunca en un dispositivo**.
+
 ## Comandos
 
 ```bash
