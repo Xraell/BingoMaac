@@ -240,7 +240,7 @@ const ModalBoleto = ({
         <View style={[styles.modalView]}>
           <View style={styles.closeButtonContainer}>
             <Pressable
-              style={[styles.button, styles.buttonClose]}
+              style={[estilosComunes.botonModal, styles.buttonClose]}
               onPress={() => setModalVisible(false)}
             >
               <Text style={estilosComunes.textStyle}>X</Text>
@@ -299,11 +299,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     paddingRight: 10,
     marginBottom: 10,
-  },
-  button: {
-    borderRadius: 10,
-    padding: 3,
-    elevation: 2,
   },
   buttonClose: {
     backgroundColor: BingoColors.primary,

@@ -54,6 +54,24 @@ Conocidas al redactar el plan, pendientes de confirmar durante la ejecución:
 
 ## Deuda técnica
 
+- **`ModalAgregarPartida.js` y `ModalAgregarPromocion.js` usan `styles.button`, que no
+  existe.** Ninguno de los dos declara la clave `button` en su `StyleSheet.create` — ni
+  ahora ni antes de esta etapa (comprobado contra el tag `pre-refactor-app`). Ambos hacen:
+
+  ```js
+  <Pressable style={[styles.button, estilosComunes.botonCerrar]} ... />
+  ```
+
+  React Native ignora los elementos `undefined` de un array de estilos, así que no revienta:
+  simplemente el botón de cerrar de esos dos modales **no lleva** el `borderRadius: 10`,
+  `padding: 3` ni `elevation: 2` que sí llevan los otros doce. Es casi seguro un copia-pega
+  incompleto.
+
+  Se detectó durante la tarea 03 de `doc/estilos-centralizados/` y **no se arregló a
+  propósito**: cambiar `styles.button` por `estilosComunes.botonModal` haría que esos dos
+  botones se vieran distintos, y esa etapa tenía prohibido cambiar nada observable. Es un
+  arreglo de una línea por fichero, pero necesita a alguien que mire la pantalla para
+  confirmar que el resultado es el que se quería.
 - **`src/components/Data/usuarioInvitado.js` sigue con el literal `Rol: "GUEST"`** en vez
   de la constante `ROL_GUEST` de `src/constants/roles.js` (tarea 05). El documento de la
   tarea lo permitía si no generaba import circular, pero el fichero está dentro de

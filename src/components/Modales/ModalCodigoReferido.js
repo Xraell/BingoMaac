@@ -13,16 +13,16 @@ const ModalCodigoReferido = () => {
   const [visible, setModalVisible] = useState(false);
 
   return (
-    <View style={styles.centeredView}>
+    <View style={estilosComunes.vistaCentrada}>
       <Modal
         animationType="slide"
         transparent={true}
         visible={visible}
       >
-        <View style={styles.centeredView}>
+        <View style={estilosComunes.vistaCentrada}>
           <View style={styles.modalView}>
             <Pressable
-              style={[styles.button, styles.buttonClose]}
+              style={[estilosComunes.botonModal, estilosComunes.botonCerrar]}
               onPress={() => setModalVisible(false)}
             >
               <Text style={estilosComunes.textStyle}>X</Text>
@@ -59,11 +59,6 @@ const ModalCodigoReferido = () => {
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
   modalView: {
     backgroundColor: BingoColors.white,
     position: "relative",
@@ -84,19 +79,6 @@ const styles = StyleSheet.create({
     marginTop: "40%",
     maxHeight: "60%",
     width: "92%",
-  },
-  button: {
-    borderRadius: 10,
-    padding: 3,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: BingoColors.primary,
-    position: "absolute",
-    top: 10,
-    right: 10,
-    borderRadius: 100,
-    paddingHorizontal: 10,
   },
   title: {
     marginTop: 20,

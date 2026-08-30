@@ -41,12 +41,12 @@ const ModalDetallesUsuario = ({ usuario, visible, setVisible }) => {
     );
   };
   return (
-    <View style={styles.centeredView}>
+    <View style={estilosComunes.vistaCentradaConMargen}>
       <Modal animationType="slide" transparent={true} visible={visible}>
-        <View style={styles.centeredView}>
+        <View style={estilosComunes.vistaCentradaConMargen}>
           <View style={styles.modalView}>
             <Pressable
-              style={[styles.button, styles.buttonClose]}
+              style={[estilosComunes.botonModal, estilosComunes.botonCerrar]}
               onPress={() => setVisible(false)}
             >
               <Text style={estilosComunes.textStyle}>X</Text>
@@ -105,12 +105,6 @@ const styles = StyleSheet.create({
     textAlign: "left",
     width: "100%",
   },
-  centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 7,
-    position: "relative",
-  },
   modalView: {
     backgroundColor: BingoColors.white,
     position: "relative",
@@ -130,19 +124,6 @@ const styles = StyleSheet.create({
     minHeight: 300,
     marginTop: "50%",
     width: "90%",
-  },
-  button: {
-    borderRadius: 10,
-    padding: 3,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: BingoColors.primary,
-    position: "absolute",
-    top: 10,
-    right: 10,
-    borderRadius: 100,
-    paddingHorizontal: 10,
   },
 });
 

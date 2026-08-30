@@ -50,12 +50,12 @@ const ModalAgregarPartida = ({ }) => {
   }, [partidaActual]);
 
   return (
-    <View style={styles.centeredView}>
+    <View style={estilosComunes.vistaCentradaConMargen}>
       <Modal animationType="slide" transparent={true} visible={visible}>
-        <View style={styles.centeredView}>
+        <View style={estilosComunes.vistaCentradaConMargen}>
           <View style={styles.modalView}>
             <Pressable
-              style={[styles.button, styles.buttonClose]}
+              style={[styles.button, estilosComunes.botonCerrar]}
               onPress={() => setVisible(false)}
             >
               <Text style={estilosComunes.textStyle}>X</Text>
@@ -207,12 +207,6 @@ const styles = StyleSheet.create({
     width: "30%",
     marginLeft: 10,
   },
-  centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 7,
-    position: "relative",
-  },
   modalView: {
     backgroundColor: BingoColors.white,
     position: "relative",
@@ -232,14 +226,6 @@ const styles = StyleSheet.create({
     minHeight: 300,
     marginTop: "10%",
     width: "95%",
-  },
-  buttonClose: {
-    backgroundColor: BingoColors.primary,
-    position: "absolute",
-    top: 10,
-    right: 10,
-    borderRadius: 100,
-    paddingHorizontal: 10,
   },
   title: {
     marginTop: 10,

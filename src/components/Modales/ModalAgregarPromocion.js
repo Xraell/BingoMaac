@@ -23,12 +23,12 @@ const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
     };
 
     return (
-        <View style={styles.centeredView}>
+        <View style={estilosComunes.vistaCentrada}>
             <Modal animationType="slide" transparent={true} visible={visible}>
-                <View style={styles.centeredView}>
+                <View style={estilosComunes.vistaCentrada}>
                     <View style={styles.modalView}>
                         <Pressable
-                            style={[styles.button, styles.buttonClose]}
+                            style={[styles.button, estilosComunes.botonCerrar]}
                             onPress={() => setVisible(false)}
                         >
                             <Text style={estilosComunes.textStyle}>X</Text>
@@ -110,11 +110,6 @@ const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
 };
 
 const styles = StyleSheet.create({
-    centeredView: {
-        justifyContent: "center",
-        alignItems: "center",
-        position: "relative",
-    },
     modalView: {
         backgroundColor: BingoColors.white,
         borderRadius: 20,
@@ -129,14 +124,6 @@ const styles = StyleSheet.create({
         minHeight: "60%",
         marginTop: "30%",
         width: "95%",
-    },
-    buttonClose: {
-        backgroundColor: BingoColors.primary,
-        position: "absolute",
-        top: 10,
-        right: 10,
-        borderRadius: 100,
-        paddingHorizontal: 10,
     },
     title: {
         marginTop: 10,
