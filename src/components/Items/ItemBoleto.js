@@ -1,8 +1,6 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { BingoColors } from "../../Theme/Colors";
 import { Text } from "react-native-paper";
-import ModalBoleto from "../Modales/ModalBoleto";
-import { useState } from "react";
 export default function ItemBoleto({ boleto, setBoleto, abrir }) {
   return (
     <TouchableOpacity

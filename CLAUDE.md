@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> **Antes de retomar el trabajo, leer [`doc/PENDIENTE.md`](doc/PENDIENTE.md).** Resume qué
+> queda por hacer, qué bugs se encontraron y se dejaron a propósito, y por qué
+> `pnpm install --frozen-lockfile` falla hoy. Hay dos etapas terminadas y verificadas por
+> tests pero **sin probar nunca en un dispositivo**.
+
 ## Comandos
 
 ```bash
@@ -18,7 +23,16 @@ Build de APK / producción con EAS (perfiles definidos en `eas.json`: `developme
 eas build --profile preview --platform android
 ```
 
-No hay tests, linter ni TypeScript configurados en el proyecto. El código es JavaScript plano con JSX; no existe script de `lint` ni `test` en `package.json`.
+```bash
+npm test             # jest
+```
+
+Hay tests con Jest (`jest-expo` + `@testing-library/react-native`), agregados en
+`doc/pruebas-automatizadas/`. Cobertura todavía parcial: solo funciones puras de
+`src/Utils/` (los `crearObjeto*` y los ayudantes `pedirODevolverNull`/`pedirOLanzar` de
+`http.js`) y las constantes de `src/constants/roles.js`. Los componentes y el resto de
+`Utils/` siguen sin tests. No hay linter ni TypeScript configurados. El código es
+JavaScript plano con JSX.
 
 ## Arquitectura
 
@@ -85,6 +99,14 @@ Un boleto es un objeto plano con campos `Nro1`…`Nro15` (15 números) más `Nro
 - **Todo el dominio está en español**: nombres de componentes, funciones, variables, rutas de API y textos de UI. Mantener esa nomenclatura al agregar código.
 - Estructura por tipo, no por feature: `components/{Botones,Modales,Items,Listas,Tablas,Conjunto,Formularios,Filtros,Accesorios,Mensajes,Animations,Data}`. `Conjunto/` agrupa los componentes compuestos grandes.
 - UI con `react-native-paper` (tema en `App.js`), iconos `MaterialCommunityIcons`, paleta centralizada en `src/Theme/Colors.js` (`BingoColors`). Usar esas constantes en vez de literales hex.
+- `src/Theme/estilosComunes.js` guarda los estilos compartidos por varios componentes:
+  `textStyle`, `botonCerrar`, `botonModal`, `vistaCentrada` y `vistaCentradaConMargen`, que
+  usan 14 de los modales. **Solo entra ahí un estilo cuyo valor sea byte a byte idéntico en
+  todos los ficheros que lo comparten**: `vistaCentrada` y `vistaCentradaConMargen` son dos
+  constantes separadas a propósito porque difieren en un `marginRight: 7`, y fusionarlas
+  movería 6 pantallas. Antes de "limpiar" un estilo que parece repetido, leer la sección 3
+  de `doc/estilos-centralizados/INFORME.md`: `bx` aparece 23 veces pero son **21 estilos
+  distintos con el mismo nombre**, y lo mismo pasa con `title`, `container` y `modalView`.
 - Patrón de pantalla recurrente: `View` con `backgroundColor: BingoColors.primary` que envuelve un `View` interior `styles.bx` con `backgroundColor: BingoColors.background` y `borderTopRightRadius: 40`.
 - Las vistas alternan sub-secciones con estados numéricos locales (`opcJuego`, `opcBoleto`, `opcMisBoletos`) en el mismo estilo que `opc` global.
 - Hay `console.log` de depuración por todo el código (varios con prefijo `🚀 ~`); es el estilo existente, no residuo accidental a limpiar salvo que se pida.

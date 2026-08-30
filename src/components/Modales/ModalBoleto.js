@@ -14,9 +14,10 @@ import { BingoColors } from "../../Theme/Colors";
 import { ActivityIndicator, Button, Text } from "react-native-paper";
 import { useAppContext } from "../../context/AppProvider";
 import { useNavigation } from "@react-navigation/native";
-import { actualizarBoleto, ObtenerBoletosUsuario } from "../../Utils/Boleto";
+import { ObtenerBoletosUsuario } from "../../Utils/Boleto";
 import { agregarcompra, crearObjetocompra } from "../../Utils/Compra";
 import { ObtenerPartidaActual } from "../../Utils/Partida";
+import { estilosComunes } from "../../Theme/estilosComunes";
 
 // Subcomponente para una celda individual de Boleto
 const CeldaBoleto = ({ numero, squareSize }) => {
@@ -133,7 +134,6 @@ const ModalBoleto = ({
       const response = await ObtenerBoletosUsuario(user.id);
       setMisBoletos(response);
     } catch (error) {
-      console.log("error: ", error);
       setMisBoletos([]);
     }
   };
@@ -240,10 +240,10 @@ const ModalBoleto = ({
         <View style={[styles.modalView]}>
           <View style={styles.closeButtonContainer}>
             <Pressable
-              style={[styles.button, styles.buttonClose]}
+              style={[estilosComunes.botonModal, styles.buttonClose]}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
           </View>
 
@@ -300,21 +300,10 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     marginBottom: 10,
   },
-  button: {
-    borderRadius: 10,
-    padding: 3,
-    elevation: 2,
-  },
   buttonClose: {
     backgroundColor: BingoColors.primary,
     borderRadius: 100,
     paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
   },
   filaContainer: {
     flexDirection: "row",

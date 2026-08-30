@@ -1,15 +1,9 @@
 import { useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { ActivityIndicator, IconButton } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import { useAppContext } from "../../context/AppProvider";
-import {
-  ObtenerPartidas,
-  actualizarPartida,
-  agregarPartida,
-  crearObjetoPartida,
-  eliminarPartida,
-} from "../../Utils/Partida";
+import { ObtenerPartidas, agregarPartida, crearObjetoPartida } from "../../Utils/Partida";
 export default function BotonesAgregarPartida({
   Nro,
   Descripcion,
@@ -77,7 +71,6 @@ export default function BotonesAgregarPartida({
       const response = await agregarPartida(PartidaNuevo, promociones, costoBoleto,premios);
       const Partidas = await ObtenerPartidas();
       setPartidas(Partidas);
-      console.log("Partidas al agregar: ", Partidas);
       if (Partidas.length > 0) {
         setPartidaActual(Partidas[0]);
       } else {

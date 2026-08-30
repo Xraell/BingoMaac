@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native';
 import { IconButton } from 'react-native-paper'
 import { BingoColors } from '../../Theme/Colors'
 export default function BotonTerminarPartida({volver}) {

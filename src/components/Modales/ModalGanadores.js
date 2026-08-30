@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Modal, View, StyleSheet, ScrollView, Animated, Dimensions } from 'react-native';
-import { Text, Button, IconButton } from 'react-native-paper';
+import { Text, Button } from 'react-native-paper';
 import { Audio } from 'expo-av';
 import LottieView from 'lottie-react-native';
 import { BingoColors } from '../../Theme/Colors';
@@ -33,7 +33,6 @@ export default function ModalGanadores({ visible, ganadores, onClose }) {
   }, [visible]);
 
   const reproducirSonido = async (tipoPremio) => {
-    console.log('tipoPremio: ', tipoPremio);
     try {
       const soundMap = {
         'Cartón lleno': require('../../sounds/women/bingo.wav'),
@@ -48,7 +47,6 @@ export default function ModalGanadores({ visible, ganadores, onClose }) {
         await audioPlayer.playAsync();
       }
     } catch (error) {
-      console.log('Error al reproducir sonido:', error);
     }
   };
 

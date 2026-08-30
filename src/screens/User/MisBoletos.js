@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import MensajeRegistrate from "../../components/Mensajes/MensajesRegistrate";
 import { BingoColors } from "../../Theme/Colors";
 import { useAppContext } from "../../context/AppProvider";
 import { useEffect, useState } from "react";
 import ListaMisBoletos from "../../components/Conjunto/ListaMisBoletos";
+import { ROL_USER } from "../../constants/roles";
 export default function MisBoletos() {
   const { user } = useAppContext();
   const [opcMisBoletos,setOpcMisBoletos]= useState(0)
   useEffect(() => {
-    if(user.Rol=="USER"){
+    if(user.Rol==ROL_USER){
       return setOpcMisBoletos(2)
     }
     return setOpcMisBoletos(1)

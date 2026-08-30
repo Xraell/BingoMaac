@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 import { useAppContext } from "../context/AppProvider";
 import Login from "./Login";
 import { StatusBar } from "expo-status-bar";

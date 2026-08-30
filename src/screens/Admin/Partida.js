@@ -1,4 +1,4 @@
-import { Alert, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { BingoColors } from "../../Theme/Colors";
 import { Button, Text } from "react-native-paper";
 import { useAppContext } from "../../context/AppProvider";
@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import ModalEditarPartida from "../../components/Modales/ModalEditarPartida";
 import ModalAgregarPartida from "../../components/Modales/ModalAgregarPartida";
 import { ReiniciarBoletos } from "../../Utils/Boleto";
-import ModalPrecio from "../../components/Modales/ModalPrecio";
 import { actualizarPartida } from "../../Utils/Partida";
 
 export default function Partida() {

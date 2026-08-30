@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { PermissionsAndroid, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 import { format } from "date-fns";
 import * as FileSystem from "expo-file-system";
@@ -7,7 +7,6 @@ import XLSX from "xlsx";
 import * as Sharing from "expo-sharing";
 import { useAppContext } from "../../context/AppProvider";
 import { ObtenerReportePartidaNuevo } from "../../Utils/Boleto";
-import { requestStoragePermission } from "../../Utils/storagePermissions";
 
 export default function BotonExportarReporte() {
   const [datosExport, setDatosExport] = useState({});
@@ -35,25 +34,20 @@ export default function BotonExportarReporte() {
 
     for (let col = 0; col < COLUMNAS; col++) {
       const colKey = String.fromCharCode(65 + col);
-      console.log(`Procesando columna: ${colKey} (Columna ${col + 1} de ${COLUMNAS})`);
 
       for (let fila = 0; fila < filas; fila++) {
         const index = col * filas + fila;
-        console.log(`Fila: ${fila + 1} | Columna: ${colKey} | Índice: ${index}`);
 
         if (index < boletos.length) {
           const boleto = boletos[index];
-          console.log(`Asignando boleto: #${boleto.NroSerial} ${boleto.Nombres} ${boleto.Apellidos} a tabla[${fila + 2}][${colKey}]`);
           tabla[fila + 2][colKey] = `#${boleto.NroSerial} ${boleto.Nombres} ${boleto.Apellidos}`;
         } else {
-          console.log(`No hay más boletos, asignando celda vacía a tabla[${fila + 2}][${colKey}]`);
           tabla[fila + 2][colKey] = "";
         }
       }
     }
 
 
-    console.log('tabla: ', tabla);
     tabla.push({});
     tabla.push({});
 
@@ -121,7 +115,6 @@ export default function BotonExportarReporte() {
         mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
     } catch (error) {
-      console.log("Error:", error);
     }
   };
   const handleExport = async () => {
@@ -133,7 +126,6 @@ export default function BotonExportarReporte() {
       const tabla = crearTablaTickets(datosRecibidos.boletos_vendidos,datosRecibidos);
       await exportar(tabla);
     } catch (error) {
-      console.log("Error en handleExport:", error);
     }
   };
 

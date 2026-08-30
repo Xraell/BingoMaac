@@ -1,4 +1,4 @@
-import { apiFetch } from "./http";
+import { pedirODevolverNull, pedirOLanzar } from "./http";
 
 export const crearObjetoMensaje = (
   idMensaje,
@@ -17,27 +17,12 @@ export const crearObjetoMensaje = (
 };
 
 export const ObtenerMensajePartida = async (id) => {
-  try {
-    const data = await apiFetch("/mensaje/partida/" + id);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en VerificarNumero:", error);
-    return null;
-  }
+  return pedirODevolverNull("/mensaje/partida/" + id, "VerificarNumero");
 };
 
 export const agregarMensaje = async (Mensaje) => {
-  try {
-    const data = await apiFetch("/mensaje/crear", {
-      method: "POST",
-      body: JSON.stringify(Mensaje),
-    });
-    return data;
-  } catch (error) {
-    console.error("Error en Mensaje:", error);
-    throw error;
-  }
+  return pedirOLanzar("/mensaje/crear", "Mensaje", {
+    method: "POST",
+    body: JSON.stringify(Mensaje),
+  });
 };

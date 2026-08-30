@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Partida from '../screens/Admin/Partida';
@@ -27,8 +27,6 @@ export default function TabsAdmin() {
     setPartidas(lista)
     const usuarios = await ObtenerUsuarios()
     setListUsers(usuarios)
-    console.log("response: ", response);
-    
   }
   return (
     <Tab.Navigator

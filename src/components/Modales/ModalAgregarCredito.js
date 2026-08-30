@@ -1,25 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Pressable,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Dimensions,
-} from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  IconButton,
-  Switch,
-  Text,
-} from "react-native-paper";
+import React, { useState } from "react";
+import { Alert, Modal, StyleSheet, Pressable, View, TextInput } from "react-native";
+import { ActivityIndicator, Button, IconButton, Text } from "react-native-paper";
 // import { ObtenerUsuarios, eliminarUsuario } from "../utils/Usuario";
 import { BingoColors } from "../../Theme/Colors";
 import { useAppContext } from "../../context/AppProvider";
-import { AgregarCreditosUsuario, crearObjetoUsuario } from "../../Utils/Usuario";
+import { AgregarCreditosUsuario } from "../../Utils/Usuario";
+import { estilosComunes } from "../../Theme/estilosComunes";
 const ModalAgregarCredito = ({ usuario, visible, setVisible }) => {
   const [loading, setLoading] = useState(false);
   const { setListUsers,listUsers } = useAppContext();
@@ -58,15 +44,15 @@ const ModalAgregarCredito = ({ usuario, visible, setVisible }) => {
     );
   };
   return (
-    <View style={styles.centeredView}>
+    <View style={estilosComunes.vistaCentradaConMargen}>
       <Modal animationType="slide" transparent={true} visible={visible}>
-        <View style={styles.centeredView}>
+        <View style={estilosComunes.vistaCentradaConMargen}>
           <View style={styles.modalView}>
             <Pressable
-              style={[styles.button, styles.buttonClose]}
+              style={[estilosComunes.botonModal, estilosComunes.botonCerrar]}
               onPress={() => setVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
               AGREGAR CREDITOS
@@ -119,12 +105,6 @@ const ModalAgregarCredito = ({ usuario, visible, setVisible }) => {
 };
 
 const styles = StyleSheet.create({
-  Descripcion: {
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 5,
-    textAlign: "center",
-  },
   title: {
     marginTop: 10,
     textAlign: "center",
@@ -139,12 +119,6 @@ const styles = StyleSheet.create({
     color: BingoColors.primary,
     textAlign: "center",
     width: "100%",
-  },
-  centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 7,
-    position: "relative",
   },
   modalView: {
     backgroundColor: BingoColors.white,
@@ -164,29 +138,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginTop: "60%",
     width: "90%",
-  },
-  button: {
-    borderRadius: 10,
-    padding: 3,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: BingoColors.primary,
-    position: "absolute",
-    top: 10,
-    right: 10,
-    borderRadius: 100,
-    paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
   },
 });
 

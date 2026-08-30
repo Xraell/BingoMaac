@@ -1,24 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Pressable,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Dimensions,
-} from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  IconButton,
-  Switch,
-  Text,
-} from "react-native-paper";
+import React, { useState } from "react";
+import { Alert, Modal, StyleSheet, Pressable, View } from "react-native";
+import { ActivityIndicator, IconButton, Text } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import { ObtenerUsuarios, eliminarUsuario } from "../../Utils/Usuario";
 import { useAppContext } from "../../context/AppProvider";
+import { estilosComunes } from "../../Theme/estilosComunes";
 const ModalDetallesUsuario = ({ usuario, visible, setVisible }) => {
   const [loading, setLoading] = useState(false);
   const { setListUsers } = useAppContext();
@@ -55,15 +41,15 @@ const ModalDetallesUsuario = ({ usuario, visible, setVisible }) => {
     );
   };
   return (
-    <View style={styles.centeredView}>
+    <View style={estilosComunes.vistaCentradaConMargen}>
       <Modal animationType="slide" transparent={true} visible={visible}>
-        <View style={styles.centeredView}>
+        <View style={estilosComunes.vistaCentradaConMargen}>
           <View style={styles.modalView}>
             <Pressable
-              style={[styles.button, styles.buttonClose]}
+              style={[estilosComunes.botonModal, estilosComunes.botonCerrar]}
               onPress={() => setVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
               DETALLES DEL USUARIO
@@ -104,18 +90,6 @@ const ModalDetallesUsuario = ({ usuario, visible, setVisible }) => {
 };
 
 const styles = StyleSheet.create({
-  Descripcion: {
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 5,
-    textAlign: "center",
-  },
-  rowItem: {
-    width: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-  },
   title: {
     marginTop: 10,
     textAlign: "center",
@@ -130,12 +104,6 @@ const styles = StyleSheet.create({
     color: BingoColors.primary,
     textAlign: "left",
     width: "100%",
-  },
-  centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 7,
-    position: "relative",
   },
   modalView: {
     backgroundColor: BingoColors.white,
@@ -156,29 +124,6 @@ const styles = StyleSheet.create({
     minHeight: 300,
     marginTop: "50%",
     width: "90%",
-  },
-  button: {
-    borderRadius: 10,
-    padding: 3,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: BingoColors.primary,
-    position: "absolute",
-    top: 10,
-    right: 10,
-    borderRadius: 100,
-    paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
   },
 });
 

@@ -1,4 +1,4 @@
-import { apiFetch } from "./http";
+import { apiFetch, pedirODevolverNull, pedirOLanzar } from "./http";
 import { guardarToken } from "./sesion";
 
 export const VerificarUsuario = async (tel, clave) => {
@@ -47,81 +47,23 @@ export const ObtenerUsuarios = async () => {
   }
 };
 
-export const ObtenerUsuario = async (id) => {
-  try {
-    const data = await apiFetch("/usuario/" + id);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en VerificarUsuario:", error);
-    return null;
-  }
-};
 export const ObtenerTotalCreditos = async () => {
-  try {
-    const data = await apiFetch("/usuario/total");
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en total:", error);
-    return null;
-  }
+  return pedirODevolverNull("/usuario/total", "total");
 };
 export const AgregarCreditosUsuario = async (id,nroCreditos) => {
-  try {
-    const data = await apiFetch("/usuario/agregar-creditos/" + id+"/"+nroCreditos);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en VerificarUsuario:", error);
-    return null;
-  }
+  return pedirODevolverNull("/usuario/agregar-creditos/" + id+"/"+nroCreditos, "VerificarUsuario");
 };
 export const RetirarCreditosUsuario = async (id,nroCreditos) => {
-  try {
-    const data = await apiFetch("/usuario/retirar-creditos/" + id+"/"+nroCreditos);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en VerificarUsuario:", error);
-    return null;
-  }
+  return pedirODevolverNull("/usuario/retirar-creditos/" + id+"/"+nroCreditos, "VerificarUsuario");
 };
-
 
 export const agregarUsuario = async (Usuario) => {
-  try {
-    const data = await apiFetch("/usuario/crear", {
-      method: "POST",
-      body: JSON.stringify(Usuario),
-    });
-    return data;
-  } catch (error) {
-    console.error("Error en usuario:", error);
-    throw error;
-  }
+  return pedirOLanzar("/usuario/crear", "usuario", {
+    method: "POST",
+    body: JSON.stringify(Usuario),
+  });
 };
 
-export const actualizarUsuario = async (User, id) => {
-  try {
-    await apiFetch("/usuario/"+id, {
-      method: "PUT",
-      body: JSON.stringify(User),
-    });
-    return true;
-  } catch (error) {
-    console.error("Error en usuario:", error);
-    throw error;
-  }
-};
 export const eliminarUsuario = async (id) => {
   try {
     await apiFetch("/usuario/"+id, {

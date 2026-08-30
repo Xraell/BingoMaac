@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Modal, Pressable, StyleSheet, ScrollView } from "react-native";
 import { Text, TextInput, Button, IconButton } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
+import { estilosComunes } from "../../Theme/estilosComunes";
 
 const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
     const [visible, setVisible] = useState(false);
@@ -11,7 +12,6 @@ const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
     };
 
     const actualizarPromocion = (index, field, value) => {
-        console.log('index, field, value: ', index, field, value);
         const nuevasPromociones = [...promociones];
         nuevasPromociones[index][field] = value;
         setPromociones(nuevasPromociones);
@@ -23,15 +23,15 @@ const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
     };
 
     return (
-        <View style={styles.centeredView}>
+        <View style={estilosComunes.vistaCentrada}>
             <Modal animationType="slide" transparent={true} visible={visible}>
-                <View style={styles.centeredView}>
+                <View style={estilosComunes.vistaCentrada}>
                     <View style={styles.modalView}>
                         <Pressable
-                            style={[styles.button, styles.buttonClose]}
+                            style={[styles.button, estilosComunes.botonCerrar]}
                             onPress={() => setVisible(false)}
                         >
-                            <Text style={styles.textStyle}>X</Text>
+                            <Text style={estilosComunes.textStyle}>X</Text>
                         </Pressable>
                         <Text variant="titleLarge" style={styles.title}>
                             AGREGAR PROMOCIONES
@@ -110,11 +110,6 @@ const ModalAgregarPromocion = ({ promociones, setPromociones }) => {
 };
 
 const styles = StyleSheet.create({
-    centeredView: {
-        justifyContent: "center",
-        alignItems: "center",
-        position: "relative",
-    },
     modalView: {
         backgroundColor: BingoColors.white,
         borderRadius: 20,
@@ -129,20 +124,6 @@ const styles = StyleSheet.create({
         minHeight: "60%",
         marginTop: "30%",
         width: "95%",
-    },
-    buttonClose: {
-        backgroundColor: BingoColors.primary,
-        position: "absolute",
-        top: 10,
-        right: 10,
-        borderRadius: 100,
-        paddingHorizontal: 10,
-    },
-    textStyle: {
-        color: "#fff",
-        fontWeight: "bold",
-        textAlign: "center",
-        fontSize: 20,
     },
     title: {
         marginTop: 10,

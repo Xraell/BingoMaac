@@ -1,24 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Pressable,
-  View,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  IconButton,
-  Switch,
-  Text,
-  TextInput,
-} from "react-native-paper";
+import React, { useState, useEffect } from "react";
+import { Modal, StyleSheet, Pressable, View } from "react-native";
+import { Switch, Text, TextInput } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import BotonesEditarPartida from "../Botones/BotonesEditarPartida";
-import { ObtenerPremiosPartida, ObtenerPromocionesPartida } from "../../Utils/Partida";
+import { ObtenerPremiosPartida } from "../../Utils/Partida";
+import { estilosComunes } from "../../Theme/estilosComunes";
 const ModalEditarPartida = ({ partida, visible, setVisible }) => {
   const [nroPartida, setNroPartida] = useState(partida.NroPartida + "");
   const [descripcion, setDescripcion] = useState(partida.Descripcion);
@@ -66,7 +52,6 @@ const ModalEditarPartida = ({ partida, visible, setVisible }) => {
   
   const obtenerPromociones = async () => {
     const response = await ObtenerPremiosPartida(partida.id)
-    console.log('response: ', response);
     if (response.premios.length > 0) {
 
 
@@ -75,14 +60,11 @@ const ModalEditarPartida = ({ partida, visible, setVisible }) => {
         const accion = accionesPremios[premio.premio.nombre];
 
         if (!accion) {
-          console.log(`Advertencia: No se encontró acción para el premio "${premio.premio.nombre}"`);
           return;
         }
 
         if (premio.monto > 0) {
           accion(premio.monto.toString(),premio.id);
-        } else {
-          console.log(`Monto no válido (${premio.monto}) para el premio "${premio.premio.nombre}". No se ejecuta acción.`);
         }
       });
     }
@@ -110,15 +92,15 @@ const ModalEditarPartida = ({ partida, visible, setVisible }) => {
     }
   };
   return (
-    <View style={styles.centeredView}>
+    <View style={estilosComunes.vistaCentradaConMargen}>
       <Modal animationType="slide" transparent={true} visible={visible}>
-        <View style={styles.centeredView}>
+        <View style={estilosComunes.vistaCentradaConMargen}>
           <View style={styles.modalView}>
             <Pressable
-              style={[styles.button, styles.buttonClose]}
+              style={[estilosComunes.botonModal, estilosComunes.botonCerrar]}
               onPress={() => setVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
               DETALLES DE LA PARTIDA
@@ -247,18 +229,6 @@ const ModalEditarPartida = ({ partida, visible, setVisible }) => {
 };
 
 const styles = StyleSheet.create({
-  Descripcion: {
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 5,
-    textAlign: "center",
-  },
-  rowItem: {
-    width: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-  },
   title: {
     marginTop: 10,
     textAlign: "center",
@@ -273,12 +243,6 @@ const styles = StyleSheet.create({
     color: BingoColors.primary,
     textAlign: "left",
     width: "100%",
-  },
-  centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 7,
-    position: "relative",
   },
   modalView: {
     backgroundColor: BingoColors.white,
@@ -299,29 +263,6 @@ const styles = StyleSheet.create({
     minHeight: 300,
     marginTop: "10%",
     width: "95%",
-  },
-  button: {
-    borderRadius: 10,
-    padding: 3,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: BingoColors.primary,
-    position: "absolute",
-    top: 10,
-    right: 10,
-    borderRadius: 100,
-    paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
   },
   row: {
     flexDirection: "row",

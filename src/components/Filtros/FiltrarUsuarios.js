@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Searchbar } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
 import { BingoColors } from "../../Theme/Colors";
@@ -34,7 +34,6 @@ export default function FiltrarUsuarios({ filtrar }) {
               let txt = txtBusqueda
                 .replace(new RegExp("Mi código es:", "g"), "")
                 .trim();
-              console.log("Texto:" + txt);
               return obtenerCodigoUsuario(usuario).includes(txt);
             default:
               return true;

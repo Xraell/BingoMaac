@@ -14,7 +14,6 @@ const Tablapartidas = ({ lista, abrirModal,setPartida}) => {
   }, [itemsPerPage]);
   const mostrarpartida = (partidaP) => {
     setPartida(partidaP)
-    console.log("partidaP: ", partidaP);
     abrirModal();
   };
   return (

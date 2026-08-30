@@ -1,23 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Pressable,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Dimensions,
-  ScrollView,
-} from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  IconButton,
-  Switch,
-  Text,
-} from "react-native-paper";
+import React, { useState, useEffect } from "react";
+import { Modal, StyleSheet, Pressable, View, ScrollView } from "react-native";
+import { Text } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
+import { estilosComunes } from "../../Theme/estilosComunes";
 const ModalDetallesParticipante = ({ usuario, visible, setVisible }) => {
   const [listaNros, setListaNros] = useState([]);
   useEffect(() => {
@@ -29,15 +14,15 @@ const ModalDetallesParticipante = ({ usuario, visible, setVisible }) => {
   }, [usuario]);
 
   return (
-    <View style={styles.centeredView}>
+    <View style={estilosComunes.vistaCentradaConMargen}>
       <Modal animationType="slide" transparent={true} visible={visible}>
-        <View style={styles.centeredView}>
+        <View style={estilosComunes.vistaCentradaConMargen}>
           <View style={styles.modalView}>
             <Pressable
-              style={[styles.button, styles.buttonClose]}
+              style={[estilosComunes.botonModal, estilosComunes.botonCerrar]}
               onPress={() => setVisible(false)}
             >
-              <Text style={styles.textStyle}>X</Text>
+              <Text style={estilosComunes.textStyle}>X</Text>
             </Pressable>
             <Text variant="titleLarge" style={styles.title}>
               DETALLES DEL USUARIO
@@ -74,18 +59,6 @@ const ModalDetallesParticipante = ({ usuario, visible, setVisible }) => {
 };
 
 const styles = StyleSheet.create({
-  Descripcion: {
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 5,
-    textAlign: "center",
-  },
-  rowItem: {
-    width: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-  },
   title: {
     marginTop: 10,
     textAlign: "center",
@@ -100,12 +73,6 @@ const styles = StyleSheet.create({
     color: BingoColors.primary,
     textAlign: "left",
     width: "100%",
-  },
-  centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 7,
-    position: "relative",
   },
   modalView: {
     backgroundColor: BingoColors.white,
@@ -126,29 +93,6 @@ const styles = StyleSheet.create({
     minHeight: 300,
     marginTop: "50%",
     width: "90%",
-  },
-  button: {
-    borderRadius: 10,
-    padding: 3,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: BingoColors.primary,
-    position: "absolute",
-    top: 10,
-    right: 10,
-    borderRadius: 100,
-    paddingHorizontal: 10,
-  },
-  textStyle: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
   },
 });
 

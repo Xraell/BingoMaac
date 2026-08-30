@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppContext } from "../context/AppProvider";
 import { useNavigation } from "@react-navigation/native";
 import { BingoColors } from "../Theme/Colors";
@@ -11,6 +11,7 @@ import MisBoletos from "../screens/User/MisBoletos";
 import Perfil from "../screens/User/Perfil";
 import { ObtenerDatosPartida, ObtenerPartidaActual } from "../Utils/Partida";
 import { ObtenerBoletosUsuario } from "../Utils/Boleto";
+import { ROL_USER } from "../constants/roles";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -22,7 +23,7 @@ export default function TabsUser() {
     obtenerPActual();
   }, []);
   useEffect(() => {
-    if (user.Rol == "USER") {
+    if (user.Rol == ROL_USER) {
       obtenerListas()
     }
   }, [user]);
@@ -30,17 +31,14 @@ export default function TabsUser() {
     try {
 
       const response = await ObtenerBoletosUsuario(user.id)
-      console.log("🚀 ~ obtenerListas ~ response:", response)
       setMisBoletos(response)
     } catch (error) {
-      console.log("error: ", error);
       setMisBoletos([])
 
     }
   }
   const obtenerPActual = async () => {
     const response = await ObtenerPartidaActual()
-    console.log("🚀 ~ obtenerPActual ~ response:", response)
     if (response) {
       obtenerPremiosActual(response.id);
       setPartidaActual(response)
@@ -48,7 +46,6 @@ export default function TabsUser() {
   };
   const obtenerPremiosActual = async (idPartida) => {
     const response = await ObtenerDatosPartida(idPartida, user.id)
-    console.log("🚀 ~ obtenerPremiosActual ~ response:", response)
     if (response) {
       setPremios(response.premios)
       setPromociones(response.promociones)

@@ -1,5 +1,5 @@
-import { Alert, Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { IconButton, Text } from "react-native-paper";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Text } from "react-native-paper";
 import * as Linking from "expo-linking";
 export default function RedesSociales() {
   const redireccionar = (url) => {

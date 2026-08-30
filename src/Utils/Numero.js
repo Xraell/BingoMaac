@@ -1,4 +1,4 @@
-import { apiFetch } from "./http";
+import { apiFetch, pedirODevolverNull, pedirOLanzar } from "./http";
 
 export const crearObjetoNumero = (
   idPartida,
@@ -47,41 +47,17 @@ export const ObtenerNumerosPartida = async (idPartida) => {
     }
   };
 export const ObtenerNumero = async (id) => {
-  try {
-    const data = await apiFetch("/numero/" + id);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en VerificarNumero:", error);
-    return null;
-  }
+  return pedirODevolverNull("/numero/" + id, "VerificarNumero");
 };
 export const ObtenerNumeroActual = async () => {
-  try {
-    const data = await apiFetch("/numero/obtener-Numero-actual");
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en obtener Numero actual:", error);
-    return null;
-  }
+  return pedirODevolverNull("/numero/obtener-Numero-actual", "obtener Numero actual");
 };
 
 export const agregarNumero = async (Numero) => {
-  try {
-    const data = await apiFetch("/numero/crear", {
-      method: "POST",
-      body: JSON.stringify(Numero),
-    });
-    return data;
-  } catch (error) {
-    console.error("Error en Numero:", error);
-    throw error;
-  }
+  return pedirOLanzar("/numero/crear", "Numero", {
+    method: "POST",
+    body: JSON.stringify(Numero),
+  });
 };
 
 export const actualizarNumero = async (User, id) => {

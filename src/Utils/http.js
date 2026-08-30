@@ -37,3 +37,27 @@ export async function apiFetch(ruta, opciones = {}) {
 
   return respuesta.status === 204 ? null : respuesta.json();
 }
+
+// Para las funciones que hoy devuelven null al fallar
+export async function pedirODevolverNull(ruta, etiqueta, opciones) {
+  try {
+    const data = await apiFetch(ruta, opciones);
+    if (!data) {
+      throw new Error("No se pudo obtener datos de la API");
+    }
+    return data;
+  } catch (error) {
+    console.error(`Error en ${etiqueta}:`, error);
+    return null;
+  }
+}
+
+// Para las que hoy relanzan
+export async function pedirOLanzar(ruta, etiqueta, opciones) {
+  try {
+    return await apiFetch(ruta, opciones);
+  } catch (error) {
+    console.error(`Error en ${etiqueta}:`, error);
+    throw error;
+  }
+}

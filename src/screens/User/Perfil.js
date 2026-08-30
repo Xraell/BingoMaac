@@ -1,15 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { BingoColors } from "../../Theme/Colors";
 import FormularioRegistro from "../../components/Formularios/FormularioRegistro";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppProvider";
 import PerfilUsuario from "../../components/Conjunto/PerfilUsuario";
 import CreditosUsuario from "../../components/Conjunto/CreditosUsuario";
+import { ROL_GUEST } from "../../constants/roles";
 export default function Perfil() {
   const { user } = useAppContext();
   const [opcUser, setOpcUser] = useState(true);
   useEffect(() => {
-    setOpcUser(user.Rol == "GUEST");
+    setOpcUser(user.Rol == ROL_GUEST);
   }, [user]);
   return (
     <View style={{ flex: 1, backgroundColor: BingoColors.primary }}>

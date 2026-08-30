@@ -8,16 +8,12 @@ import {
   PanResponder,
   Animated,
 } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { BingoColors } from "../../Theme/Colors";
 import { useAppContext } from "../../context/AppProvider";
 import ItemMiBoleto from "../Items/ItemMiBoleto";
 import { ObtenerNumerosPartida } from "../../Utils/Numero";
-import {
-  ObtenerPartida,
-  ObtenerPartidaActual,
-  ObtenerPartidas,
-} from "../../Utils/Partida";
+import { ObtenerPartidaActual } from "../../Utils/Partida";
 import ListaNrosRetirados from "../Listas/ListaNrosRetirados";
 import TablaBingo from "./TablaBingo";
 import { ObtenerMensajePartida } from "../../Utils/Mensaje";
@@ -109,7 +105,6 @@ export default function ListaMisBoletos() {
     const fetchData = async () => {
       try {
         const ganadoresData = await ObtenerGanadoresPorPartida(partidaActual.id)
-        console.log('ganadores: ', ganadoresData);
         setGanadoresResponse(ganadoresData)
         verificarGanadoresParaAlertar(ganadoresData)
         const response = await ObtenerNumerosPartida(partidaActual.id);
@@ -144,12 +139,7 @@ export default function ListaMisBoletos() {
     }
   }, [sincronizado, partidaActual.id]);
   const verificarGanadoresParaAlertar = (ganadoresData) => {
-    console.log("Ejecutando verificarGanadoresParaAlertar");
-    console.log("Datos de ganadores recibidos:", ganadoresData);
-  
     setPremiosYaAlertados((prevPremiosYaAlertados) => {
-      console.log("Premios ya alertados antes de procesar:", prevPremiosYaAlertados);
-  
       if (ganadoresData) {
         const nuevosPremios = [...prevPremiosYaAlertados];
   
@@ -181,8 +171,6 @@ export default function ListaMisBoletos() {
             Nombres: ganadoresData.Terno,
           });
           setModalGanadoresVisible(true);
-        } else {
-          console.log("No se detectaron nuevos premios para alertar");
         }
   
         return nuevosPremios;

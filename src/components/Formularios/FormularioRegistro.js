@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { Text, TextInput, Button, HelperText } from 'react-native-paper';
+import { Text, TextInput, HelperText } from 'react-native-paper';
 import { BingoColors } from '../../Theme/Colors';
 import SelectDropdown from "react-native-select-dropdown";
 import { paisesSudamerica, codigosTelefonicos } from '../Data/paises';

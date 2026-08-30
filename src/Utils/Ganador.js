@@ -1,4 +1,4 @@
-import { apiFetch } from "./http";
+import { pedirODevolverNull, pedirOLanzar } from "./http";
 
 export const crearObjetoGanadores = (
   usuarios_ganadores,
@@ -13,27 +13,12 @@ export const crearObjetoGanadores = (
 };
 
 export const ObtenerGanadoresPorPartida = async (idPartida) => {
-  try {
-    const data = await apiFetch("/ganador/partida/" + idPartida);
-    if (!data) {
-      throw new Error("No se pudo obtener datos de la API");
-    }
-    return data;
-  } catch (error) {
-    console.error("Error en ObtenerGanadoresPorPartida:", error);
-    return null;
-  }
+  return pedirODevolverNull("/ganador/partida/" + idPartida, "ObtenerGanadoresPorPartida");
 };
 
 export const agregarGanadoresPremio = async (Ganador) => {
-  try {
-    const data = await apiFetch("/ganador/crearGanadores", {
-      method: "POST",
-      body: JSON.stringify(Ganador),
-    });
-    return data;
-  } catch (error) {
-    console.error("Error en Ganador:", error);
-    throw error;
-  }
+  return pedirOLanzar("/ganador/crearGanadores", "Ganador", {
+    method: "POST",
+    body: JSON.stringify(Ganador),
+  });
 };

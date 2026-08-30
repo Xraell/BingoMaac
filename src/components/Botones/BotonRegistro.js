@@ -3,6 +3,7 @@ import { Alert } from "react-native";
 import { Button } from "react-native-paper";
 import { useAppContext } from "../../context/AppProvider";
 import { agregarUsuario, crearObjetoUsuario, VerificarUsuario } from "../../Utils/Usuario";
+import { ROL_USER } from "../../constants/roles";
 
 export default function BotonRegistro({ nombre, telefono, apellido, clave ,codigoInvitado}) {
   const { setUser } = useAppContext();
@@ -52,7 +53,7 @@ export default function BotonRegistro({ nombre, telefono, apellido, clave ,codig
       apellido,
       telefono,
       0,
-      "USER",
+      ROL_USER,
       clave
     );
     if(codigoInvitado.length>6){
