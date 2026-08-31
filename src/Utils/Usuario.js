@@ -51,13 +51,13 @@ export const ObtenerTotalCreditos = async () => {
   return pedirODevolverNull("/usuario/total", "total");
 };
 export const AgregarCreditosUsuario = async (id,nroCreditos) => {
-  return pedirODevolverNull("/usuario/agregar-creditos/" + id, "VerificarUsuario", {
+  return pedirOLanzar("/usuario/agregar-creditos/" + id, "VerificarUsuario", {
     method: "POST",
     body: JSON.stringify({ puntos: parseInt(nroCreditos, 10) }),
   });
 };
 export const RetirarCreditosUsuario = async (id,nroCreditos) => {
-  return pedirODevolverNull("/usuario/retirar-creditos/" + id, "VerificarUsuario", {
+  return pedirOLanzar("/usuario/retirar-creditos/" + id, "VerificarUsuario", {
     method: "POST",
     body: JSON.stringify({ puntos: parseInt(nroCreditos, 10) }),
   });

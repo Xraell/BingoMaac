@@ -5,8 +5,8 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecha · ❌ revertida · ⏭ sal
 | # | Tarea | Estado | Commit | Notas |
 |---|---|---|---|---|
 | 01 | Línea base y reproducción | ✅ | (tag) | Tag `pre-correccion-app` creado. Sin commit de código. |
-| 02 | Contrato de créditos | ✅ | (pendiente de commit) | POST + `puntos` numérico en `Utils/Usuario.js`; 4 tests nuevos. |
-| 03 | Error visible al fallar | ⬜ | | |
+| 02 | Contrato de créditos | ✅ | `acf4849` | POST + `puntos` numérico en `Utils/Usuario.js`; 4 tests nuevos. |
+| 03 | Error visible al fallar | ✅ | (pendiente de commit) | `pedirOLanzar` + `error.message` en los dos modales de crédito. |
 | 04 | Informe de cierre | ⬜ | | |
 
 ## Línea base
@@ -61,3 +61,22 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecha · ❌ revertida · ⏭ sal
   `npx expo export --platform android` → exit 0, bundle 5.45 MB, igual a la línea base.
   `grep -n "agregar-creditos\|retirar-creditos" src/Utils/Usuario.js` ya no muestra
   concatenación de la cantidad en la ruta.
+
+### Tarea 03 — Que el fallo de créditos no se trague el error (✅)
+
+- Reconfirmado por grep antes de tocar nada: los únicos llamantes de
+  `AgregarCreditosUsuario`/`RetirarCreditosUsuario` en `src/` son
+  `ModalAgregarCredito.js` y `ModalRetirarCredito.js` (más el test de la tarea 02). No
+  apareció un tercer llamante, así que la tarea no se saltó.
+- `Utils/Usuario.js`: las dos funciones de crédito pasaron de `pedirODevolverNull` a
+  `pedirOLanzar` (relanza en vez de devolver `null`). `pedirODevolverNull` sigue
+  importado y en uso por `ObtenerTotalCreditos`, así que no quedó import muerto.
+- Único cambio en los modales: la línea del `Alert.alert("Error", ...)` en el `catch`,
+  en los dos ficheros, para mostrar `error.message ?? "Ocurrio un error desconocido"`.
+  `setLoading(false)` ya se ejecutaba antes de esa línea en ambos — no hizo falta tocarlo.
+- Verificación: `npx jest` → 5 suites, 36 tests, 21 snapshots sin reescribir.
+  `npx expo export --platform android` → exit 0, bundle 5.45 MB.
+  `grep -rn "pedirODevolverNull\|pedirOLanzar" src/Utils/Usuario.js` confirma que solo
+  cambiaron las dos funciones de crédito (el resto de usos de ambos ayudantes sigue igual).
+  `git diff pre-correccion-app -- src/components/Modales/` toca únicamente esa línea en
+  los dos modales de crédito.

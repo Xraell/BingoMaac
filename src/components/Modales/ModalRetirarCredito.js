@@ -40,7 +40,7 @@ const ModalRetirarCredito = ({ usuario, visible, setVisible }) => {
               );
             } catch (error) {
               setLoading(false);
-              Alert.alert("Error", "Ocurrio un error desconocido");
+              Alert.alert("Error", error.message ?? "Ocurrio un error desconocido");
             }
           },
         },
