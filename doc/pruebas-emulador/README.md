@@ -58,11 +58,18 @@ Todo lo demás —sesión, compras, saldos, créditos, números sin repetir— s
 | Etapa | Estado |
 |---|---|
 | Refactor, estilos, seguridad 01–04 | Aplicadas y verificadas en emulador el 2026-08-30 |
-| `correccion-hallazgos` (app y backend) | **Plan escrito, sin ejecutar** |
+| `correccion-hallazgos` (app y backend) | **Ejecutadas.** 46 tests del backend en verde |
 
-Es decir: **los tres bugs conocidos siguen presentes** salvo que se hayan ejecutado esos
-planes. La tarea 01 lo comprueba y ajusta qué se espera. Un fallo previsto no es un
-hallazgo, y mezclarlos haría el informe inútil.
+Los tres bugs conocidos están arreglados. Esta sesión es de **aseguramiento**: confirmar en
+ejecución lo que los tests no pueden demostrar.
+
+**Con una excepción ya detectada.** El arreglo del bug 2 hizo que `obtener-boletos-partida`
+devuelva `idUsuario` como booleano en vez de `null`/id — correcto, evita la fuga. Pero
+`ItemBoleto.js:12` sigue con `disabled={boleto.idUsuario != null}`, y en JavaScript
+`false != null` es `true`: **los boletos libres quedan sin responder al toque.**
+
+Confirmado contra la API real con `curl` (99 libres, 1 vendido, todos booleanos). La tarea
+04 lo verifica en ejecución. Es un fallo silencioso: se ven habilitados y no reaccionan.
 
 ## Lo que NO se hace aquí
 

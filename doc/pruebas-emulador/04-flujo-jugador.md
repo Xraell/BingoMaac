@@ -6,18 +6,35 @@
 
 Probar la razón de ser del producto: que un jugador pueda comprar un boleto y verlo.
 
-## Aviso: puede estar bloqueado desde el primer paso
+## Aviso: hay una regresión confirmada en 4.2/4.3
 
-Si la tarea 01 confirmó que el **bug 2 sigue vivo**, la prueba 4.1 fallará con **403** y
-todo lo demás queda bloqueado: sin listado no hay dónde pulsar.
+Los planes de corrección **ya se ejecutaron**, así que 4.1 debería dar **200**. Pero el
+arreglo del bug 2 introdujo una regresión en la app, confirmada contra la API real el
+2026-08-30:
 
-No es un descubrimiento: es el bug conocido. Anotarlo como *esperado*, marcar el resto ⏭ y
-pasar a la tarea 05.
+`obtenerBoletosPartida` ahora devuelve `idUsuario` como **booleano** (`false` libre, `true`
+vendido) en vez de `null`/id — correcto, es lo que evita la fuga de datos. Comprobado con
+`curl`: 99 libres y 1 vendido en la partida 86, todos con `idUsuario` de tipo `bool`.
 
-**Para desbloquearla**, habría que ejecutar antes `BACKEND/doc/correccion-hallazgos/`
-(tarea 02). Es la decisión más rentable, pero **no la tomes tú**: anótalo como
-recomendación en el informe y sigue. Arreglar código durante una sesión de pruebas está
-prohibido.
+El problema está en `ItemBoleto.js:12`, que **no se adaptó**:
+
+```js
+disabled={boleto.idUsuario != null}
+```
+
+En JavaScript **`false != null` es `true`**. Con `idUsuario` booleano, esa expresión da
+`true` para *todos* los boletos: **los 99 libres quedan sin responder al toque.**
+
+Y es un fallo silencioso: la línea 14 usa truthiness (`boleto.idUsuario ? ... : ...`), que
+sí distingue, así que los libres **se verán habilitados pero no reaccionarán**. Sin error,
+sin aviso.
+
+**Consecuencia para esta tarea:** se espera que 4.3 falle y que 4.4–4.7 queden bloqueadas.
+El bug de "el jugador no puede comprar" no está resuelto: se movió del backend (403) a la
+app (boletos que no responden).
+
+**No lo arregles aquí.** Anótalo como regresión confirmada y sigue. El arreglo es de una
+línea, pero necesita su propio commit y una verificación real.
 
 ## Pruebas
 
@@ -27,17 +44,19 @@ Con la cuenta USER de prueba, con saldo, y la partida creada en la tarea 02.
 
 Navegar a la pestaña **Boletos** y volcar.
 
-- [ ] En el log: `GET /api/boleto/obtener-boletos-partida/{id}` con **200**. Un **403** es
-      el bug 2.
+- [ ] En el log: `GET /api/boleto/obtener-boletos-partida/{id}` con **200**.
+      Un **403** significaría que el arreglo del backend se revirtió.
 - [ ] El volcado muestra boletos (números de serie).
 
 ### 4.2 — Vendidos vs. libres
 
 - [ ] El volcado muestra alguno como **NO DISPONIBLE**, y pulsarlo no abre nada.
-- [ ] Los libres sí abren el modal.
+- [ ] **Los libres abren el modal.** ⚠️ Aquí es donde muerde la regresión: se espera que
+      **no** se abran. Confirmarlo pulsando varios boletos libres distintos y comprobando
+      que el volcado no cambia.
 
-Importa más de lo que parece: si el plan del backend ya se ejecutó, cambió `idUsuario` por
-un booleano, y **ésta comprueba que ese cambio no rompió `ItemBoleto`**.
+Ésta es la prueba que verifica si el cambio de `idUsuario` a booleano rompió `ItemBoleto`.
+Según el análisis del código, lo rompió. Confirmarlo en ejecución es el objetivo.
 
 ### 4.3 — Abrir un boleto
 
@@ -117,9 +136,10 @@ Difícil de forzar. Si sale de forma natural, anotar qué pasa; si no, ⏭.
 - [ ] Las siete pruebas anotadas con ✅/❌/⏭.
 - [ ] Las cifras de saldo y `Compra::count()` antes/después de 4.4 y 4.6, registradas.
 - [ ] Los 15 números de 4.3 y 4.5, anotados y comparados.
-- [ ] Si 4.1 dio 403, anotado como **bug 2 conocido**, no como hallazgo nuevo.
+- [ ] La regresión de `ItemBoleto.js:12` confirmada o desmentida **en ejecución**, no solo
+      por lectura del código.
 
 ## Criterio de finalización
 
-Las siete anotadas. Si 4.1 falla por el bug conocido, el resto se marca ⏭ con ese motivo y
-se pasa a la tarea 05.
+Las siete anotadas. Si 4.3 falla por la regresión, 4.4–4.7 se marcan ⏭ con ese motivo y se
+pasa a la tarea 05. Confirmar la regresión **es** el resultado valioso de esta tarea.

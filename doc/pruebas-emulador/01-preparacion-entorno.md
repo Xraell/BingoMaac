@@ -36,13 +36,26 @@ Determina qué se espera en las tareas 04 y 05. Por código, sin levantar nada:
 grep -n "agregar-creditos" D:/BINGO_MAAC/APP/src/Utils/Usuario.js; grep -n "obtener-boletos-partida" D:/BINGO_MAAC/BACKEND/routes/api.php; grep -n "Hash::check" D:/BINGO_MAAC/BACKEND/app/Http/Controllers/UsuarioController.php
 ```
 
+Al 2026-08-30 los tres planes de corrección **ya se ejecutaron** y los tres bugs están
+arreglados (verificado en código y con `curl`). Esta comprobación sirve para confirmar que
+siguen así, no para descubrirlos:
+
 | Si ves… | Entonces |
 |---|---|
-| La cantidad concatenada en la ruta (`+ "/" + nroCreditos`) | **Bug 1 vivo**: los créditos fallarán |
-| `obtener-boletos-partida` dentro del grupo `admin` | **Bug 2 vivo**: el USER no podrá comprar |
-| `Hash::check` sin comprobar antes el formato | **Bug 3 vivo**: login de clave plana dará 500 |
+| La cantidad concatenada en la ruta (`+ "/" + nroCreditos`) | El arreglo del bug 1 se revirtió |
+| `obtener-boletos-partida` dentro del grupo `admin` | El arreglo del bug 2 se revirtió |
+| `Hash::check` sin comprobar antes el formato | El arreglo del bug 3 se revirtió |
 
 Anotar los tres en `RESULTADOS.md`.
+
+**Comprobar además la regresión conocida**, que sí sigue abierta:
+
+```bash
+grep -n "idUsuario != null" D:/BINGO_MAAC/APP/src/components/Items/ItemBoleto.js
+```
+
+Si aparece la línea 12, la regresión sigue viva y **se espera que la tarea 04 falle en
+4.3**. Ver el aviso de esa tarea.
 
 ### 3. MariaDB
 
