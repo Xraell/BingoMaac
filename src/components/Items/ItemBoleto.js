@@ -9,7 +9,7 @@ export default function ItemBoleto({ boleto, setBoleto, abrir }) {
         setBoleto(boleto);
         abrir();
       }}
-      disabled={boleto.idUsuario != null}
+      disabled={!!boleto.idUsuario}
     >
       <View style={boleto.idUsuario ? styles.bxClose : styles.bx}>
         <Text
