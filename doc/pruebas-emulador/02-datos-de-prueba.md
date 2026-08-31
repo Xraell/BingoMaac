@@ -33,15 +33,19 @@ Sin este respaldo, no sigas. La tarea 05 mueve créditos y la 04 compra boletos.
 
 ### 1. Cuenta de USER nueva, desde la propia app
 
-**Registrarla desde la pantalla de registro, no por SQL.** Dos motivos: prueba el alta de
+**Registrarla desde la pantalla de registro de la app (por `adb`), no por SQL.** Dos motivos: prueba el alta de
 paso, y garantiza que la clave queda con **bcrypt** (una insertada a mano quedaría en texto
 plano y toparía con el bug 3).
 
 Datos sugeridos, reconocibles a simple vista:
 
-- Nombres: `Prueba Emulador`
-- Teléfono: uno que no exista, p.ej. `+591 69990002`
-- Clave: la que quieras, **anótala**
+- Nombres: `PruebaEmulador`
+- Teléfono: uno que no exista, p.ej. `+59169990002`
+- Clave: `Prueba1234`
+
+**Sin espacios ni acentos, a propósito.** `adb shell input text` no los escribe con
+fiabilidad, y un teléfono tecleado a medias haría fallar el login por un motivo que no es
+un bug de la app. Ver [TECNICAS-ADB.md](TECNICAS-ADB.md).
 
 Anotar el `id` que le asigne la base.
 
@@ -61,7 +65,7 @@ tocar la del dueño:
 
 ```bash
 cd D:/BINGO_MAAC/BACKEND && php artisan tinker --execute="
-\$u = \App\Models\Usuario::where('Telefono','+591 69990002')->first();
+\$u = \App\Models\Usuario::where('Telefono','+59169990002')->first();
 \$u->Rol = 'ADMIN'; \$u->save();
 echo 'Ahora ADMIN: '.\$u->id.PHP_EOL;"
 ```
@@ -69,7 +73,7 @@ echo 'Ahora ADMIN: '.\$u->id.PHP_EOL;"
 **No cambies la clave del ADMIN real.** Es la cuenta del dueño de la plataforma.
 
 Si haces esto, necesitarás **otra** cuenta USER para la tarea 04 (registra
-`+591 69990003` igual que antes). Probar el flujo del jugador con un ADMIN no vale: el rol
+`+59169990003` igual que antes). Probar el flujo del jugador con un ADMIN no vale: el rol
 cambia lo que se ve.
 
 ### 3. Créditos para poder comprar
@@ -78,7 +82,7 @@ El boleto de la partida actual cuesta **30**. Para comprar varios, con 300 sobra
 
 ```bash
 cd D:/BINGO_MAAC/BACKEND && php artisan tinker --execute="
-\$u = \App\Models\Usuario::where('Telefono','+591 69990002')->first();
+\$u = \App\Models\Usuario::where('Telefono','+59169990002')->first();
 \$u->Creditos = 300; \$u->save();
 echo 'Creditos: '.\$u->Creditos.PHP_EOL;"
 ```
@@ -111,6 +115,23 @@ echo 'Partidas: '.\App\Models\Partida::count().PHP_EOL;"
 
 Sirve para dos cosas: comprobar al final que las compras subieron lo que esperabas, y
 localizar lo creado si hay que limpiar.
+
+### 6. Verificar por consola lo que se creó
+
+No te fíes de que la pantalla dijera que el registro salió bien:
+
+```bash
+cd D:/BINGO_MAAC/BACKEND && php artisan tinker --execute="
+\$u = \App\Models\Usuario::where('Telefono','+59169990002')->first();
+if (!\$u) { echo 'NO EXISTE'.PHP_EOL; }
+else {
+  echo 'id='.\$u->id.' Rol='.\$u->Rol.' Creditos='.\$u->Creditos.PHP_EOL;
+  echo 'Bcrypt: '.(\Illuminate\Support\Facades\Hash::info(\$u->Clave)['algoName'] === 'bcrypt' ? 'SI' : 'NO').PHP_EOL;
+}"
+```
+
+La comprobación de bcrypt importa: si saliera `NO`, esa cuenta toparía con el bug 3 al
+intentar entrar, y confundirías un bug conocido con un fallo del registro.
 
 ## Verificación
 

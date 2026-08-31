@@ -1,6 +1,6 @@
 # 05 — El panel de administración
 
-**Depende de:** [03](03-humo-y-sesion.md)
+**Depende de:** [03](03-humo-y-sesion.md) · **Técnicas:** [TECNICAS-ADB.md](TECNICAS-ADB.md)
 
 ## Objetivo
 
@@ -29,11 +29,18 @@ completada pero **nunca verificada en dispositivo**.
 **Si el bug 1 sigue vivo (tarea 01), esto va a fallar con "Ocurrió un error desconocido".**
 Es lo esperado, no un hallazgo nuevo.
 
-Anotar el saldo del usuario antes.
+Medir antes y después, con el mismo comando:
 
-- [ ] Con los botones **±10**: el saldo sube lo indicado y la lista se refresca.
-- [ ] **Escribiendo la cantidad a mano**: funciona igual.
-- [ ] En el backend: `POST /api/usuario/agregar-creditos/{id}` con **200**.
+```bash
+cd D:/BINGO_MAAC/BACKEND && php artisan tinker --execute="
+\$u = \App\Models\Usuario::find(<id>);
+echo 'Creditos: '.\$u->Creditos.PHP_EOL;"
+```
+
+- [ ] Con los botones **±10**: el saldo **sube exactamente lo indicado** (verificado por
+      consola, no por pantalla).
+- [ ] **Escribiendo la cantidad a mano** (`input text`): mismo resultado.
+- [ ] En el log: `POST /api/usuario/agregar-creditos/{id}` con **200**.
       Un **404** es el bug 1 (la app manda GET con la cantidad en la URL).
       Un **422** con los botones funcionando es el **segundo defecto encadenado**: el campo
       de texto deja la cantidad como *string* y el backend valida `integer` estricto.
@@ -43,9 +50,9 @@ bug del otro, y la razón de que el plan de corrección tenga ese matiz.
 
 ### 5.4 — Retirar créditos
 
-- [ ] El saldo baja lo indicado.
-- [ ] Retirando **más de lo que hay**: mensaje con sentido, y **el saldo no queda negativo**.
-      En el backend: **422**.
+- [ ] El saldo **baja exactamente lo indicado**, verificado por consola.
+- [ ] Retirando **más de lo que hay**: en el log **422**, y **el saldo no cambia**
+      (el delta debe ser 0) ni queda negativo.
 
 ### 5.5 — Bono de referido del 20 %
 

@@ -58,6 +58,12 @@ pequeño: es dinero real.
 
 Cada ⏭ con su motivo. Un "no se pudo" bien explicado vale más que un ✅ dudoso.
 
+**El audio va siempre aquí**, nunca en "lo que funciona": `adb` no puede escuchar. Anotar
+las horas en que debía sonar, para que la persona lo confirme.
+
+Y lo que no se pudo automatizar por `adb`: si una pantalla no se dejó manejar, se dice,
+con lo que se intentó.
+
 ### 6. Qué hacer ahora
 
 Recomendación ordenada. Con lo que se sabe al redactar el plan, el orden probable es:

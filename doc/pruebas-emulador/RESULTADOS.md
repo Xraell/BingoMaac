@@ -11,6 +11,9 @@ lo que no se anota en el momento se olvida o se recuerda mal.
 
 Cada ❌ necesita: **qué se hizo · qué se esperaba · qué pasó · código de estado del backend**.
 
+Un ✅ solo se pone cuando se verificó contra la **base de datos o el log**, no porque la
+pantalla lo dijera. El audio nunca es ✅: `adb` no puede escuchar.
+
 ---
 
 ## Tarea 03 — Humo y sesión
@@ -32,7 +35,7 @@ Cada ❌ necesita: **qué se hizo · qué se esperaba · qué pasó · código d
 | 4.1 | Ver boletos disponibles | | |
 | 4.2 | Vendidos vs. libres | | |
 | 4.3 | Abrir un boleto | | |
-| 4.4 | Comprar | | Saldo antes: ___ después: ___ |
+| 4.4 | Comprar | | Saldo: ___→___ · Compras: ___→___ |
 | 4.5 | Mis Boletos: números coinciden | | |
 | 4.6 | Saldo insuficiente | | |
 | 4.7 | Boleto ya vendido | | |
@@ -55,8 +58,9 @@ Cada ❌ necesita: **qué se hizo · qué se esperaba · qué pasó · código d
 
 | # | Prueba | Res. | Notas |
 |---|---|---|---|
-| 6.1 | Cantar número + audio | | |
-| 6.2 | Automático sin repetir | | Números: |
+| 6.1 | Cantar número | | |
+| 6.1b | Audio (⏭ humano) | | Hora: |
+| 6.2 | Automático sin repetir | | Total/únicos: ___/___ · Números: |
 | 6.3 | Detener y reanudar | | |
 | 6.4 | Persisten al volver | | |
 | 6.5 | El jugador los ve | | |
@@ -74,6 +78,14 @@ _(vacío)_
 ## Bugs conocidos, confirmados
 
 _(vacío)_
+
+## Pendiente de confirmación humana
+
+Lo que el agente no pudo juzgar. **El audio va siempre aquí.**
+
+| Qué | Cuándo | Cómo confirmarlo |
+|---|---|---|
+| Audio al cantar número | | Escucharlo al pasar |
 
 ## Notas de entorno
 

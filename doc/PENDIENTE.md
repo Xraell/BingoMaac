@@ -125,8 +125,10 @@ Dos cosas que el análisis añadió y no estaban en el reporte original:
 la app contra el backend local, en el emulador `Xpancity_API_31`. Siete tareas: montaje,
 datos de prueba, sesión, jugador, admin, partida en curso e informe.
 
-**No es autónoma**: necesita a alguien delante para mirar la pantalla y escuchar el audio.
-El agente conduce, ejecuta y anota.
+**Es autónoma**: el agente arranca el emulador, maneja la app por `adb` y verifica los
+resultados contra la base de datos y el log del backend, no contra lo que muestra la
+pantalla. Lo único que no puede juzgar es el **audio** (`adb` no escucha): queda anotado
+con la hora para confirmarlo al pasar.
 
 Cubre lo que ninguna otra etapa puede: `PartidaEnCurso.js` (sin un solo test, 39 refs que
 espejan estado) y el `slice(4)` de `ItemMiBoleto.js`, que depende del orden de las claves.
