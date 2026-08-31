@@ -7,7 +7,7 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecha · ❌ revertida · ⏭ sal
 | 01 | Línea base y reproducción | ✅ | (tag) | Tag `pre-correccion-app` creado. Sin commit de código. |
 | 02 | Contrato de créditos | ✅ | `acf4849` | POST + `puntos` numérico en `Utils/Usuario.js`; 4 tests nuevos. |
 | 03 | Error visible al fallar | ✅ | `dc8caa4` | `pedirOLanzar` + `error.message` en los dos modales de crédito. |
-| 04 | Informe de cierre | ✅ | (pendiente de commit) | `INFORME.md` con checklist de verificación manual. |
+| 04 | Informe de cierre | ✅ | `89acf5e` | `INFORME.md` con checklist de verificación manual. |
 
 ## Línea base
 
