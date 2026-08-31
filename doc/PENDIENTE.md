@@ -9,6 +9,60 @@ terminadas y verificadas por tests, y **cero verificaciones en un dispositivo re
 
 ---
 
+## 2026-08-31 — Sesión de pruebas guiadas en emulador: bug crítico encontrado
+
+Ejecutada de forma autónoma (skill `/probar-app`) contra el backend real y el emulador
+`Xpancity_API_31`. Informe completo en
+[`doc/pruebas-emulador/INFORME.md`](pruebas-emulador/INFORME.md); resultado en bruto en
+[`RESULTADOS.md`](pruebas-emulador/RESULTADOS.md) de la misma carpeta.
+
+### Lo más importante: la compra de boletos está rota para cualquier partida activa
+
+**`src/components/Modales/ModalBoleto.js:206`** rechaza toda compra con "Partida Ya
+Iniciada" cuando `partidaActual.Activo == 1`. Pero `Activo` no significa "ya empezó a
+cantar números" — significa "la partida está habilitada" (el mismo campo, con el sentido
+correcto, en `Admin/Juego.js`, `ListaMisBoletos.js` y `TablaPartidas.js`). Una partida a la
+venta tiene `Activo=1` por definición, así que **esto bloquea el 100% de las compras
+normales**. Reproducido con una partida de prueba recién creada, 0 números cantados,
+`Activo=1`: rechazo inmediato, sin llamar siquiera al backend. Saldo y `Compra::count()`
+verificados sin cambio.
+
+Es dinero real y es la razón de ser del producto — arreglarlo es la prioridad número uno
+antes de cualquier otra cosa de este documento. Probablemente la condición debía comprobar
+si la partida ya tiene números cantados (`Numero::where('idPartida', ...)->exists()`), no
+su campo `Activo`.
+
+### Confirmado funcionando de punta a punta (primera vez con verificación real)
+
+- **Sesión completa**: login, logout, sesión persistiendo tras `force-stop` y tras un
+  reinicio completo del emulador, y — el hallazgo más valioso de la sesión — **un token
+  revocado por consola hace que la app vuelva sola al login**, sin quedarse en una pantalla
+  rota. Nunca se había ejercitado ese circuito.
+- **`PartidaEnCurso.js`** (el archivo más complejo del repo, sin un solo test): el modo
+  automático generó 30 números **sin un solo repetido**, deteniendo y reanudando limpio, sin
+  dejar ningún `setTimeout` huérfano.
+- **Panel de administración completo**: créditos (agregar por botones y por teclado, sin
+  reaparecer el bug 1 ni su defecto encadenado), retirar créditos, bono de referido del 20%
+  exacto, exportar a Excel, eliminar usuario.
+
+### Otros dos hallazgos, menores
+
+- `obtenerPartidaActual` no captura el 401 que recibe el invitado sin sesión: sube como
+  promesa sin manejar y dispara el LogBox de desarrollo tapando la pantalla. En producción no
+  se ve, pero la promesa sigue sin capturarse.
+- El buscador de Usuarios del panel admin solo filtra por Nombres — buscar por teléfono o
+  apellido siempre da 0 resultados. Hay alternativa (buscar por nombre); no bloquea nada.
+
+### Lo que quedó sin verificar
+
+Bloqueado en cascada por el bug de compra: 4.4–4.7 (comprar, saldo insuficiente, boleto ya
+vendido), 6.5 (el jugador ve los números vía sincronización) y 6.6 (ganadores). El cierre de
+partida (6.7) no se pudo automatizar por `adb` — el botón no respondió a los toques; puede
+ser un problema real de hitbox, no solo de la automatización. El audio, como siempre, queda
+pendiente de que alguien lo escuche (horas exactas en el informe).
+
+---
+
 ## 2026-08-30 — Verificación en dispositivo completada
 
 Hecha desde una máquina local con emulador (`Xpancity_API_31`) y el backend real
