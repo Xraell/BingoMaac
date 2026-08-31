@@ -119,6 +119,26 @@ Dos cosas que el análisis añadió y no estaban en el reporte original:
 
 ---
 
+## Sesión de pruebas en emulador — plan escrito
+
+`doc/pruebas-emulador/` (skill `/probar-app`) es un plan de **pruebas manuales guiadas** de
+la app contra el backend local, en el emulador `Xpancity_API_31`. Siete tareas: montaje,
+datos de prueba, sesión, jugador, admin, partida en curso e informe.
+
+**No es autónoma**: necesita a alguien delante para mirar la pantalla y escuchar el audio.
+El agente conduce, ejecuta y anota.
+
+Cubre lo que ninguna otra etapa puede: `PartidaEnCurso.js` (sin un solo test, 39 refs que
+espejan estado) y el `slice(4)` de `ItemMiBoleto.js`, que depende del orden de las claves.
+Las pruebas 6.2 (automático sin repetir) y 4.5 (los números de Mis Boletos coinciden) son
+la única verificación que esos dos van a recibir.
+
+Detalle de montaje que conviene no olvidar: el backend hay que levantarlo con
+`php artisan serve --host=0.0.0.0 --port=8080`. Sin `--host=0.0.0.0` solo escucha en
+`127.0.0.1` y el emulador no lo alcanza — la app arranca pero nada carga.
+
+---
+
 ## 0. Lo primero al clonar: desbloquear `pnpm install`
 
 **`pnpm install --frozen-lockfile` va a fallar.** No es tu entorno: es un estado conocido y
