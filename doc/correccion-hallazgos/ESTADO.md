@@ -6,8 +6,8 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecha · ❌ revertida · ⏭ sal
 |---|---|---|---|---|
 | 01 | Línea base y reproducción | ✅ | (tag) | Tag `pre-correccion-app` creado. Sin commit de código. |
 | 02 | Contrato de créditos | ✅ | `acf4849` | POST + `puntos` numérico en `Utils/Usuario.js`; 4 tests nuevos. |
-| 03 | Error visible al fallar | ✅ | (pendiente de commit) | `pedirOLanzar` + `error.message` en los dos modales de crédito. |
-| 04 | Informe de cierre | ⬜ | | |
+| 03 | Error visible al fallar | ✅ | `dc8caa4` | `pedirOLanzar` + `error.message` en los dos modales de crédito. |
+| 04 | Informe de cierre | ✅ | (pendiente de commit) | `INFORME.md` con checklist de verificación manual. |
 
 ## Línea base
 
@@ -80,3 +80,14 @@ Leyenda: ⬜ pendiente · 🔄 en curso · ✅ hecha · ❌ revertida · ⏭ sal
   cambiaron las dos funciones de crédito (el resto de usos de ambos ayudantes sigue igual).
   `git diff pre-correccion-app -- src/components/Modales/` toca únicamente esa línea en
   los dos modales de crédito.
+
+### Tarea 04 — Informe de cierre (✅)
+
+- `INFORME.md` escrito con las seis secciones pedidas: resumen, antes/después, el segundo
+  defecto (string→integer), checklist de verificación manual (sin marcar — nada se probó
+  en ejecución), volcado de `HALLAZGOS.md` (vacío de hallazgos nuevos: no apareció tercer
+  llamante, ningún snapshot se movió), y lo que sigue pendiente.
+- `npx jest` → 5 suites, 36 tests, 21 snapshots. `npx expo export --platform android` →
+  exit 0, 5.45 MB. `git status --short` sin cambios propios sin commitear antes de este
+  commit final.
+- Plan `corregir-app` completo: tareas 01-04 hechas, ninguna revertida ni saltada.
