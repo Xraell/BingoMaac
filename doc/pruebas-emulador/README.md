@@ -63,13 +63,12 @@ Todo lo demás —sesión, compras, saldos, créditos, números sin repetir— s
 Los tres bugs conocidos están arreglados. Esta sesión es de **aseguramiento**: confirmar en
 ejecución lo que los tests no pueden demostrar.
 
-**Con una excepción ya detectada.** El arreglo del bug 2 hizo que `obtener-boletos-partida`
-devuelva `idUsuario` como booleano en vez de `null`/id — correcto, evita la fuga. Pero
-`ItemBoleto.js:12` sigue con `disabled={boleto.idUsuario != null}`, y en JavaScript
-`false != null` es `true`: **los boletos libres quedan sin responder al toque.**
+Durante la preparación de esta sesión se detectó y arregló una regresión: el arreglo del
+bug 2 hizo que `obtener-boletos-partida` devolviera `idUsuario` como booleano, y
+`ItemBoleto.js` seguía comparándolo con `!= null` — en JavaScript `false != null` es `true`,
+así que **ningún boleto respondía al toque**. Corregido y cubierto con 5 tests.
 
-Confirmado contra la API real con `curl` (99 libres, 1 vendido, todos booleanos). La tarea
-04 lo verifica en ejecución. Es un fallo silencioso: se ven habilitados y no reaccionan.
+Queda verificarlo en ejecución, que es lo que ningún test puede hacer: la prueba 4.3.
 
 ## Lo que NO se hace aquí
 

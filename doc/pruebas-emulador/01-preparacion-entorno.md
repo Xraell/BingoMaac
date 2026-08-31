@@ -54,8 +54,8 @@ Anotar los tres en `RESULTADOS.md`.
 grep -n "idUsuario != null" D:/BINGO_MAAC/APP/src/components/Items/ItemBoleto.js
 ```
 
-Si aparece la línea 12, la regresión sigue viva y **se espera que la tarea 04 falle en
-4.3**. Ver el aviso de esa tarea.
+**No debe encontrar nada.** Si apareciera, el arreglo se revirtió y la tarea 04 fallará en
+4.3. Lo correcto hoy es `disabled={!!boleto.idUsuario}`.
 
 ### 3. MariaDB
 

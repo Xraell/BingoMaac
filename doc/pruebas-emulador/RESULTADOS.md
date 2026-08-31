@@ -75,31 +75,17 @@ Los que no estaban en `doc/PENDIENTE.md`.
 
 _(vacío)_
 
-## Regresiones y bugs conocidos, a confirmar en ejecución
+## Bugs y regresiones ya arregladas, a confirmar en ejecución
 
-### Regresión abierta: `ItemBoleto.js:12` (detectada 2026-08-30, sin arreglar)
+Todo lo conocido está arreglado en código al empezar esta sesión. Anotar aquí solo si algo
+reapareciera.
 
-Tras el arreglo del bug 2, `obtener-boletos-partida` devuelve `idUsuario` **booleano**
-(`false` libre / `true` vendido) en vez de `null`/id. Verificado con `curl` contra la
-partida 86: 99 libres, 1 vendido, todos de tipo `bool`.
+- Bugs 1, 2 y 3 de `correccion-hallazgos`: arreglados, 46 tests del backend en verde.
+- Regresión de `ItemBoleto.js` (los boletos libres no respondían al toque, por
+  `idUsuario != null` contra un booleano): arreglada con `!!boleto.idUsuario`, 5 tests.
+  **Verificar en ejecución en la prueba 4.3.**
 
-`ItemBoleto.js:12` no se adaptó:
-
-```js
-disabled={boleto.idUsuario != null}   // false != null  ===  true
-```
-
-**Efecto esperado:** los boletos libres se ven habilitados (la línea 14 usa truthiness y sí
-distingue) pero **no responden al toque**. El jugador sigue sin poder comprar; el bloqueo
-se movió del backend a la app.
-
-Confirmar en la prueba 4.3. Resultado: ______
-
-### Bugs de los planes de corrección
-
-Los tres estaban arreglados en código al empezar. Anotar aquí si alguno reapareciera.
-
-_(vacío)_
+_(sin reapariciones)_
 
 ## Pendiente de confirmación humana
 

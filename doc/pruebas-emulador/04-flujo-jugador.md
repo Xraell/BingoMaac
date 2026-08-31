@@ -6,35 +6,19 @@
 
 Probar la razón de ser del producto: que un jugador pueda comprar un boleto y verlo.
 
-## Aviso: hay una regresión confirmada en 4.2/4.3
+## Estado al empezar: todo arreglado
 
-Los planes de corrección **ya se ejecutaron**, así que 4.1 debería dar **200**. Pero el
-arreglo del bug 2 introdujo una regresión en la app, confirmada contra la API real el
-2026-08-30:
+Los planes de corrección ya se ejecutaron, y la regresión que introdujo el arreglo del bug 2
+también está corregida (commit `fix: los boletos libres vuelven a responder al toque`).
 
-`obtenerBoletosPartida` ahora devuelve `idUsuario` como **booleano** (`false` libre, `true`
-vendido) en vez de `null`/id — correcto, es lo que evita la fuga de datos. Comprobado con
-`curl`: 99 libres y 1 vendido en la partida 86, todos con `idUsuario` de tipo `bool`.
+Eso significa que **esta tarea debería pasar entera**, y es justo lo que viene a comprobar:
+que la cadena completa —ver boletos, abrir uno, comprarlo, verlo en Mis Boletos— funciona
+de principio a fin contra el backend real.
 
-El problema está en `ItemBoleto.js:12`, que **no se adaptó**:
-
-```js
-disabled={boleto.idUsuario != null}
-```
-
-En JavaScript **`false != null` es `true`**. Con `idUsuario` booleano, esa expresión da
-`true` para *todos* los boletos: **los 99 libres quedan sin responder al toque.**
-
-Y es un fallo silencioso: la línea 14 usa truthiness (`boleto.idUsuario ? ... : ...`), que
-sí distingue, así que los libres **se verán habilitados pero no reaccionarán**. Sin error,
-sin aviso.
-
-**Consecuencia para esta tarea:** se espera que 4.3 falle y que 4.4–4.7 queden bloqueadas.
-El bug de "el jugador no puede comprar" no está resuelto: se movió del backend (403) a la
-app (boletos que no responden).
-
-**No lo arregles aquí.** Anótalo como regresión confirmada y sigue. El arreglo es de una
-línea, pero necesita su propio commit y una verificación real.
+Contexto útil por si algo falla: `obtener-boletos-partida` devuelve `idUsuario` como
+**booleano** (`false` libre / `true` vendido), no como `null`/id. `ItemBoleto` ya usa
+truthiness (`!!boleto.idUsuario`) y hay 5 tests que lo cubren. Si 4.2 o 4.3 fallaran, mirar
+primero ahí.
 
 ## Pruebas
 
@@ -51,12 +35,11 @@ Navegar a la pestaña **Boletos** y volcar.
 ### 4.2 — Vendidos vs. libres
 
 - [ ] El volcado muestra alguno como **NO DISPONIBLE**, y pulsarlo no abre nada.
-- [ ] **Los libres abren el modal.** ⚠️ Aquí es donde muerde la regresión: se espera que
-      **no** se abran. Confirmarlo pulsando varios boletos libres distintos y comprobando
-      que el volcado no cambia.
+- [ ] **Los libres abren el modal.** Probar con varios distintos, no solo uno.
 
-Ésta es la prueba que verifica si el cambio de `idUsuario` a booleano rompió `ItemBoleto`.
-Según el análisis del código, lo rompió. Confirmarlo en ejecución es el objetivo.
+Ésta es la verificación en ejecución del arreglo de `ItemBoleto`: los tests demuestran que
+el componente se comporta bien con `idUsuario` booleano, pero no que la pantalla real
+responda al toque. Es exactamente el hueco que esta sesión cierra.
 
 ### 4.3 — Abrir un boleto
 
@@ -136,10 +119,10 @@ Difícil de forzar. Si sale de forma natural, anotar qué pasa; si no, ⏭.
 - [ ] Las siete pruebas anotadas con ✅/❌/⏭.
 - [ ] Las cifras de saldo y `Compra::count()` antes/después de 4.4 y 4.6, registradas.
 - [ ] Los 15 números de 4.3 y 4.5, anotados y comparados.
-- [ ] La regresión de `ItemBoleto.js:12` confirmada o desmentida **en ejecución**, no solo
-      por lectura del código.
+- [ ] El arreglo de `ItemBoleto` verificado **en ejecución**: un boleto libre se abre al
+      pulsarlo.
 
 ## Criterio de finalización
 
-Las siete anotadas. Si 4.3 falla por la regresión, 4.4–4.7 se marcan ⏭ con ese motivo y se
-pasa a la tarea 05. Confirmar la regresión **es** el resultado valioso de esta tarea.
+Las siete anotadas. Si 4.3 fallara, 4.4–4.7 se marcan ⏭ con ese motivo y se pasa a la
+tarea 05.
